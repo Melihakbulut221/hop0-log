@@ -80,19 +80,19 @@
     // ---- engine: chamber, injector, igniter, gimbal, TVC
     var eng = group("engine", 0, -0.2);
     var gim = el("g", {}, eng);
-    var plume = el("path", { d: "M" + X(-0.035) + " " + Y(0) + " Q" + X(0) + " " + Y(-0.2) + " " + X(0.035) + " " + Y(0) + " Z", class: "xp-plume xp-anim" }, gim);
-    el("path", { d: "M" + X(-0.053) + " " + Y(0.215) + " L" + X(-0.053) + " " + Y(0.118) + " L" + X(-0.022) + " " + Y(0.072) +
-      " Q" + X(-0.03) + " " + Y(0.03) + " " + X(-0.042) + " " + Y(0) + " L" + X(0.042) + " " + Y(0) + " Q" + X(0.03) + " " + Y(0.03) + " " + X(0.022) + " " + Y(0.072) +
-      " L" + X(0.053) + " " + Y(0.118) + " L" + X(0.053) + " " + Y(0.215) + " Z", class: "xp-chamber" }, gim);
-    for (var k = 0; k < 5; k++) line(-0.046 + k * 0.023, 0.2, -0.046 + k * 0.023, 0.125, "xp-channel", gim);   // cooling channels (schematic)
-    rect(-0.062, 0.062, 0.215, 0.255, "xp-inj", gim);
+    var plume = el("path", { d: "M" + X(-0.05) + " " + Y(0) + " Q" + X(0) + " " + Y(-0.22) + " " + X(0.05) + " " + Y(0) + " Z", class: "xp-plume xp-anim" }, gim);
+    // the engine is a generic schematic, not drawn from the engine design
+    el("path", { d: "M" + X(-0.065) + " " + Y(0.23) + " L" + X(-0.065) + " " + Y(0.13) + " L" + X(-0.035) + " " + Y(0.085) +
+      " Q" + X(-0.04) + " " + Y(0.035) + " " + X(-0.06) + " " + Y(0) + " L" + X(0.06) + " " + Y(0) + " Q" + X(0.04) + " " + Y(0.035) + " " + X(0.035) + " " + Y(0.085) +
+      " L" + X(0.065) + " " + Y(0.13) + " L" + X(0.065) + " " + Y(0.23) + " Z", class: "xp-chamber" }, gim);
+    rect(-0.07, 0.07, 0.23, 0.26, "xp-inj", gim);
     el("path", { d: "M" + X(-0.05) + " " + Y(0.255) + " A" + 0.05 * S + " " + 0.035 * S + " 0 0 1 " + X(0.05) + " " + Y(0.255) + " Z", class: "xp-inj" }, gim);
-    rect(0.062, 0.095, 0.212, 0.236, "xp-ign", gim);
-    rect(-0.06, 0.06, 0.30, 0.345, "xp-yoke", gim);
-    rect(-0.078, 0.078, 0.132, 0.148, "xp-ring", gim);
-    rect(-0.016, 0.016, 0.345, 0.373, "xp-cross", eng);                  // cardan cross + pins
-    rect(-0.075, 0.075, 0.373, 0.392, "xp-yoke", eng);                   // upper yoke + plate
-    var PIV = [0, 0.359];
+    rect(0.07, 0.1, 0.225, 0.25, "xp-ign", gim);
+    rect(-0.06, 0.06, 0.29, 0.335, "xp-yoke", gim);
+    rect(-0.085, 0.085, 0.16, 0.18, "xp-ring", gim);
+    rect(-0.016, 0.016, 0.335, 0.365, "xp-cross", eng);                  // cardan cross + pins
+    rect(-0.075, 0.075, 0.365, 0.39, "xp-yoke", eng);                   // upper yoke + plate
+    var PIV = [0, 0.35];
     var emaEls = [-1, 1].map(function (s) {
       rect(s * 0.19, s * 0.215, 0.372, 0.392, "xp-bracket", eng);
       return { s: s, body: el("line", { class: "xp-ema" }, eng), rod: el("line", { class: "xp-emarod" }, eng) };
@@ -101,7 +101,7 @@
       gim.setAttribute("transform", "rotate(" + (-deg).toFixed(2) + " " + X(PIV[0]) + " " + Y(PIV[1]) + ")");
       var a = deg * Math.PI / 180;
       emaEls.forEach(function (e) {
-        var r0 = e.s * 0.075 - PIV[0], z0 = 0.14 - PIV[1];
+        var r0 = e.s * 0.085 - PIV[0], z0 = 0.17 - PIV[1];
         var rr = PIV[0] + r0 * Math.cos(a) - z0 * Math.sin(a), zz = PIV[1] + r0 * Math.sin(a) + z0 * Math.cos(a);
         var top = [e.s * 0.2, 0.38], mid = [top[0] + (rr - top[0]) * 0.55, top[1] + (zz - top[1]) * 0.55];
         e.body.setAttribute("x1", X(top[0])); e.body.setAttribute("y1", Y(top[1])); e.body.setAttribute("x2", X(mid[0])); e.body.setAttribute("y2", Y(mid[1]));
@@ -219,9 +219,9 @@
         ["feed", -0.125, 0.47, "l", "Pre-valve"], ["feed", 0.125, 0.27, "r", "Main valve"],
         ["feed", 0.05, 0.16, "r", "Flexible hose"], ["feed", -0.2, 0.535, "l", "Fill and drain QD"]] },
       { on: ["engine"], labels: [
-        ["engine", -0.04, 0.05, "l", "Regeneratively cooled chamber"], ["engine", -0.05, 0.24, "l", "Pintle injector"],
-        ["engine", 0.09, 0.225, "r", "Spark-torch igniter"], ["engine", 0, 0.359, "r", "Cardan joint"],
-        ["engine", 0.16, 0.29, "r", "Electromechanical actuator"], ["engine", -0.078, 0.14, "l", "Actuator ring"]] },
+        ["engine", -0.05, 0.05, "l", "Regeneratively cooled chamber"], ["engine", -0.06, 0.245, "l", "Pintle injector"],
+        ["engine", 0.1, 0.24, "r", "Spark-torch igniter"], ["engine", 0, 0.35, "r", "Cardan joint"],
+        ["engine", 0.16, 0.29, "r", "Electromechanical actuator"], ["engine", -0.085, 0.17, "l", "Actuator ring"]] },
       { on: ["power"], labels: [
         ["power", 0.205, 0.2, "r", "LiPo pump battery"], ["power", -0.2, 0.19, "l", "Pump inverters INV-1"],
         ["power", 0.115, 0.06, "r", "Power distribution unit"], ["power", -0.1, 0.035, "l", "Radar altimeter"]] },
