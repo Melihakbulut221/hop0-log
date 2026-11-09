@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hop-0 engineering log</title>
-<meta name="description" content="A small reusable-rocket hop testbed, developed in simulation and hardware-in-the-loop first. Methods, results and the mistakes along the way.">
+<meta name="description" content="A digital twin of a small reusable rocket, built before the rocket: flight dynamics, CFD aerodynamics, structure, guidance and the real flight code in hardware-in-the-loop.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hop-0 engineering log">
-<meta property="og:description" content="A small reusable-rocket testbed, built in simulation first. Hardest hardware-in-the-loop scenario: 53% to 98.7% landing success.">
+<meta property="og:description" content="A digital twin of a small reusable rocket, built before the rocket. Hardest hardware-in-the-loop scenario: 53% to 98.7% landing success.">
 <meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/">
 <meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
 <meta property="og:image:width" content="1200">
@@ -15,88 +15,179 @@
 <meta property="og:image:alt" content="Hop-0 engineering log: 18 replayed landing trajectories converging on the pad.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #fcfcfb;
-    --fg: #0b0b0b;
-    --fg2: #52514e;
-    --rule: #e1e0d9;
-    --accent: #184f95;
-    --card: #ffffff;
-    --code: #f0efec;
-    --figbg: #fcfcfb;
-    --dot: #184f95;
+    --bg: #fafaf6; --fg: #191919; --fg2: #5b5a55; --rule: #e3e2db; --card: #ffffff;
+    --accent: #c4471f; --link: #184f95; --dot: #184f95;
+    --c1: #e8e7e1; --c1fg: #191919;
+    --c2: #2f4d43; --c2fg: #fafaf6;
+    --c3: #9aa0ba; --c3fg: #191919;
+    --c4: #d8c8a4; --c4fg: #191919;
+    --c5: #213654; --c5fg: #fafaf6;
+    --c6: #7c4632; --c6fg: #fafaf6;
+    --banner: #2a211c;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #1a1a19;
-      --fg: #f3f2ee;
-      --fg2: #c3c2b7;
-      --rule: #34342f;
-      --accent: #86b6ef;
-      --card: #222220;
-      --code: #2c2c2a;
-      --figbg: #fcfcfb;
-      --dot: #3987e5;
+      --bg: #151514; --fg: #f1f0ea; --fg2: #b9b8ae; --rule: #33332e; --card: #1f1f1d;
+      --accent: #e0673d; --link: #86b6ef; --dot: #3987e5;
+      --c1: #2b2b28; --c1fg: #f1f0ea; --c3: #6d7391; --c3fg: #f6f6f2; --c4: #8c7b56; --c4fg: #f6f6f2;
+      --banner: #221b17;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #1a1a19; --fg: #f3f2ee; --fg2: #c3c2b7; --rule: #34342f; --accent: #86b6ef; --card: #222220;
-    --code: #2c2c2a; --figbg: #fcfcfb; --dot: #3987e5;
+    --bg: #151514; --fg: #f1f0ea; --fg2: #b9b8ae; --rule: #33332e; --card: #1f1f1d;
+    --accent: #e0673d; --link: #86b6ef; --dot: #3987e5;
+    --c1: #2b2b28; --c1fg: #f1f0ea; --c3: #6d7391; --c3fg: #f6f6f2; --c4: #8c7b56; --c4fg: #f6f6f2;
+    --banner: #221b17;
   }
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    margin: 0; background: var(--bg); color: var(--fg);
-    font: 17px/1.62 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { margin: 0; background: var(--bg); color: var(--fg); overflow-x: hidden;
+         font: 400 18px/1.55 "Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  a { color: var(--link); text-underline-offset: 3px; }
+  strong { font-weight: 600; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+  @media (max-width: 600px) { .wrap { padding: 0 16px; } }
+  h2.display { font-size: clamp(40px, 6vw, 76px); line-height: .98; font-weight: 800; letter-spacing: -.035em; margin: 0 0 18px; }
+  .sub { color: var(--fg2); max-width: 620px; margin: 0 0 28px; }
+  section, .lf { scroll-margin-top: 76px; }
+
+  /* top bar */
+  .bar { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; align-items: center;
+         justify-content: space-between; padding: 14px 24px; color: #fafaf6; transition: background .3s, color .3s, box-shadow .3s; }
+  .bar.solid, .bar.menu-open { background: var(--bg); color: var(--fg); box-shadow: 0 1px 0 var(--rule); }
+  .bar a.home { display: flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; font-weight: 600; font-size: 19px; }
+  .mark { width: 40px; height: 40px; background: #191919; display: grid; place-items: center; }
+  .mark svg { width: 22px; height: 22px; }
+  .menu-btn { display: flex; align-items: center; gap: 12px; background: none; border: 0; color: inherit; font: inherit;
+              font-size: 17px; cursor: pointer; padding: 0; }
+  .menu-btn i { width: 40px; height: 40px; background: #fafaf6; display: grid; place-items: center; }
+  .bar.solid .menu-btn i, .bar.menu-open .menu-btn i { background: #191919; }
+  .menu-btn i b { width: 18px; height: 3px; background: #191919; display: block; transition: transform .3s; }
+  .bar.solid .menu-btn i b, .bar.menu-open .menu-btn i b { background: #fafaf6; }
+  .menu-btn[aria-expanded="true"] i b { transform: rotate(90deg); }
+  @media (max-width: 600px) { .bar { padding: 12px 16px; } .menu-btn span { display: none; } }
+  nav.overlay { position: fixed; inset: 0; z-index: 15; background: var(--bg); color: var(--fg); padding: 100px 24px 40px;
+                transform: translateY(-100%); visibility: hidden; transition: transform .5s cubic-bezier(.7,0,.2,1), visibility 0s .5s; overflow-y: auto; }
+  nav.overlay.open { transform: none; visibility: visible; transition: transform .5s cubic-bezier(.7,0,.2,1); }
+  nav.overlay a { display: block; color: var(--fg); text-decoration: none; font-weight: 800; letter-spacing: -.03em;
+                  font-size: clamp(32px, 5.5vw, 64px); line-height: 1.14; max-width: 1240px; margin: 0 auto; }
+  nav.overlay a:hover { color: var(--accent); }
+  nav.overlay a small { font-size: 16px; font-weight: 400; letter-spacing: 0; color: var(--fg2); margin-left: 10px; }
+
+  /* hero */
+  .hero { position: relative; height: 100vh; min-height: 600px; max-height: 980px; background: #0b1220; overflow: hidden; color: #fafaf6; }
+  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hero h1 { position: absolute; left: 24px; bottom: 74px; margin: 0; max-width: 720px; font-weight: 800;
+             font-size: clamp(44px, 6.6vw, 92px); line-height: .96; letter-spacing: -.04em; pointer-events: none;
+             text-shadow: 0 2px 30px rgba(11,18,32,.6); }
+  .feat { position: absolute; right: 24px; top: 22%; text-align: right; max-width: 360px; pointer-events: none; transition: opacity .5s;
+          text-shadow: 0 1px 16px rgba(11,18,32,.8); }
+  .feat .k { font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: #9fb0c8; margin: 0 0 6px; }
+  .feat .t { font-size: clamp(22px, 2.4vw, 30px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 8px; }
+  .feat .d { font-size: 16px; color: #c8d2e0; margin: 0; }
+  .hero .cap { position: absolute; left: 24px; right: 24px; bottom: 10px; margin: 0; text-align: right; font-size: 12px; color: #7d8ca3; }
+  @media (max-width: 760px) {
+    .hero h1 { bottom: auto; top: 84px; left: 16px; right: 16px; }
+    .feat { top: auto; bottom: 70px; left: 16px; right: auto; text-align: left; max-width: 300px; }
+    .feat .d { font-size: 14px; }
+    .hero .cap { left: 16px; right: 16px; }
   }
-  main { max-width: 740px; margin: 0 auto; padding: 48px 16px 80px; }
-  header.top { border-bottom: 1px solid var(--rule); padding-bottom: 28px; margin-bottom: 8px; }
-  .kicker { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--fg2); margin: 0 0 10px; }
-  h1 { font-size: 34px; line-height: 1.18; margin: 0 0 14px; letter-spacing: -.01em; }
-  .lede { font-size: 19px; color: var(--fg2); margin: 0 0 18px; }
-  .status { display: inline-block; font-size: 14px; border: 1px solid var(--rule); border-radius: 6px; padding: 4px 10px;
-            color: var(--fg2); background: var(--card); }
-  h2 { font-size: 24px; line-height: 1.25; margin: 56px 0 12px; letter-spacing: -.005em; }
-  h3 { font-size: 18px; margin: 32px 0 8px; }
-  p { margin: 0 0 16px; }
-  a { color: var(--accent); text-underline-offset: 2px; }
-  ul { padding-left: 22px; margin: 0 0 16px; }
-  li { margin: 4px 0; }
-  figure { margin: 28px -8px; }
-  figure img { display: block; width: 100%; height: auto; border-radius: 8px; background: var(--figbg);
-               border: 1px solid var(--rule); }
-  figcaption { font-size: 14px; color: var(--fg2); margin-top: 8px; padding: 0 8px; }
-  @media (min-width: 1000px) { figure.wide { margin-left: -120px; margin-right: -120px; } }
+
+  /* intro */
+  .intro { padding: 72px 0 40px; }
+  .intro p { font-size: clamp(22px, 2.5vw, 30px); line-height: 1.32; font-weight: 300; letter-spacing: -.01em; max-width: 1000px; margin: 0 0 20px; }
+  .intro p strong { font-weight: 800; }
+  .inset { position: relative; margin: 36px 0 0 auto; max-width: 860px; }
+  .inset img { display: block; width: 100%; height: auto; border-radius: 4px; background: #fcfcfb; }
+  .inset figcaption { font-size: 14px; color: var(--fg2); margin-top: 10px; max-width: 760px; }
+  .badge { position: absolute; left: -12px; bottom: 40px; width: 168px; height: 168px; border-radius: 50%; background: var(--accent);
+           color: #fff; display: flex; align-items: center; justify-content: center; text-align: center; padding: 22px;
+           font-weight: 600; font-size: 15px; line-height: 1.2; text-decoration: none; transform: rotate(-8deg);
+           transition: transform .4s; }
+  .badge:hover { transform: rotate(0) scale(1.04); }
+  @media (max-width: 600px) { .badge { width: 116px; height: 116px; font-size: 12px; padding: 12px; left: auto; right: -6px; bottom: auto; top: -58px; } .inset { margin-top: 76px; } }
+
+  /* cascading layer cards */
+  .layers { padding: 72px 0 40px; }
+  .cascade { display: grid; grid-template-columns: repeat(6, 1fr); margin-top: 8px; }
+  .lc { min-height: 240px; padding: 22px 24px; text-decoration: none; display: flex; flex-direction: column;
+        justify-content: space-between; position: relative; }
+  .lc h3 { margin: 0; font-size: clamp(36px, 4.2vw, 56px); font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+  .lc .go { font-size: 14px; margin-top: 8px; display: block; }
+  .lc .go::after { content: " \2192"; display: inline-block; transition: transform .3s; }
+  .lc:hover .go::after { transform: translateX(6px); }
+  .lc p { margin: 0; font-size: 15px; line-height: 1.4; max-width: 300px; }
+  .lc:nth-child(1) { background: var(--c1); color: var(--c1fg); grid-column: 1 / span 3; }
+  .lc:nth-child(2) { background: var(--c2); color: var(--c2fg); grid-column: 2 / span 3; }
+  .lc:nth-child(3) { background: var(--c3); color: var(--c3fg); grid-column: 3 / span 3; }
+  .lc:nth-child(4) { background: var(--c4); color: var(--c4fg); grid-column: 4 / span 3; }
+  .lc:nth-child(5) { background: var(--c5); color: var(--c5fg); grid-column: 3 / span 3; }
+  .lc:nth-child(6) { background: var(--c6); color: var(--c6fg); grid-column: 2 / span 3; }
+  .lc .glyph { position: absolute; right: 22px; bottom: 22px; width: 60px; height: 60px; }
+  @media (max-width: 760px) {
+    .cascade { grid-template-columns: repeat(8, 1fr); }
+    .lc { min-height: 190px; padding: 18px; }
+    .lc p { max-width: 70%; }
+    .lc:nth-child(odd) { grid-column: 1 / span 7; }
+    .lc:nth-child(even) { grid-column: 2 / span 7; }
+  }
+  .reveal.slide { transform: translateX(-48px); }
+  .reveal.slide.shown { transform: none; }
+
+  /* flights */
+  .flights { padding: 72px 0 40px; }
+  .fgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 22px; }
+  @media (max-width: 900px) { .fgrid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .fgrid { grid-template-columns: 1fr; } }
+  .fc { cursor: pointer; }
+  .fc canvas { display: block; width: 100%; aspect-ratio: 16 / 10; background: #0e1726; border-radius: 3px 3px 0 0; }
+  .fc .prog { height: 26px; background: var(--c1); position: relative; display: flex; align-items: center; padding: 0 10px; }
+  .fc .prog i { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); left: 0; }
+  .fc .prog svg { width: 10px; height: 10px; fill: var(--fg2); }
+  .fc .meta { display: flex; justify-content: space-between; font-size: 14px; margin: 12px 0 4px; color: var(--fg); }
+  .fc .meta span:last-child { font-variant-numeric: tabular-nums; }
+  .fc h3 { margin: 0; font-size: 20px; line-height: 1.15; font-weight: 800; letter-spacing: -.02em; }
+  .fc p { margin: 6px 0 0; font-size: 14px; color: var(--fg2); }
+
+  /* banner */
+  .banner { position: relative; margin: 72px 0 0; background: var(--banner); color: #f6f1ea; overflow: hidden; border-radius: 4px; }
+  .banner svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .banner .in { position: relative; padding: 56px 40px 52px; max-width: 900px; }
+  .banner h2 { font-size: clamp(40px, 6.2vw, 82px); line-height: .96; font-weight: 800; letter-spacing: -.04em; margin: 0 0 22px; }
+  .banner p { font-size: 19px; line-height: 1.45; color: #e3d9cd; max-width: 720px; }
+  .banner a.cta { display: inline-block; margin-top: 10px; color: #191919; background: #f6f1ea; text-decoration: none;
+                  font-weight: 600; padding: 12px 20px; border-radius: 999px; }
+  @media (max-width: 600px) { .banner .in { padding: 36px 20px; } .banner p { font-size: 17px; } }
+
+  /* long-form */
+  .longform { padding: 40px 0; }
+  .lf { display: grid; grid-template-columns: 4fr 7fr; gap: 40px; padding: 48px 0; border-top: 1px solid var(--rule); }
+  .lf > h2 { font-size: clamp(30px, 3.4vw, 44px); line-height: 1.02; font-weight: 800; letter-spacing: -.03em; margin: 0;
+             position: sticky; top: 90px; align-self: start; }
+  .lf .body { max-width: 720px; }
+  .lf p { margin: 0 0 16px; }
+  .lf ul { padding-left: 20px; margin: 0 0 16px; }
+  .lf li { margin: 6px 0; }
+  .lf h3 { font-size: 20px; margin: 28px 0 8px; font-weight: 800; letter-spacing: -.01em; }
+  @media (max-width: 860px) { .lf { grid-template-columns: 1fr; gap: 14px; padding: 36px 0; } .lf > h2 { position: static; } }
+  figure { margin: 24px 0; }
+  figcaption { font-size: 14px; color: var(--fg2); margin-top: 10px; }
   table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 8px 0 20px; }
-  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
-  th { font-weight: 600; color: var(--fg2); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+  th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-weight: 600; color: var(--fg2); font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .tablewrap { overflow-x: auto; }
-  code { font: 14px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--code); padding: 1px 5px;
-         border-radius: 4px; }
-  .note { border-left: 3px solid var(--rule); padding: 2px 0 2px 14px; color: var(--fg2); font-size: 15px; }
-  nav.toc { font-size: 15px; margin: 24px 0 0; }
-  nav.toc a { color: var(--fg2); text-decoration: none; margin-right: 14px; display: inline-block; }
-  nav.toc a:hover { color: var(--accent); text-decoration: underline; }
-  /* hero */
-  .hero { position: relative; height: min(90vh, 820px); min-height: 560px; background: #0b1220; overflow: hidden; }
-  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .hero .over { position: relative; max-width: 1040px; margin: 0 auto; padding: 44px 16px 0; color: #f3f2ee;
-                pointer-events: none; }
-  .hero .kicker { color: #9fb0c8; }
-  .hero h1 { color: #f6f5f1; max-width: 640px; font-size: clamp(30px, 4.6vw, 46px); }
-  .hero .lede { color: #c4cedd; max-width: 560px; font-size: 18px; }
-  .hero .big { font-size: clamp(34px, 6vw, 58px); font-weight: 700; letter-spacing: -.02em; color: #86b6ef;
-               font-variant-numeric: tabular-nums; line-height: 1; margin: 18px 0 4px; }
-  .hero .big small { font-size: 15px; font-weight: 500; color: #9fb0c8; letter-spacing: 0; display: block;
-                     margin-top: 6px; }
-  .hero .cap { position: absolute; left: 16px; right: 16px; bottom: 6px; margin: 0; text-align: right; font-size: 12px; color: #7d8ca3; }
-  .hero .big + .status { margin-top: 12px; }
-  .hero .status { background: rgba(255,255,255,.06); color: #c4cedd; border-color: rgba(255,255,255,.14); }
+  .note { border-left: 3px solid var(--accent); padding: 2px 0 2px 14px; color: var(--fg2); font-size: 15px; }
+
   /* charts */
   .chart svg { width: 100%; height: auto; display: block; }
-  .chart { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 10px 6px; }
+  .chart { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: 16px 12px 8px; }
   .chart .grid { stroke: var(--rule); stroke-width: 1; }
   .chart .tick { fill: var(--fg2); font-size: 12px; }
   .chart .rowlab { fill: var(--fg); font-size: 13.5px; }
@@ -106,194 +197,353 @@
   .chart .dot-before { fill: #86b6ef; stroke: var(--card); stroke-width: 2.5; }
   .chart .dot-after { fill: var(--dot); stroke: var(--card); stroke-width: 2.5; }
   .chart .tl-line { fill: none; stroke: var(--dot); stroke-width: 2.2; }
-  .legend { display: flex; gap: 22px; flex-wrap: wrap; font-size: 14px; color: var(--fg2); margin: 0 4px 8px; }
-  .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px;
-              vertical-align: -1px; }
-  /* scroll reveal */
-  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+  .chart.dim .tl-pt:not(.hl) { opacity: .22 !important; }
+  .chart.dim .rowlab:not(.hl) { opacity: .35; }
+  .legend { display: flex; gap: 22px; flex-wrap: wrap; font-size: 14px; color: var(--fg2); margin: 0 4px 10px; }
+  .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+
+  /* timeline chips */
+  .timeline { padding: 72px 0 24px; }
+  .chips { display: flex; overflow-x: auto; margin: 0 0 22px; border-top: 2px solid var(--fg); scrollbar-width: thin; }
+  .chips button { flex: 1 0 116px; text-align: left; background: none; border: 0; border-right: 1px solid var(--rule);
+                  padding: 12px 12px 14px; font: inherit; color: var(--fg); cursor: pointer; transition: background .2s; }
+  .chips button:last-child { border-right: 0; }
+  .chips button:hover, .chips button:focus-visible, .chips button.on { background: var(--c1); outline: none; }
+  .chips b { display: block; font-size: 26px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .chips span { display: block; font-size: 13px; color: var(--fg2); line-height: 1.25; margin-top: 4px; }
+
+  /* quotes */
+  .quotes { padding: 80px 0 64px; border-top: 1px solid var(--rule); }
+  .quotes .k { font-size: 13px; text-transform: uppercase; letter-spacing: .12em; color: var(--fg2); margin: 0 0 22px; }
+  .qbox { display: grid; }
+  .q { grid-area: 1 / 1; margin: 0; opacity: 0; transition: opacity .8s; }
+  .q.on { opacity: 1; }
+  .q blockquote { margin: 0; font-size: clamp(28px, 3.8vw, 52px); line-height: 1.08; font-weight: 800; letter-spacing: -.03em; max-width: 1080px; }
+  .q cite { display: block; margin-top: 20px; font-style: normal; color: var(--fg2); }
+  .qnav { display: flex; gap: 8px; margin-top: 24px; }
+  .qnav button { width: 34px; height: 6px; border: 0; background: var(--rule); cursor: pointer; padding: 0; }
+  .qnav button.on { background: var(--fg); }
+
+  /* twin statement */
+  .twin { padding: 64px 0 80px; border-top: 1px solid var(--rule); }
+  .twin .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .twin .grid2 p { margin: 0 0 16px; }
+  .twin .big { font-size: clamp(24px, 2.6vw, 34px); line-height: 1.2; font-weight: 300; letter-spacing: -.01em; }
+  .twin .big strong { font-weight: 800; }
+  @media (max-width: 860px) { .twin .grid2 { grid-template-columns: 1fr; gap: 10px; } }
+
+  footer { background: #191919; color: #d8d7d0; padding: 56px 0 40px; }
+  footer .word { font-size: clamp(64px, 14vw, 200px); font-weight: 800; letter-spacing: -.06em; line-height: .85; color: #fafaf6; margin: 0 0 30px; }
+  footer p { max-width: 640px; font-size: 15px; margin: 0 0 10px; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
   .reveal.shown { opacity: 1; transform: none; }
-  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
-  footer { border-top: 1px solid var(--rule); margin-top: 64px; padding-top: 20px; font-size: 14px; color: var(--fg2); }
+  @media (prefers-reduced-motion: reduce) { .reveal, .reveal.slide { opacity: 1; transform: none; transition: none; } }
 </style>
 </head>
 <body>
-<section class="hero" aria-label="Replayed landings">
+
+<header class="bar" id="bar">
+  <a class="home" href="#top" aria-label="Hop-0, back to top">
+    <span class="mark" aria-hidden="true"><svg viewBox="0 0 22 22"><rect x="8.5" y="2" width="5" height="14" rx="2.5" fill="#fafaf6"/><path d="M8.5 13 L4 19 M13.5 13 L18 19" stroke="#fafaf6" stroke-width="1.8"/></svg></span>
+    Hop-0
+  </a>
+  <button class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="menu"><span>Menu</span><i aria-hidden="true"><b></b></i></button>
+</header>
+<nav class="overlay" id="menu" aria-label="Sections">
+  <a href="#layers">The twin <small>six layers</small></a>
+  <a href="#flights">Flights <small>recorded landings</small></a>
+  <a href="#filter">The fix was in the filter</a>
+  <a href="#timeline">Every change, measured</a>
+  <a href="#tools">Trusting the right simulator</a>
+  <a href="#mistakes">Mistakes</a>
+  <a href="#numbers">Numbers</a>
+  <a href="#open">Open problems</a>
+  <a href="#twin">What “digital twin” means here</a>
+</nav>
+
+<section class="hero" id="top" aria-label="Replayed landings">
   <canvas id="hero-canvas" aria-hidden="true"></canvas>
-  <div class="over">
-    <p class="kicker">Engineering log · Phase 0</p>
-    <h1>Hop-0: a small reusable-rocket testbed, built in simulation first</h1>
-    <p class="lede">A 1.9 m, 200 kg vertical-takeoff, vertical-landing hop vehicle. Every part of it lives in software
-      first: flight dynamics, aerodynamics, structure, engine controller and the flight computer's code.</p>
-    <div class="big"><span data-count-from="53" data-count-to="98.7">98.7%</span>
-      <small>landing success in the hardest hardware-in-the-loop scenario, up from 53%</small></div>
-    <span class="status">Simulation and hardware-in-the-loop only. The vehicle has not been built or flown.</span>
+  <div class="feat" id="feat">
+    <p class="k">Replaying the flight software</p>
+    <p class="t" id="feat-t">Eighteen recorded landings</p>
+    <p class="d" id="feat-d">Wind up to 12 m/s, realistic sensors, the same code the flight computer runs.</p>
   </div>
-  <p class="cap">Replayed landings recorded from the flight software at 4x speed. Vehicles drawn larger than scale.</p>
+  <h1>A reusable rocket that lands before it exists</h1>
+  <p class="cap">Recorded landings at 4x speed. Vehicles drawn larger than scale.</p>
 </section>
 
 <main>
+<div class="wrap">
 
-<header class="top">
-  <p class="lede">This page records what worked, what didn't, and how each claim was measured.</p>
-  <nav class="toc">
-    <a href="#stack">The stack</a><a href="#wind">Wind broke the lander</a><a href="#filter">The fix was in the filter</a>
-    <a href="#tools">Trusting the right simulator</a><a href="#mistakes">Mistakes</a><a href="#numbers">Numbers</a>
-    <a href="#open">Open problems</a>
-  </nav>
-</header>
+<section class="intro">
+  <p class="reveal">Hop-0 is a <strong>digital twin</strong> of a small reusable rocket, built before the rocket: a
+    <strong>1.9 m</strong>, <strong>200 kg</strong> vertical-landing hop vehicle whose physics, aerodynamics, structure and
+    flight code all live in software first.</p>
+  <p class="reveal">In the hardest hardware-in-the-loop scenario it now lands
+    <strong><span data-count-from="53" data-count-to="98.7">98.7%</span></strong> of the time, up from 53%, on the same
+    <strong>300</strong> random seeds.</p>
+  <figure class="inset reveal">
+    <img src="assets/cfd_flow_slices.png" alt="Grid of twelve CFD velocity-magnitude slices around the hull at angles of attack from 0 to 180 degrees, with and without legs.">
+    <a class="badge" href="#twin">Simulation only. Not built or flown yet. &darr;</a>
+    <figcaption>CFD velocity magnitude around the vehicle from 0° to 180° angle of attack. Bottom row: with the landing
+      legs, which carry a quarter to a third of the side force.</figcaption>
+  </figure>
+</section>
 
-<figure class="wide reveal">
-  <div class="chart" data-chart="before-after">
-    <div class="legend"><span><i style="background:#86b6ef"></i>Before: when the CFD aerodynamics went in</span>
-      <span><i style="background:var(--dot)"></i>After: current flight software</span></div>
-    <noscript><img src="assets/before_after.png" alt="Landing success before and after in seven HIL scenarios."></noscript>
+<section class="layers" id="layers">
+  <h2 class="display reveal">The twin,<br>layer by layer</h2>
+  <p class="sub reveal">Six models that run together. Each one is checked against something independent of it.</p>
+  <div class="cascade">
+    <a class="lc reveal slide" href="#stack"><div><h3>Plant</h3><span class="go">flight dynamics</span></div>
+      <p>MuJoCo, with mass properties from CAD that change as propellant burns.</p>
+      <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true"><rect x="26" y="6" width="12" height="40" rx="6" fill="currentColor"/><path d="M26 40 L12 58 M38 40 L52 58" stroke="currentColor" stroke-width="4"/></svg></a>
+    <a class="lc reveal slide" href="#stack"><div><h3>Air</h3><span class="go">RANS CFD</span></div>
+      <p>Force and moment tables from 0° to 180° angle of attack, legs included.</p>
+      <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true"><path d="M4 20 Q32 8 60 20 M4 34 Q32 22 60 34 M4 48 Q32 36 60 48" fill="none" stroke="currentColor" stroke-width="4"/></svg></a>
+    <a class="lc reveal slide" href="#stack"><div><h3>Structure</h3><span class="go">finite elements</span></div>
+      <p>Tanks, legs, thrust structure and engine cooling, plus leg drop tests.</p>
+      <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 56 L32 8 L56 56 Z M20 32 L44 32 M14 44 L50 44" fill="none" stroke="currentColor" stroke-width="4"/></svg></a>
+    <a class="lc reveal slide" href="#stack"><div><h3>Guidance</h3><span class="go">navigation and control</span></div>
+      <p>A multi-rate navigation filter and a predictive terminal law.</p>
+      <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="32" cy="32" r="6" fill="currentColor"/></svg></a>
+    <a class="lc reveal slide" href="#stack"><div><h3>Flight code</h3><span class="go">C, MISRA checked</span></div>
+      <p>Matches the Python reference to about 10<sup>-6</sup> and runs on a Cortex-M7 in QEMU.</p>
+      <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true"><path d="M22 14 L6 32 L22 50 M42 14 L58 32 L42 50" fill="none" stroke="currentColor" stroke-width="4"/></svg></a>
+    <a class="lc reveal slide" href="#stack"><div><h3>Loop</h3><span class="go">hardware-in-the-loop</span></div>
+      <p>The flight code as a separate process, over UDP, with latency, loss and sensor faults.</p>
+      <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true"><path d="M50 22 A20 20 0 1 0 52 38" fill="none" stroke="currentColor" stroke-width="4"/><path d="M44 18 L52 22 L48 30" fill="none" stroke="currentColor" stroke-width="4"/></svg></a>
   </div>
-  <figcaption>Landing success in winds up to 12 m/s, C flight software in hardware-in-the-loop, the same random seeds
-    before and after the filter and guidance work described below. "After" also has a ±10° gimbal instead of ±7°;
-    on its own that changes little.</figcaption>
-</figure>
+</section>
 
-<h2 class="reveal" id="stack">The stack</h2>
-<p>The vehicle is a Phase-0 testbed: a 0.45 m hull, four inverted-tripod landing legs, and one 4 kN-class
-  electric-pump liquid engine on a two-axis gimbal. The goal of Phase 0 is a controlled hop and landing. What exists
-  today is the software and analysis around it:</p>
-<ul>
-  <li><strong>Flight dynamics:</strong> a MuJoCo model whose mass properties come from the CAD model and change with
-    propellant load. It includes a spring-damper leg model with a crushable honeycomb stop, a rate-limited engine and
-    pump response from a transient engine model, gimbal backlash, and wind with gusts and shear.</li>
-  <li><strong>Aerodynamics:</strong> force and moment tables from RANS CFD of the vehicle with its legs, over the full
-    0–180° angle-of-attack range, with mesh-convergence and DDES checks.</li>
-  <li><strong>Structure:</strong> finite-element checks (CalculiX) of tanks, legs, thrust structure and engine cooling,
-    and drop-test campaigns of the leg design.</li>
-  <li><strong>Guidance, navigation and control:</strong> a classical controller with a multi-rate navigation filter
-    (50 Hz IMU, sparse and delayed GNSS, radar altimeter).</li>
-  <li><strong>Flight software:</strong> a C port that matches the Python reference to about 10<sup>-6</sup> step by step.
-    It passes static analysis (gcc analyzer, clang-tidy, cppcheck with MISRA C:2012), runs fuzzing under ASan and
-    UBSan, and runs on a Cortex-M7 target in QEMU with the same outputs.</li>
-  <li><strong>Hardware-in-the-loop:</strong> the C flight software runs as a separate process and talks to the
-    simulator over a UDP protocol with timestamps, CRC, injected latency, packet loss and sensor faults.</li>
-</ul>
+<section class="flights" id="flights">
+  <h2 class="display reveal">Flights</h2>
+  <p class="sub reveal">Recorded landings of the flight software in the CFD plant, each with a different sensor suite
+    and wind. Hover or tap one to replay it.</p>
+  <div class="fgrid" id="fgrid"></div>
+</section>
 
-<h2 class="reveal" id="wind">Wind broke the lander</h2>
-<p>With a simple drag model, the controller landed in winds up to 12 m/s more than 96% of the time in HIL. Then
-  that model was replaced with tables from CFD of the vehicle with its legs.</p>
-<figure class="wide reveal">
-  <img src="assets/cfd_flow_slices.png" alt="Grid of twelve CFD velocity-magnitude slices around the hull at angles of attack from 0 to 180 degrees, with and without legs.">
-  <figcaption>CFD velocity magnitude around the vehicle from 0° to 180° angle of attack. The bottom row shows the
-    legs: they carry a quarter to a third of the side force, far below the centre of mass.</figcaption>
-</figure>
-<p>The legs pull the centre of pressure 0.15–0.5 m below the centre of mass in side flow and in descent. Falling tail
-  first, the vehicle is aerodynamically unstable. In HIL the hardest scenario dropped from 293 to 159 landings out of
-  300, and even the clean COTS-sensor case fell to 75%.</p>
-
-<h3>The hardware answer, and why it didn't help</h3>
-<p>The obvious response was hardware. I designed leg fairings and a ±10° gimbal (up from ±7°) and checked both
-  with structural analysis.</p>
-<ul>
-  <li><strong>Fixed fairings made things worse.</strong> In crossflow they act as fins: CFD gave 2.3–2.6 times the leg
-    side force.</li>
-  <li><strong>Free-swivelling fairings passed the structural checks.</strong> But CFD showed only a 9–14% leg-force
-    reduction in hover side wind, because about 60% of the leg force comes from parts that cannot be faired. With
-    their 5.8 kg of extra mass, the simulator landed less often, not more. They were dropped.</li>
-  <li><strong>The ±10° gimbal is feasible</strong> with a re-laid-out aft bay. Its clearance sweep also found an
-    actuator interference that already existed at ±7°. On its own it changes landing rates by almost nothing.</li>
-</ul>
-
-<h2 class="reveal" id="filter">The fix was in the filter, not the hardware</h2>
-<p>The navigation filter predicts the vehicle's rotation from the gimbal torque. With the CFD aerodynamics, the gimbal
-  spends much of its authority holding the aerodynamic moment, and the filter didn't know that moment existed. It kept
-  predicting rotation that wasn't happening, so the attitude estimate drifted exactly when control authority was
-  tightest.</p>
-<p>The fix is one extra state in the filter: an angular-acceleration disturbance, learnt from the gyro residual. It
-  went into Python and C together and is tested for C/Python equivalence. Together with the ±10° gimbal (which on
-  its own changes little), it took the hardest HIL scenario from 159 to 266 of 300.</p>
-<p>The rest of the recovery came from guidance, each step measured in the same HIL scenario:</p>
-<ul>
-  <li>wider tilt limits near the ground, to stop the vehicle arriving at the pad still drifting;</li>
-  <li>a descent-speed limit that keeps the divert feasible when drag is high;</li>
-  <li>higher terminal-gate heights;</li>
-  <li>a predictive terminal law: a finite-horizon LQR that models the attitude-loop lag and plans to null position
-    and velocity at touchdown.</li>
-</ul>
-<figure class="wide reveal">
-  <div class="chart" data-chart="timeline">
-    <noscript><img src="assets/hil_timeline.png" alt="Landings out of 300 in the hardest HIL scenario after each change."></noscript>
+<section id="filter">
+  <div class="banner reveal">
+    <svg class="bg" id="banner-bg" aria-hidden="true"></svg>
+    <div class="in">
+      <h2>Wind broke the lander. The fix was in the filter.</h2>
+      <p>With a simple drag model the lander made 293 of 300 in the hardest HIL scenario. CFD of the vehicle with its
+        legs moved the centre of pressure below the centre of mass, and it fell to 159. Leg fairings and a bigger gimbal
+        did not bring it back. One extra state in the navigation filter, then four guidance changes, did.</p>
+      <a class="cta" href="#wind">Read how</a>
+    </div>
   </div>
-  <figcaption>Landings out of 300 in the hardest scenario (harsh sensors, 200 ms latency, 15% packet loss, wind up to
-    12 m/s) after each change, same 300 episodes every time. Changes that did not hold up in HIL were reverted and are
-    not shown.</figcaption>
-</figure>
+  <figure class="reveal" style="margin-top:28px">
+    <div class="chart" data-chart="before-after">
+      <div class="legend"><span><i style="background:#86b6ef"></i>Before: when the CFD aerodynamics went in</span>
+        <span><i style="background:var(--dot)"></i>After: current flight software</span></div>
+      <noscript><img src="assets/before_after.png" alt="Landing success before and after in seven HIL scenarios." style="width:100%"></noscript>
+    </div>
+    <figcaption>Landing success in winds up to 12 m/s, C flight software in hardware-in-the-loop, the same random seeds
+      before and after. "After" also has a ±10° gimbal instead of ±7°; on its own that changes little.</figcaption>
+  </figure>
+</section>
 
-<h2 class="reveal" id="tools">Trusting the right simulator</h2>
-<p>The hardest part was not the control design but knowing which result to believe. Three tools disagreed at
-  different times: the fast Python simulation, hardware-in-the-loop, and the C code itself.</p>
-<ul>
-  <li><strong>The fast Python loop did not model packet loss, and it twice pointed the wrong way.</strong> A filter
-    gain it recommended made the 20 Hz HIL worst case worse (186 to 172 of 200). I wrote an in-process emulator of the HIL
-    server, with the same random streams, latency, packet-loss and command-horizon logic. It reproduces HIL episode
-    by episode (300 of 300 identical in the deterministic scenarios). Tuning now happens there, on seed sets disjoint
-    from the ones used for confirmation in HIL.</li>
-  <li><strong>The quick diagnostic tool ran a legacy filter mode</strong> (no accelerometer, GNSS every frame, no
-    radar). For two changes it reported regressions that the flight configuration did not have. It now runs the
-    flight filter by default.</li>
-  <li><strong>Float32 against float64 exposed threshold races</strong> in the control law: a timer compared
-    against 1.0 s, and a feed-forward that stepped on and off. Both were fixed with ramps and margins. They now cause
-    no differences larger than rounding.</li>
-</ul>
+<section class="timeline" id="timeline">
+  <h2 class="display reveal">Every change,<br>measured</h2>
+  <p class="sub reveal">The hardest scenario (harsh sensors, 200 ms latency, 15% packet loss, wind up to 12 m/s), the
+    same 300 episodes after every step. Changes that did not hold up in HIL were reverted and are not shown.</p>
+  <div class="chips reveal" id="chips"></div>
+  <figure class="reveal" style="margin-top:0">
+    <div class="chart" data-chart="timeline" id="tl-chart">
+      <noscript><img src="assets/hil_timeline.png" alt="Landings out of 300 in the hardest HIL scenario after each change." style="width:100%"></noscript>
+    </div>
+  </figure>
+</section>
 
-<h2 class="reveal" id="mistakes">Mistakes along the way</h2>
-<p>Each of these produced results that looked fine and were wrong:</p>
-<ul>
-  <li><strong>The simulator ignored the centre of mass.</strong> A MuJoCo body-frame flag kept the CoM at the hull's
-    geometric centre, so every controller before that fix was tuned on the wrong plant.</li>
-  <li><strong>Touchdown speed was measured after the bounce.</strong> It was read after the leg-contact impulse, so
-    early "successful" learned policies were in fact crashing.</li>
-  <li><strong>A "±10° gimbal helps" result was an artifact.</strong> The study overrode the gimbal limit in the
-    simulator and controller but not in the navigation filter's own copy of the constant. The filter then
-    under-modelled gimbal torque by 30%, which happened to offset the missing aerodynamic moment.</li>
-  <li><strong>A double-counted mass.</strong> The unsprung leg masses were counted twice, which made the touchdown
-    lateral speed 45% worse.</li>
-  <li><strong>The same seeds in screening and confirmation.</strong> One seed set was used for both. Part of a
-    screening gain turned out to be specific to it.</li>
-</ul>
+<section class="longform">
 
-<h2 class="reveal" id="numbers">Current numbers</h2>
-<p>All scenarios have mean wind up to 12 m/s with gusts. HIL rows are the C flight software over UDP, lockstep, at
-  50 Hz.</p>
-<div class="tablewrap reveal">
-<table>
-  <thead><tr><th>Scenario</th><th class="num">HIL landings</th></tr></thead>
-  <tbody>
-    <tr><td>COTS sensors / + 5% sensor faults / + 15% packet loss</td><td class="num">100 / 100 / 100 of 100</td></tr>
-    <tr><td>Harsh sensors / + 200 ms latency</td><td class="num">100 / 100 of 100</td></tr>
-    <tr><td>Harsh + 200 ms + 15% loss (two disjoint seed sets)</td><td class="num">296, 294 of 300</td></tr>
-    <tr><td>No radar, 1 Hz GNSS with 200 ms lag</td><td class="num">298 of 300</td></tr>
-    <tr><td>Worst aerodynamic-uncertainty corner (COTS / harsh)</td><td class="num">198 / 198 of 200</td></tr>
-  </tbody>
-</table>
+<div class="lf" id="stack">
+  <h2 class="reveal">The stack</h2>
+  <div class="body reveal">
+    <p>The vehicle is a Phase-0 testbed: a 0.45 m hull, four inverted-tripod landing legs, and one 4 kN-class
+      electric-pump liquid engine on a two-axis gimbal. The goal of Phase 0 is a controlled hop and landing.</p>
+    <ul>
+      <li><strong>Flight dynamics:</strong> a MuJoCo model whose mass properties come from the CAD model and change with
+        propellant load. It includes a spring-damper leg model with a crushable honeycomb stop, a rate-limited engine and
+        pump response from a transient engine model, gimbal backlash, and wind with gusts and shear.</li>
+      <li><strong>Aerodynamics:</strong> force and moment tables from RANS CFD of the vehicle with its legs, over the full
+        0–180° angle-of-attack range, with mesh-convergence and DDES checks.</li>
+      <li><strong>Structure:</strong> finite-element checks (CalculiX) of tanks, legs, thrust structure and engine cooling,
+        and drop-test campaigns of the leg design.</li>
+      <li><strong>Guidance, navigation and control:</strong> a classical controller with a multi-rate navigation filter
+        (50 Hz IMU, sparse and delayed GNSS, radar altimeter).</li>
+      <li><strong>Flight software:</strong> a C port that matches the Python reference to about 10<sup>-6</sup> step by
+        step. It passes static analysis (gcc analyzer, clang-tidy, cppcheck with MISRA C:2012), runs fuzzing under ASan
+        and UBSan, and runs on a Cortex-M7 target in QEMU with the same outputs.</li>
+      <li><strong>Hardware-in-the-loop:</strong> the C flight software runs as a separate process and talks to the
+        simulator over a UDP protocol with timestamps, CRC, injected latency, packet loss and sensor faults.</li>
+    </ul>
+  </div>
 </div>
-<p class="note">"Harsh" sensors: 1.5 m position noise, 1° attitude noise, 1°/s gyro noise and gyro bias. The
-  "200 ms" rows add 150 ms observation and 50 ms actuation latency. A landing counts only if touchdown is below 2 m/s vertical and 1 m/s
-  horizontal, within 6 m of the pad, and the vehicle stays upright.</p>
 
-<h2 class="reveal" id="open">Open problems</h2>
-<ul>
-  <li>The worst aerodynamic-uncertainty corner (hull drag ×1.6, leg drag ×2) with 200 ms latency is still about 93%.
-    It is limited by latency rather than gains.</li>
-  <li>Powered-descent aerodynamics, where the plume covers the base, is not modelled; the CFD descent axial force is an
-    upper bound.</li>
-  <li>The flight-computer and engine-controller boards are schematic-complete but their PCBs are not
-    fabrication-ready, and the power-distribution unit is not designed.</li>
-  <li>The cooling design depends on a film-cooling effectiveness that has to be measured before a regeneratively
-    cooled chamber is built.</li>
-</ul>
+<div class="lf" id="wind">
+  <h2 class="reveal">Wind broke the lander</h2>
+  <div class="body reveal">
+    <p>With a simple drag model, the controller landed in winds up to 12 m/s more than 96% of the time in HIL. Then
+      that model was replaced with tables from CFD of the vehicle with its legs.</p>
+    <p>The legs pull the centre of pressure 0.15–0.5 m below the centre of mass in side flow and in descent. Falling tail
+      first, the vehicle is aerodynamically unstable. In HIL the hardest scenario dropped from 293 to 159 landings out of
+      300, and even the clean COTS-sensor case fell to 75%.</p>
+    <h3>The hardware answer, and why it didn't help</h3>
+    <p>The obvious response was hardware. I designed leg fairings and a ±10° gimbal (up from ±7°) and checked both
+      with structural analysis.</p>
+    <ul>
+      <li><strong>Fixed fairings made things worse.</strong> In crossflow they act as fins: CFD gave 2.3–2.6 times the leg
+        side force.</li>
+      <li><strong>Free-swivelling fairings passed the structural checks.</strong> But CFD showed only a 9–14% leg-force
+        reduction in hover side wind, because about 60% of the leg force comes from parts that cannot be faired. With
+        their 5.8 kg of extra mass, the simulator landed less often, not more. They were dropped.</li>
+      <li><strong>The ±10° gimbal is feasible</strong> with a re-laid-out aft bay. Its clearance sweep also found an
+        actuator interference that already existed at ±7°. On its own it changes landing rates by almost nothing.</li>
+    </ul>
+    <h3>The filter</h3>
+    <p>The navigation filter predicts the vehicle's rotation from the gimbal torque. With the CFD aerodynamics, the gimbal
+      spends much of its authority holding the aerodynamic moment, and the filter didn't know that moment existed. It
+      kept predicting rotation that wasn't happening, so the attitude estimate drifted exactly when control authority was
+      tightest.</p>
+    <p>The fix is one extra state in the filter: an angular-acceleration disturbance, learnt from the gyro residual. It
+      went into Python and C together and is tested for C/Python equivalence. Together with the ±10° gimbal, it took the
+      hardest HIL scenario from 159 to 266 of 300. The rest came from guidance:</p>
+    <ul>
+      <li>wider tilt limits near the ground, to stop the vehicle arriving at the pad still drifting;</li>
+      <li>a descent-speed limit that keeps the divert feasible when drag is high;</li>
+      <li>higher terminal-gate heights;</li>
+      <li>a predictive terminal law: a finite-horizon LQR that models the attitude-loop lag and plans to null position
+        and velocity at touchdown.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="lf" id="tools">
+  <h2 class="reveal">Trusting the right simulator</h2>
+  <div class="body reveal">
+    <p>The hardest part was not the control design but knowing which result to believe. Three tools disagreed at
+      different times: the fast Python simulation, hardware-in-the-loop, and the C code itself.</p>
+    <ul>
+      <li><strong>The fast Python loop did not model packet loss, and it twice pointed the wrong way.</strong> A filter
+        gain it recommended made the 20 Hz HIL worst case worse (186 to 172 of 200). I wrote an in-process emulator of the
+        HIL server, with the same random streams, latency, packet-loss and command-horizon logic. It reproduces HIL
+        episode by episode (300 of 300 identical in the deterministic scenarios). Tuning now happens there, on seed sets
+        disjoint from the ones used for confirmation in HIL.</li>
+      <li><strong>The quick diagnostic tool ran a legacy filter mode</strong> (no accelerometer, GNSS every frame, no
+        radar). For two changes it reported regressions that the flight configuration did not have. It now runs the
+        flight filter by default.</li>
+      <li><strong>Float32 against float64 exposed threshold races</strong> in the control law: a timer compared
+        against 1.0 s, and a feed-forward that stepped on and off. Both were fixed with ramps and margins. They now
+        cause no differences larger than rounding.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="lf" id="mistakes">
+  <h2 class="reveal">Mistakes along the way</h2>
+  <div class="body reveal">
+    <p>Each of these produced results that looked fine and were wrong:</p>
+    <ul>
+      <li><strong>The simulator ignored the centre of mass.</strong> A MuJoCo body-frame flag kept the CoM at the hull's
+        geometric centre, so every controller before that fix was tuned on the wrong plant.</li>
+      <li><strong>Touchdown speed was measured after the bounce.</strong> It was read after the leg-contact impulse, so
+        early "successful" learned policies were in fact crashing.</li>
+      <li><strong>A "±10° gimbal helps" result was an artifact.</strong> The study overrode the gimbal limit in the
+        simulator and controller but not in the navigation filter's own copy of the constant. The filter then
+        under-modelled gimbal torque by 30%, which happened to offset the missing aerodynamic moment.</li>
+      <li><strong>A double-counted mass.</strong> The unsprung leg masses were counted twice, which made the touchdown
+        lateral speed 45% worse.</li>
+      <li><strong>The same seeds in screening and confirmation.</strong> One seed set was used for both. Part of a
+        screening gain turned out to be specific to it.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="lf" id="numbers">
+  <h2 class="reveal">Current numbers</h2>
+  <div class="body reveal">
+    <p>All scenarios have mean wind up to 12 m/s with gusts. HIL rows are the C flight software over UDP, lockstep, at
+      50 Hz.</p>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Scenario</th><th class="num">HIL landings</th></tr></thead>
+      <tbody>
+        <tr><td>COTS sensors / + 5% sensor faults / + 15% packet loss</td><td class="num">100 / 100 / 100 of 100</td></tr>
+        <tr><td>Harsh sensors / + 200 ms latency</td><td class="num">100 / 100 of 100</td></tr>
+        <tr><td>Harsh + 200 ms + 15% loss (two disjoint seed sets)</td><td class="num">296, 294 of 300</td></tr>
+        <tr><td>No radar, 1 Hz GNSS with 200 ms lag</td><td class="num">298 of 300</td></tr>
+        <tr><td>Worst aerodynamic-uncertainty corner (COTS / harsh)</td><td class="num">198 / 198 of 200</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="note">"Harsh" sensors: 1.5 m position noise, 1° attitude noise, 1°/s gyro noise and gyro bias. The
+      "200 ms" rows add 150 ms observation and 50 ms actuation latency. A landing counts only if touchdown is below 2 m/s
+      vertical and 1 m/s horizontal, within 6 m of the pad, and the vehicle stays upright.</p>
+  </div>
+</div>
+
+<div class="lf" id="open">
+  <h2 class="reveal">Open problems</h2>
+  <div class="body reveal">
+    <ul>
+      <li>The worst aerodynamic-uncertainty corner (hull drag ×1.6, leg drag ×2) with 200 ms latency is still about 93%.
+        It is limited by latency rather than gains.</li>
+      <li>Powered-descent aerodynamics, where the plume covers the base, is not modelled; the CFD descent axial force is
+        an upper bound.</li>
+      <li>The flight-computer and engine-controller boards are schematic-complete but their PCBs are not
+        fabrication-ready, and the power-distribution unit is not designed.</li>
+      <li>The cooling design depends on a film-cooling effectiveness that has to be measured before a regeneratively
+        cooled chamber is built.</li>
+    </ul>
+  </div>
+</div>
+
+</section>
+
+<section class="quotes" aria-label="Lessons from the log">
+  <p class="k">From the log</p>
+  <div class="qbox" id="qbox">
+    <figure class="q on"><blockquote>The hardest part was not the control design but knowing which result to believe.</blockquote>
+      <cite>On three simulators that disagreed</cite></figure>
+    <figure class="q"><blockquote>The obvious answer was hardware. The fix was one extra state in the navigation filter.</blockquote>
+      <cite>On leg fairings and a bigger gimbal</cite></figure>
+    <figure class="q"><blockquote>A gain that only shows up in the fast simulator is not a gain.</blockquote>
+      <cite>On a filter change that made HIL worse</cite></figure>
+    <figure class="q"><blockquote>Every controller before that fix was tuned on the wrong plant.</blockquote>
+      <cite>On a centre of mass the simulator ignored</cite></figure>
+  </div>
+  <div class="qnav" id="qnav"></div>
+</section>
+
+<section class="twin" id="twin">
+  <h2 class="display reveal">What “digital twin”<br>means here</h2>
+  <div class="grid2">
+    <p class="big reveal">A twin usually mirrors a machine that already exists. This one comes <strong>first</strong>: the
+      vehicle is designed, flown and broken in software, and only what survives gets built.</p>
+    <div class="reveal">
+      <p>It is a twin in the engineering sense: the physics, the aerodynamics and the structure are modelled from the
+        design, and the code it flies is the code the flight computer will run, not a stand-in for it.</p>
+      <p>Until there is hardware, it has nothing to sync with. The first engine static fires, leg drop tests and tethered
+        hops will be its test: their data goes back into the plant, and the twin either agrees or gets corrected.
+        Nothing on this page has flown.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
 
 <footer>
-  <p>Hasan Melih. Phase 0 of a longer plan toward a small reusable launcher. This page shows methods and results;
-    detailed design data and flight code are not published.</p>
+  <div class="wrap">
+    <p class="word">Hop-0</p>
+    <p>Hasan Melih. Phase 0 of a longer plan toward a small reusable launcher. This page shows methods and results;
+      detailed design data and flight code are not published.</p>
+  </div>
 </footer>
 
-</main>
 <script src="assets/app.js"></script>
 </body>
 </html>
