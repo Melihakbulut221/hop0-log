@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hop-0 engineering log</title>
+<meta name="description" content="A small reusable-rocket hop testbed, developed in simulation and hardware-in-the-loop first. Methods, results and the mistakes along the way.">
+<style>
+  :root {
+    --bg: #fcfcfb;
+    --fg: #0b0b0b;
+    --fg2: #52514e;
+    --rule: #e1e0d9;
+    --accent: #184f95;
+    --card: #ffffff;
+    --code: #f0efec;
+    --figbg: #fcfcfb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1a1a19;
+      --fg: #f3f2ee;
+      --fg2: #c3c2b7;
+      --rule: #34342f;
+      --accent: #86b6ef;
+      --card: #222220;
+      --code: #2c2c2a;
+      --figbg: #fcfcfb;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1a1a19; --fg: #f3f2ee; --fg2: #c3c2b7; --rule: #34342f; --accent: #86b6ef; --card: #222220;
+    --code: #2c2c2a; --figbg: #fcfcfb;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 17px/1.62 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  main { max-width: 740px; margin: 0 auto; padding: 48px 16px 80px; }
+  header.top { border-bottom: 1px solid var(--rule); padding-bottom: 28px; margin-bottom: 8px; }
+  .kicker { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--fg2); margin: 0 0 10px; }
+  h1 { font-size: 34px; line-height: 1.18; margin: 0 0 14px; letter-spacing: -.01em; }
+  .lede { font-size: 19px; color: var(--fg2); margin: 0 0 18px; }
+  .status { display: inline-block; font-size: 14px; border: 1px solid var(--rule); border-radius: 6px; padding: 4px 10px;
+            color: var(--fg2); background: var(--card); }
+  h2 { font-size: 24px; line-height: 1.25; margin: 56px 0 12px; letter-spacing: -.005em; }
+  h3 { font-size: 18px; margin: 32px 0 8px; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  ul { padding-left: 22px; margin: 0 0 16px; }
+  li { margin: 4px 0; }
+  figure { margin: 28px -8px; }
+  figure img { display: block; width: 100%; height: auto; border-radius: 8px; background: var(--figbg);
+               border: 1px solid var(--rule); }
+  figcaption { font-size: 14px; color: var(--fg2); margin-top: 8px; padding: 0 8px; }
+  @media (min-width: 1000px) { figure.wide { margin-left: -120px; margin-right: -120px; } }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 8px 0 20px; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-weight: 600; color: var(--fg2); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tablewrap { overflow-x: auto; }
+  code { font: 14px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--code); padding: 1px 5px;
+         border-radius: 4px; }
+  .note { border-left: 3px solid var(--rule); padding: 2px 0 2px 14px; color: var(--fg2); font-size: 15px; }
+  nav.toc { font-size: 15px; margin: 24px 0 0; }
+  nav.toc a { color: var(--fg2); text-decoration: none; margin-right: 14px; display: inline-block; }
+  nav.toc a:hover { color: var(--accent); text-decoration: underline; }
+  footer { border-top: 1px solid var(--rule); margin-top: 64px; padding-top: 20px; font-size: 14px; color: var(--fg2); }
+</style>
+</head>
+<body>
+<main>
+
+<header class="top">
+  <p class="kicker">Engineering log · Phase 0</p>
+  <h1>Hop-0: a small reusable-rocket testbed, built in simulation first</h1>
+  <p class="lede">A 1.9 m, 200 kg vertical-takeoff, vertical-landing hop vehicle. Before any hardware, every part of it
+    lives in software: the flight dynamics, the aerodynamics, the structure, the engine controller and the flight
+    computer's code. This page records what worked, what didn't, and how each claim was measured.</p>
+  <span class="status">Status: simulation and hardware-in-the-loop only. The vehicle has not been built or flown.</span>
+  <nav class="toc">
+    <a href="#stack">The stack</a><a href="#wind">Wind broke the lander</a><a href="#filter">The fix was in the filter</a>
+    <a href="#tools">Trusting the right simulator</a><a href="#mistakes">Mistakes</a><a href="#numbers">Numbers</a>
+    <a href="#open">Open problems</a>
+  </nav>
+</header>
+
+<figure class="wide">
+  <img src="assets/before_after.png" alt="Dumbbell chart: landing success in seven hardware-in-the-loop scenarios, before and after. COTS sensors rise from 72-75 percent to 100 percent; the hardest scenario, harsh sensors with 200 ms latency and 15 percent packet loss, rises from 53 to 98.7 percent.">
+  <figcaption>The same C flight software, the same random seeds, before and after the filter and guidance work
+    described below.</figcaption>
+</figure>
+
+<h2 id="stack">The stack</h2>
+<p>The vehicle is a Phase-0 testbed: a 0.45 m hull, four inverted-tripod landing legs, and one 4 kN-class
+  electric-pump liquid engine on a two-axis gimbal. The goal of Phase 0 is a controlled hop and landing. What exists
+  today is the software and analysis around it:</p>
+<ul>
+  <li><strong>Flight dynamics:</strong> a MuJoCo model whose mass properties come from the CAD model and change with
+    propellant load. It includes a spring-damper leg model with a crushable honeycomb stop, a rate-limited engine and
+    pump response from a transient engine model, gimbal backlash, and wind with gusts and shear.</li>
+  <li><strong>Aerodynamics:</strong> force and moment tables from RANS CFD of the vehicle with its legs, over the full
+    0–180° angle-of-attack range, with mesh-convergence and DDES checks.</li>
+  <li><strong>Structure:</strong> finite-element checks (CalculiX) of tanks, legs, thrust structure and engine cooling,
+    and drop-test campaigns of the leg design.</li>
+  <li><strong>Guidance, navigation and control:</strong> a classical controller with a multi-rate navigation filter
+    (50 Hz IMU, sparse and delayed GNSS, radar altimeter).</li>
+  <li><strong>Flight software:</strong> a C port that matches the Python reference to about 10<sup>-6</sup> step by step.
+    It passes static analysis (gcc analyzer, clang-tidy, cppcheck with MISRA C:2012), runs fuzzing under ASan and
+    UBSan, and runs on a Cortex-M7 target in QEMU with the same outputs.</li>
+  <li><strong>Hardware-in-the-loop:</strong> the C flight software runs as a separate process and talks to the
+    simulator over a UDP protocol with timestamps, CRC, injected latency, packet loss and sensor faults.</li>
+</ul>
+
+<h2 id="wind">Wind broke the lander</h2>
+<p>With a simple drag model, the controller landed in winds up to 12 m/s more than 96% of the time in HIL. Then
+  that model was replaced with tables from CFD of the vehicle with its legs.</p>
+<figure class="wide">
+  <img src="assets/cfd_flow_slices.png" alt="Grid of twelve CFD velocity-magnitude slices around the hull at angles of attack from 0 to 180 degrees, with and without legs.">
+  <figcaption>CFD velocity magnitude around the vehicle from 0° to 180° angle of attack. The bottom row shows the
+    legs: they carry a quarter to a third of the side force, far below the centre of mass.</figcaption>
+</figure>
+<p>The legs pull the centre of pressure 0.15–0.5 m below the centre of mass in side flow and in descent. Falling tail
+  first, the vehicle is aerodynamically unstable. In HIL the hardest scenario dropped from 293 to 159 landings out of
+  300, and even the clean COTS-sensor case fell to 75%.</p>
+
+<h3>The hardware answer, and why it didn't help</h3>
+<p>The obvious response was hardware. I designed leg fairings and a ±10° gimbal (up from ±7°) and checked both
+  with structural analysis.</p>
+<ul>
+  <li><strong>Fixed fairings made things worse.</strong> In crossflow they act as fins: CFD gave 2.3–2.6 times the leg
+    side force.</li>
+  <li><strong>Free-swivelling fairings passed the structural checks.</strong> But CFD showed only a 9–14% leg-force
+    reduction in hover side wind, because about 60% of the leg force comes from parts that cannot be faired. With
+    their 5.8 kg of extra mass, the simulator landed less often, not more. They were dropped.</li>
+  <li><strong>The ±10° gimbal is feasible</strong> with a re-laid-out aft bay. Its clearance sweep also found an
+    actuator interference that already existed at ±7°. On its own it changes landing rates by almost nothing.</li>
+</ul>
+
+<h2 id="filter">The fix was in the filter, not the hardware</h2>
+<p>The navigation filter predicts the vehicle's rotation from the gimbal torque. With the CFD aerodynamics, the gimbal
+  spends much of its authority holding the aerodynamic moment, and the filter didn't know that moment existed. It kept
+  predicting rotation that wasn't happening, so the attitude estimate drifted exactly when control authority was
+  tightest.</p>
+<p>The fix is one extra state in the filter: an angular-acceleration disturbance, learnt from the gyro residual. It
+  went into Python and C together and is tested for C/Python equivalence. Together with the ±10° gimbal (which on
+  its own changes little), it took the hardest HIL scenario from 159 to 266 of 300.</p>
+<p>The rest of the recovery came from guidance, each step measured in the same HIL scenario:</p>
+<ul>
+  <li>wider tilt limits near the ground, to stop the vehicle arriving at the pad still drifting;</li>
+  <li>a descent-speed limit that keeps the divert feasible when drag is high;</li>
+  <li>higher terminal-gate heights;</li>
+  <li>a predictive terminal law: a finite-horizon LQR that models the attitude-loop lag and plans to null position
+    and velocity at touchdown.</li>
+</ul>
+<figure class="wide">
+  <img src="assets/hil_timeline.png" alt="Chart of landings out of 300 in the hardest HIL scenario after each change: 293 with the simple aero model, 159 with CFD, then 266, 271, 276, 287, 285, 289, 294 and 296.">
+  <figcaption>Landings out of 300 in the hardest scenario after each change. Changes that did not hold up in HIL were
+    reverted and are not shown.</figcaption>
+</figure>
+
+<h2 id="tools">Trusting the right simulator</h2>
+<p>The hardest part was not the control design but knowing which result to believe. Three tools disagreed at
+  different times: the fast Python simulation, hardware-in-the-loop, and the C code itself.</p>
+<ul>
+  <li><strong>The fast Python loop did not model packet loss, and it twice pointed the wrong way.</strong> A filter
+    gain it recommended made the 20 Hz HIL worst case worse (186 to 172 of 200). I wrote an in-process emulator of the HIL
+    server, with the same random streams, latency, packet-loss and command-horizon logic. It reproduces HIL episode
+    by episode (300 of 300 identical in the deterministic scenarios). Tuning now happens there, on seed sets disjoint
+    from the ones used for confirmation in HIL.</li>
+  <li><strong>The quick diagnostic tool ran a legacy filter mode</strong> (no accelerometer, GNSS every frame, no
+    radar). For two changes it reported regressions that the flight configuration did not have. It now runs the
+    flight filter by default.</li>
+  <li><strong>Float32 against float64 exposed threshold races</strong> in the control law: a timer compared
+    against 1.0 s, and a feed-forward that stepped on and off. Both were fixed with ramps and margins. They now cause
+    no differences larger than rounding.</li>
+</ul>
+
+<h2 id="mistakes">Mistakes along the way</h2>
+<p>Each of these produced results that looked fine and were wrong:</p>
+<ul>
+  <li><strong>The simulator ignored the centre of mass.</strong> A MuJoCo body-frame flag kept the CoM at the hull's
+    geometric centre, so every controller before that fix was tuned on the wrong plant.</li>
+  <li><strong>Touchdown speed was measured after the bounce.</strong> It was read after the leg-contact impulse, so
+    early "successful" learned policies were in fact crashing.</li>
+  <li><strong>A "±10° gimbal helps" result was an artifact.</strong> The study overrode the gimbal limit in the
+    simulator and controller but not in the navigation filter's own copy of the constant. The filter then
+    under-modelled gimbal torque by 30%, which happened to offset the missing aerodynamic moment.</li>
+  <li><strong>A double-counted mass.</strong> The unsprung leg masses were counted twice, which made the touchdown
+    lateral speed 45% worse.</li>
+  <li><strong>The same seeds in screening and confirmation.</strong> One seed set was used for both. Part of a
+    screening gain turned out to be specific to it.</li>
+</ul>
+
+<h2 id="numbers">Current numbers</h2>
+<p>All scenarios have mean wind up to 12 m/s with gusts. HIL rows are the C flight software over UDP, lockstep, at
+  50 Hz.</p>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Scenario</th><th class="num">HIL landings</th></tr></thead>
+  <tbody>
+    <tr><td>COTS sensors / + 5% sensor faults / + 15% packet loss</td><td class="num">100 / 100 / 100 of 100</td></tr>
+    <tr><td>Harsh sensors / + 200 ms latency</td><td class="num">100 / 100 of 100</td></tr>
+    <tr><td>Harsh + 200 ms + 15% loss (two disjoint seed sets)</td><td class="num">296, 294 of 300</td></tr>
+    <tr><td>No radar, 1 Hz GNSS with 200 ms lag</td><td class="num">298 of 300</td></tr>
+    <tr><td>Worst aerodynamic-uncertainty corner (COTS / harsh)</td><td class="num">198 / 198 of 200</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="note">"Harsh" sensors: 1.5 m position noise, 1° attitude noise, 1°/s gyro noise and gyro bias. The
+  "200 ms" rows add 150 ms observation and 50 ms actuation latency. A landing counts only if touchdown is below 2 m/s vertical and 1 m/s
+  horizontal, within 6 m of the pad, and the vehicle stays upright.</p>
+
+<h2 id="open">Open problems</h2>
+<ul>
+  <li>The worst aerodynamic-uncertainty corner (hull drag ×1.6, leg drag ×2) with 200 ms latency is still about 93%.
+    It is limited by latency rather than gains.</li>
+  <li>Powered-descent aerodynamics, where the plume covers the base, is not modelled; the CFD descent axial force is an
+    upper bound.</li>
+  <li>The flight-computer and engine-controller boards are schematic-complete but their PCBs are not
+    fabrication-ready, and the power-distribution unit is not designed.</li>
+  <li>The cooling design depends on a film-cooling effectiveness that has to be measured before a regeneratively
+    cooled chamber is built.</li>
+</ul>
+
+<footer>
+  <p>Hasan Melih. Phase 0 of a longer plan toward a small reusable launcher. This page shows methods and results;
+    detailed design data and flight code are not published.</p>
+</footer>
+
+</main>
+</body>
+</html>
