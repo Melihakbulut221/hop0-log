@@ -417,6 +417,42 @@
   .fam p { font-size: 15px; color: var(--fg2); margin: 6px 0 10px; }
   @media (max-width: 860px) { .fam { grid-template-columns: 1fr 1fr; } .fam > div { border-right: 0; padding-left: 0; border-bottom: 1px solid var(--rule); } }
 
+
+  /* life twin */
+  .life { padding: 72px 0 24px; }
+  .lgrid { display: grid; grid-template-columns: 6fr 5fr; gap: 32px; align-items: start; }
+  @media (max-width: 900px) { .lgrid { grid-template-columns: 1fr; } }
+  .lconsole { background: #111b2b; color: #e6ebf2; border-radius: 4px; padding: 22px 22px 18px; }
+  .lc-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+  .lc-top .k { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: #9fb0c8; margin: 0 0 4px; }
+  .lc-n { font-size: clamp(44px, 6vw, 72px); font-weight: 800; letter-spacing: -.04em; line-height: .9; font-variant-numeric: tabular-nums; }
+  .lc-alive { font-size: 30px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: #86b6ef; }
+  .lc-row { display: grid; grid-template-columns: 190px 1fr 58px; gap: 4px 12px; align-items: center; padding: 7px 0; border-top: 1px solid rgba(255,255,255,.08); }
+  .lc-name { font-size: 15px; font-weight: 600; line-height: 1.15; }
+  .lc-name em { display: block; font-style: normal; font-weight: 400; font-size: 12px; color: #9fb0c8; }
+  .lc-track { height: 10px; background: rgba(255,255,255,.09); border-radius: 5px; overflow: hidden; }
+  .lc-track i { display: block; height: 100%; width: 0; background: #86b6ef; border-radius: 5px; }
+  .lc-row.hot .lc-track i { background: #e0673d; }
+  .lc-val { font-size: 14px; text-align: right; font-variant-numeric: tabular-nums; }
+  .lc-rep { grid-column: 2 / 4; font-size: 12px; color: #e0a03c; min-height: 0; }
+  .lc-rep:empty { display: none; }
+  .lc-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+  .lc-log { font-size: 14px; color: #c8d2e0; margin: 0; flex: 1 1 240px; }
+  .lc-play { font: inherit; font-weight: 600; font-size: 15px; background: #fafaf6; color: #191919; border: 0; border-radius: 999px; padding: 10px 18px; cursor: pointer; }
+  .lc-play:disabled { opacity: .6; cursor: default; }
+  @media (max-width: 560px) { .lc-row { grid-template-columns: 1fr 52px; } .lc-track { grid-column: 1 / 3; grid-row: 2; } .lc-rep { grid-column: 1 / 3; } }
+  .life-bar { stroke: #86b6ef; stroke-width: 7; stroke-linecap: round; }
+  .life-bar.policy { stroke-dasharray: 2 6; }
+  .ltiles { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 2px solid var(--fg); margin-top: 30px; }
+  .ltiles > div { padding: 14px 14px 8px 0; }
+  .ltiles b { display: block; font-size: 34px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .ltiles span { font-size: 14px; color: var(--fg2); }
+  @media (max-width: 760px) { .ltiles { grid-template-columns: 1fr 1fr; } }
+  .lnotes { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 40px; margin-top: 30px; }
+  .lnotes h3 { font-size: 22px; font-weight: 800; letter-spacing: -.02em; margin: 0 0 8px; }
+  .lnotes p { margin: 0; }
+  @media (max-width: 760px) { .lnotes { grid-template-columns: 1fr; } }
+
   footer { background: #191919; color: #d8d7d0; padding: 56px 0 40px; }
   footer .word { font-size: clamp(64px, 14vw, 200px); font-weight: 800; letter-spacing: -.06em; line-height: .85; color: #fafaf6; margin: 0 0 30px; }
   footer p { max-width: 640px; font-size: 15px; margin: 0 0 10px; }
@@ -443,6 +479,7 @@
   <a href="#boards">The boards <small>FC-0, ECU-1, INV-1</small></a>
   <a href="#wiring">How it's wired</a>
   <a href="#flights">Flights <small>recorded landings</small></a>
+  <a href="#life">What each flight costs <small>life twin</small></a>
   <a href="#filter">The fix was in the filter</a>
   <a href="#timeline">Every change, measured</a>
   <a href="#tools">Trusting the right simulator</a>
@@ -894,6 +931,52 @@
   <div class="fgrid" id="fgrid"></div>
 </section>
 
+
+<section class="life" id="life">
+  <h2 class="display reveal">What each<br>flight costs</h2>
+  <p class="sub reveal">The twin keeps a wear account. Every flight record is turned into damage for each part that wears
+    out: the chamber's hot wall, the pump battery, the shocks, the honeycomb, the struts, the welded hull zones and the
+    gimbal actuators. The flights here are 600 hardware-in-the-loop flights of the current flight software in the
+    hardest scenario, so this is a cautious load spectrum.</p>
+  <div class="lgrid">
+    <div class="lconsole reveal" id="life-console" aria-live="off">
+      <div class="lc-top">
+        <div><p class="k">Flights flown</p><div class="lc-n">0</div></div>
+        <div style="text-align:right"><p class="k">Chance it is still flying</p><div class="lc-alive">100%</div></div>
+      </div>
+      <div class="lc-bars"></div>
+      <div class="lc-foot"><p class="lc-log"></p><button type="button" class="lc-play">Fly again</button></div>
+    </div>
+    <div class="reveal">
+      <div class="chart" id="life-chart"><div class="legend"><span><i style="background:var(--dot)"></i>median, nominal assumptions</span>
+        <span><i style="background:#86b6ef"></i>chamber with pessimistic film cooling</span></div></div>
+      <p class="note" style="margin-top:14px">Wear bars use the mean damage per flight. The chance of still flying uses the one loss
+        in 600 flights; its 95% interval is 0.03% to 0.9% per flight, so the curve is uncertain by a factor of a few.</p>
+    </div>
+  </div>
+  <div class="ltiles reveal">
+    <div><b>2.5 g</b><span>mean peak landing load; 99th percentile 3.4 g</span></div>
+    <div><b>0 / 561</b><span>landings that crushed a honeycomb cartridge</span></div>
+    <div><b>22%</b><span>of the shock stroke used on average, 59% at most</span></div>
+    <div><b>20%</b><span>of the pump battery used per hop on average</span></div>
+  </div>
+  <div class="lnotes">
+    <div class="reveal"><h3>Loss, not wear, sets the life</h3><p>The first part to wear out is the chamber's hot wall, after about
+      1,400 flights, 780 if film cooling turns out at the pessimistic end. That is twenty times the engine's requirement. But at
+      one loss in 600 flights in this scenario, the vehicle is more likely to be lost than worn out. Reliability is where the
+      work goes next.</p></div>
+    <div class="reveal"><h3>What the numbers rest on</h3><p>Leg loads come from replaying each HIL flight at the physics rate and
+      checking it against the HIL log, episode by episode. The battery cycle life, the weld fatigue class and the shock service
+      interval are assumptions until a datasheet or a test replaces them; the twin says which.</p></div>
+    <div class="reveal"><h3>A bug it found</h3><p>Building the twin exposed a sign error in the simulator's honeycomb limiter: past
+      its crush point it stiffened the leg instead of capping the force. No landing in these records reached that point, so no
+      result changes, but it would have mattered for crash studies.</p></div>
+    <div class="reveal"><h3>Next: real data</h3><p>The same step that adds a simulated flight will add a real one, from telemetry and
+      a stroke sensor on each leg. The first static fires and drop tests will replace the assumptions one by one.</p></div>
+  </div>
+  <script type="application/json" id="life-data">{"per_flight": {"chamber": 0.0007000047278176741, "battery": 0.00042551953754794915, "honeycomb": 0.0, "shock": 0.019999999999999997, "strut": 7.476101347153706e-16, "structure": 7.583230206918308e-06, "actuators": 1.523306639928699e-05}, "median": {"chamber": 1429.0, "battery": 2351.0, "honeycomb": 20000.0, "shock": 50.0, "strut": 20000.0, "structure": 20000.0, "actuators": 20000.0}, "pess_chamber": 780.0, "p_loss": 0.0016666666666666668, "g": [2.46, 3.42, 3.87]}</script>
+</section>
+
 <section id="filter">
   <div class="banner reveal">
     <svg class="bg" id="banner-bg" aria-hidden="true"></svg>
@@ -1118,5 +1201,6 @@
 <script src="assets/app.js"></script>
 <script src="assets/parts.js"></script>
 <script src="assets/mech.js"></script>
+<script src="assets/life.js"></script>
 </body>
 </html>
