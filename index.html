@@ -232,6 +232,191 @@
   .twin .big strong { font-weight: 800; }
   @media (max-width: 860px) { .twin .grid2 { grid-template-columns: 1fr; gap: 10px; } }
 
+
+  /* exploded view */
+  .parts { padding: 72px 0 24px; }
+  .xp { display: grid; grid-template-columns: 7fr 5fr; gap: 40px; position: relative; }
+  .xp-fig { position: sticky; top: 76px; height: calc(100vh - 96px); background: var(--card); border: 1px solid var(--rule); border-radius: 4px; }
+  .xp-fig svg { width: 100%; height: 100%; display: block; }
+  .xp-steps { padding: 10vh 0 30vh; }
+  .xp-step { min-height: 72vh; display: flex; align-items: center; }
+  .xp-step > div { opacity: .28; transition: opacity .5s; }
+  .xp-step.on > div { opacity: 1; }
+  .xp-step .n { font-size: 13px; text-transform: uppercase; letter-spacing: .12em; color: var(--accent); margin: 0 0 8px; font-weight: 600; }
+  .xp-step h3 { font-size: clamp(30px, 3.4vw, 46px); line-height: 1; font-weight: 800; letter-spacing: -.035em; margin: 0 0 14px; }
+  .xp-step p { margin: 0 0 12px; }
+  @media (max-width: 860px) {
+    .xp { grid-template-columns: 1fr; gap: 0; }
+    .xp-fig { top: 64px; height: 56vh; z-index: 2; }
+    .xp-steps { padding: 4vh 0 20vh; }
+    .xp-step { min-height: 64vh; align-items: flex-start; padding-top: 3vh; }
+  }
+  .xp-gridline { fill: none; stroke: var(--rule); stroke-width: .6; opacity: .7; }
+  .xp-ground { stroke: var(--fg2); stroke-width: 1.5; }
+  .xp-g { transition: opacity .45s; }
+  .xp-g.dim { opacity: .16; }
+  #xp-svg rect, #xp-svg path, #xp-svg circle { stroke-linejoin: round; }
+  .xp-skin { fill: #c9c8c0; stroke: #7c7b75; stroke-width: 1; }
+  .xp-frame, .xp-beam { fill: #8f8e88; stroke: #5b5a55; stroke-width: 1; }
+  .xp-plate { fill: #a9a8a1; stroke: #5b5a55; stroke-width: 1; }
+  .xp-doubler { fill: #7c7b75; }
+  .xp-load { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-dasharray: 8 8; opacity: 0; }
+  svg[data-step="7"] .xp-load { opacity: 1; animation: xpflow 1s linear infinite; }
+  .xp-strut { stroke: #4a4a46; stroke-width: 5; stroke-linecap: round; }
+  .xp-strut2 { stroke: #6f6e69; stroke-width: 3.5; stroke-linecap: round; }
+  .xp-shock { stroke: #c4471f; stroke-width: 10; stroke-linecap: round; }
+  .xp-piston { stroke: #e8e2cf; stroke-width: 4; stroke-linecap: round; }
+  .xp-foot { fill: #4a4a46; }
+  .xp-switch { fill: #8f8e88; }
+  .xp-switch.on { fill: #3fae6f; }
+  .xp-clevis { fill: var(--card); stroke: #4a4a46; stroke-width: 2; }
+  .xp-chamber { fill: #b9773f; stroke: #7c4632; stroke-width: 1.5; }
+  .xp-channel { stroke: #7c4632; stroke-width: 1; opacity: .7; }
+  .xp-inj { fill: #a9a8a1; stroke: #5b5a55; stroke-width: 1.2; }
+  .xp-ign { fill: #d8c8a4; stroke: #7c4632; stroke-width: 1; }
+  .xp-yoke, .xp-cross, .xp-bracket { fill: #6f6e69; stroke: #3d3d3a; stroke-width: 1; }
+  .xp-ring { fill: none; stroke: #3d3d3a; stroke-width: 2; }
+  .xp-ema { stroke: #213654; stroke-width: 9; stroke-linecap: round; }
+  .xp-emarod { stroke: #8d97a8; stroke-width: 3; stroke-linecap: round; }
+  .xp-plume { fill: #ffb45a; opacity: 0; }
+  .xp-pump { fill: #2f4d43; stroke: #1d322b; stroke-width: 1; }
+  .xp-imp { stroke: #e8e7e1; stroke-width: 2.5; stroke-linecap: round; }
+  .xp-valve { fill: #9aa0ba; stroke: #3d3d3a; stroke-width: 1; }
+  .xp-hose { fill: none; stroke: #2f4d43; stroke-width: 4; stroke-linecap: round; }
+  .xp-qd { fill: var(--card); stroke: #2f4d43; stroke-width: 2.5; }
+  .xp-line { stroke: #2f4d43; stroke-width: 3; }
+  .xp-flow { stroke-dasharray: 6 7; }
+  svg[data-step="4"] .xp-hose, svg[data-step="6"] .xp-current { animation: xpflow .9s linear infinite; }
+  @keyframes xpflow { to { stroke-dashoffset: -26; } }
+  .xp-batt { fill: #d8c8a4; stroke: #8c7b56; stroke-width: 1.2; }
+  .xp-cell { stroke: #8c7b56; stroke-width: .8; }
+  .xp-inv { fill: #3d3d3a; stroke: #191919; stroke-width: 1; }
+  .xp-fin { stroke: #6f6e69; stroke-width: 2; }
+  .xp-pdu { fill: #8c7b56; }
+  .xp-radar { fill: #213654; }
+  .xp-beamline { fill: none; stroke: #213654; stroke-width: 1.5; stroke-dasharray: 4 5; opacity: .5; }
+  .xp-current { fill: none; stroke: #c4471f; stroke-width: 2; opacity: .8; }
+  .xp-tank { fill: #eef1f4; stroke: none; }
+  .xp-tankline { fill: none; stroke: #5b5a55; stroke-width: 1.5; }
+  .xp-liq-lox { fill: #86b6ef; opacity: .75; }
+  .xp-liq-rp1 { fill: #d8b370; opacity: .75; }
+  .xp-yring { fill: #3d3d3a; }
+  .xp-baffle { stroke: #5b5a55; stroke-width: 2.5; }
+  .xp-raceway { fill: #a9a8a1; stroke: #5b5a55; stroke-width: 1; }
+  .xp-heline { stroke: #9aa0ba; stroke-width: 2.5; stroke-dasharray: 5 4; }
+  .xp-deck { fill: #8f8e88; stroke: #5b5a55; stroke-width: 1; }
+  .xp-rib { stroke: #5b5a55; stroke-width: 2; }
+  .xp-box { fill: #213654; stroke: #0f1c30; stroke-width: 1; }
+  .xp-fts { fill: #7c4632; }
+  .xp-imu { fill: #2a78d6; }
+  .xp-led { fill: #33445e; }
+  .xp-led.on { fill: #5fd39a; }
+  .xp-copv { fill: #9aa0ba; stroke: #5d6380; stroke-width: 1.5; }
+  .xp-band { stroke: #5d6380; stroke-width: 3; }
+  .xp-strutthin { stroke: #8f8e88; stroke-width: 2.5; }
+  .xp-reg { fill: #6d7391; stroke: #3d3d3a; stroke-width: 1; }
+  .xp-radome { fill: #e8e2cf; stroke: #8c7b56; stroke-width: 1.2; }
+  .xp-ant { fill: #213654; }
+  .xp-arc { fill: none; stroke: #2a78d6; stroke-width: 2; opacity: 0; }
+  svg[data-step="1"] .xp-arc { animation: xparc 1.6s ease-out infinite; }
+  @keyframes xparc { 0% { opacity: 0; } 30% { opacity: .9; } 100% { opacity: 0; } }
+  .xp-leader { fill: none; stroke: var(--fg); stroke-width: 1; opacity: .6; }
+  .xp-dot { fill: var(--accent); stroke: var(--card); stroke-width: 1.5; }
+  .xp-ltext { fill: var(--fg); font-size: 20px; font-weight: 600; paint-order: stroke; stroke: var(--card); stroke-width: 5px; stroke-linejoin: round; }
+  .xp-lab { animation: xpin .45s ease both; }
+  @keyframes xpin { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .xp-lab, svg .xp-load, svg .xp-hose, svg .xp-current, svg .xp-arc { animation: none !important; } }
+
+  /* boards */
+  .boards { padding: 72px 0 24px; }
+  .tabs { display: flex; gap: 0; border-top: 2px solid var(--fg); margin: 0 0 24px; overflow-x: auto; }
+  .tabs button { flex: 1 0 150px; text-align: left; background: none; border: 0; border-right: 1px solid var(--rule); padding: 14px 14px 16px;
+                 font: inherit; color: var(--fg2); cursor: pointer; }
+  .tabs button:last-child { border-right: 0; }
+  .tabs button b { display: block; font-size: 24px; font-weight: 800; letter-spacing: -.02em; color: var(--fg); }
+  .tabs button[aria-selected="true"] { background: var(--c1); color: var(--fg); }
+  .tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .bpanel { display: grid; grid-template-columns: 7fr 5fr; gap: 32px; align-items: start; }
+  .bpanel.full { display: block; }
+  .bpanel[hidden] { display: none; }
+  @media (max-width: 860px) { .bpanel { grid-template-columns: 1fr; } }
+  .pcb-fig { background: #0f2a22; border-radius: 4px; padding: 6px; }
+  .pcb { width: 100%; height: auto; display: block; }
+  .pcb-board { fill: #1d5040; stroke: #d8c8a4; stroke-width: 3; }
+  .pcb-zone { fill: rgba(255,255,255,.05); stroke: rgba(216,200,164,.35); stroke-dasharray: 6 6; }
+  .pcb-zlab { fill: #b9c9bf; font-size: 15px; }
+  .pcb-hole { fill: #0f2a22; stroke: #d8c8a4; stroke-width: 3; }
+  .pcb-ic rect { fill: #1b1b1a; stroke: #3d3d3a; }
+  .pcb-ic text { fill: #c9c8c0; font-size: 15px; font-weight: 600; }
+  .pcb-ic.mcu rect { fill: #111; stroke: #d8c8a4; }
+  .pcb-trace { fill: none; stroke: #c9a24a; stroke-width: 2.2; opacity: .55; }
+  .pcb-trace.hl { opacity: 1; stroke: #ffd27a; stroke-width: 3.5; }
+  .pcb-conn rect, .pcb-conn circle { fill: #e8e7e1; stroke: #191919; stroke-width: 1; cursor: pointer; transition: fill .2s; }
+  .pcb-conn circle.hole { fill: #1d5040; }
+  .pcb-conn .pcb-ref { fill: #fafaf6; font-size: 16px; font-weight: 700; paint-order: stroke; stroke: #1d5040; stroke-width: 4px; pointer-events: none; }
+  .pcb-conn.hl rect, .pcb-conn.hl circle:not(.hole), .pcb-conn:hover rect { fill: #e0673d; }
+  .pcb-conn:focus { outline: none; }
+  .pcb-fig.dim .pcb-conn:not(.hl) { opacity: .45; }
+  .pcb-info { min-height: 3.2em; font-size: 15px; color: var(--fg2); margin: 12px 0 0; }
+  .pcb-info b { color: var(--fg); }
+  .pcb-info em, .pcb-list em { font-style: normal; color: var(--fg2); }
+  .bpanel h3 { font-size: 30px; line-height: 1.05; font-weight: 800; letter-spacing: -.03em; margin: 0 0 10px; }
+  .bpanel .role { font-size: 19px; margin: 0 0 14px; }
+  .bpanel ul.facts { padding-left: 18px; margin: 0 0 14px; font-size: 16px; }
+  .bpanel ul.facts li { margin: 4px 0; }
+  .status-tag { display: inline-block; font-size: 13px; font-weight: 600; border-radius: 999px; padding: 4px 10px; background: var(--c4); color: var(--c4fg); margin: 0 0 14px; }
+  .pcb-list { list-style: none; padding: 0; margin: 10px 0 0; border-top: 1px solid var(--rule); font-size: 14px; max-height: 360px; overflow-y: auto; }
+  .pcb-list li { display: grid; grid-template-columns: 42px 1fr; gap: 2px 10px; padding: 7px 4px; border-bottom: 1px solid var(--rule); cursor: default; }
+  .pcb-list li em { grid-column: 2; font-size: 13px; }
+  .pcb-list li.hl, .pcb-list li:focus { background: var(--c1); outline: none; }
+  .nyd { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .nyd { grid-template-columns: 1fr; } }
+  .nyd > div { border: 1px dashed var(--fg2); border-radius: 4px; padding: 20px; }
+  .nyd h4 { margin: 0 0 6px; font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+  .nyd p { margin: 0; font-size: 16px; color: var(--fg2); }
+
+  /* wiring */
+  .wiring { padding: 72px 0 24px; }
+  .wire-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: 10px; }
+  #wire-svg { display: block; width: 100%; min-width: 760px; height: auto; }
+  .w-node rect { fill: var(--bg); stroke: var(--fg2); stroke-width: 1.2; transition: opacity .3s; }
+  .w-node text { fill: var(--fg); font-size: 15px; font-weight: 600; }
+  .w-node .w-sub { fill: var(--fg2); font-size: 12.5px; font-weight: 400; }
+  .w-board rect { fill: var(--c5); stroke: var(--c5); }
+  .w-board text { fill: #fafaf6; }
+  .w-board .w-sub { fill: #c8d2e0; }
+  .w-pwr rect { fill: var(--c4); stroke: #8c7b56; }
+  .w-pwr text { fill: var(--c4fg); }
+  .w-bench rect { stroke-dasharray: 5 4; }
+  .w-edge { fill: none; stroke-width: 2; transition: opacity .3s, stroke-width .2s; }
+  .w-hit { fill: none; stroke: transparent; stroke-width: 16; cursor: pointer; }
+  .w-hit:focus { outline: none; }
+  .w-can { stroke: #2a78d6; stroke-width: 2.6; }
+  .w-data { stroke: var(--fg2); }
+  .w-rf { stroke: var(--fg2); stroke-dasharray: 2 5; }
+  .w-disc { stroke: var(--fg2); stroke-dasharray: 8 4; }
+  .w-safe { stroke: var(--accent); stroke-width: 2.6; stroke-dasharray: 10 5; animation: xpflow 1.4s linear infinite; }
+  .w-power { stroke: #8c7b56; stroke-width: 4.5; stroke-dasharray: 10 8; animation: xpflow 1.1s linear infinite; }
+  .w-bench { stroke: var(--rule); stroke-dasharray: 3 5; }
+  .w-pkt-can { fill: #2a78d6; stroke: var(--card); stroke-width: 1.5; }
+  .w-pkt-data { fill: var(--fg2); }
+  #wire-svg.dim .w-edge:not(.hl), #wire-svg.dim .w-pkt { opacity: .15; }
+  #wire-svg.dim .w-node:not(.hl) rect { opacity: .35; }
+  .w-edge.hl { stroke-width: 5; opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .w-safe, .w-power { animation: none; } }
+  .wlegend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--fg2); margin: 14px 0 0; }
+  .wlegend i { display: inline-block; width: 26px; height: 0; border-top: 3px solid; vertical-align: 4px; margin-right: 8px; }
+  .wire-info { min-height: 3.2em; font-size: 16px; margin: 12px 0 0; color: var(--fg2); }
+  .wire-info b { color: var(--fg); }
+  .wire-info em { font-style: normal; }
+  .fam { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 32px; border-top: 2px solid var(--fg); }
+  .fam > div { padding: 14px 16px 6px 0; border-right: 1px solid var(--rule); padding-left: 14px; }
+  .fam > div:first-child { padding-left: 0; }
+  .fam > div:last-child { border-right: 0; }
+  .fam b { display: block; font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
+  .fam p { font-size: 15px; color: var(--fg2); margin: 6px 0 10px; }
+  @media (max-width: 860px) { .fam { grid-template-columns: 1fr 1fr; } .fam > div { border-right: 0; padding-left: 0; border-bottom: 1px solid var(--rule); } }
+
   footer { background: #191919; color: #d8d7d0; padding: 56px 0 40px; }
   footer .word { font-size: clamp(64px, 14vw, 200px); font-weight: 800; letter-spacing: -.06em; line-height: .85; color: #fafaf6; margin: 0 0 30px; }
   footer p { max-width: 640px; font-size: 15px; margin: 0 0 10px; }
@@ -252,6 +437,9 @@
 </header>
 <nav class="overlay" id="menu" aria-label="Sections">
   <a href="#layers">The twin <small>six layers</small></a>
+  <a href="#parts">Take it apart <small>the vehicle</small></a>
+  <a href="#boards">The boards <small>FC-0, ECU-1, INV-1</small></a>
+  <a href="#wiring">How it's wired</a>
   <a href="#flights">Flights <small>recorded landings</small></a>
   <a href="#filter">The fix was in the filter</a>
   <a href="#timeline">Every change, measured</a>
@@ -314,6 +502,159 @@
       <p>The flight code as a separate process, over UDP, with latency, loss and sensor faults.</p>
       <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true"><path d="M50 22 A20 20 0 1 0 52 38" fill="none" stroke="currentColor" stroke-width="4"/><path d="M44 18 L52 22 L48 30" fill="none" stroke="currentColor" stroke-width="4"/></svg></a>
   </div>
+</section>
+
+
+<section class="parts" id="parts">
+  <h2 class="display reveal">Take it apart</h2>
+  <p class="sub reveal">A section through the CAD model, nose to feet. Scroll and it comes apart one subsystem at a time.
+    Shapes are simplified; heights and positions follow the model.</p>
+  <div class="xp" id="xp">
+    <div class="xp-fig"><svg id="xp-svg" viewBox="0 0 700 1110" role="img" aria-label="Exploded section of the Hop-0 vehicle; the highlighted subsystem is described next to it."></svg></div>
+    <div class="xp-steps">
+      <article class="xp-step on"><div><p class="n">The whole vehicle</p><h3>1.9 m, five bays</h3>
+        <p>Nose, forward avionics bay, two propellant tanks with an intertank between them, and an aft bay that holds
+          the engine, pumps, power electronics and the legs. About 95 kg dry by the CAD estimate, about 200 kg fuelled.</p>
+        <p>The tanks are the hull: there is no outer shell around them.</p></div></article>
+      <article class="xp-step"><div><p class="n">01 · Nose and pressurant</p><h3>Radome and helium</h3>
+        <p>A glass-fibre radome keeps the GNSS antenna and the telemetry link radio-transparent. Under it, a helium
+          composite overwrapped pressure vessel sits on its own ring frame, held at its equator by a band and four struts.</p>
+        <p>Its regulator and latch valve pressurise both tanks.</p></div></article>
+      <article class="xp-step"><div><p class="n">02 · Avionics deck</p><h3>The flight computer's floor</h3>
+        <p>A ribbed aluminium deck carries the flight computer in its enclosure, the RTK GNSS receiver, the telemetry
+          radio and the flight termination unit, which has its own battery. The IMU and the avionics battery hang
+          underneath.</p>
+        <p>The ribs are there for stiffness: the deck's first structural mode is above 160 Hz.</p></div></article>
+      <article class="xp-step"><div><p class="n">03 · Tanks</p><h3>Two tanks that are also the airframe</h3>
+        <p>RP-1 above, liquid oxygen below, in separate aluminium tanks with elliptical domes. Y-rings carry the load from
+          the skirts into the tank walls at each weld. A ring baffle in each tank damps slosh at the fill level the
+          vehicle lands with.</p>
+        <p>The intertank carries the pressurisation lines; an external raceway takes the RP-1 feed and the harness
+          down past the oxygen tank.</p></div></article>
+      <article class="xp-step"><div><p class="n">04 · Feed</p><h3>Electric pumps</h3>
+        <p>Each propellant has its own pump: a brushless motor under a volute, a pre-valve on the inlet and a main
+          valve on the outlet. Flexible hoses with a loop let the engine gimbal without loading the lines.</p>
+        <p>Fill and drain valves end in quick-disconnects for the ground side.</p></div></article>
+      <article class="xp-step"><div><p class="n">05 · Engine</p><h3>Chamber, injector, gimbal</h3>
+        <p>A regeneratively cooled chamber: the fuel runs through channels in the wall before it is injected. A pintle
+          injector, a spark-torch igniter, and a cardan joint under the thrust structure.</p>
+        <p>Two electromechanical actuators push on a ring around the chamber and swing the engine ±10° in pitch and
+          yaw. A clearance sweep over every corner of that range checks that nothing touches.</p></div></article>
+      <article class="xp-step"><div><p class="n">06 · Power</p><h3>A battery that drives the pumps</h3>
+        <p>A LiPo pack feeds the two pump inverters, one per pump, through a power-distribution unit with a pre-charge
+          resistor and a contactor that the engine controller switches.</p>
+        <p>The radar altimeter looks straight down from the aft bay.</p></div></article>
+      <article class="xp-step"><div><p class="n">07 · Structure</p><h3>Where the loads go</h3>
+        <p>The aft skirt carries everything below the tanks. Crossed box beams and a centre plate take the engine's
+          thrust and the gimbal loads into a thrust ring, and from there into the frame that the legs attach to.</p>
+        <p>Doubler plates spread the leg loads where the struts meet the skin; a base frame closes the bottom.</p></div></article>
+      <article class="xp-step"><div><p class="n">08 · Legs</p><h3>Four inverted tripods</h3>
+        <p>Each leg has a primary strut with a coil-over shock and a crushable honeycomb cartridge behind it, two
+          secondary struts, and a foot. Clevises attach the struts to the body; rod ends close the strut tubes.</p>
+        <p>A switch in each foot tells the flight computer it is on the ground. The leg design went through
+          drop-test campaigns in simulation before it went into the flight model.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="boards" id="boards">
+  <h2 class="display reveal">The boards</h2>
+  <p class="sub reveal">Three printed circuit boards, drawn from their layouts. Hover a connector, on the board or in the
+    list, to see what plugs into it.</p>
+  <div class="tabs reveal" id="board-tabs" role="tablist" aria-label="Boards">
+    <button role="tab" id="tab-fc0" aria-controls="panel-fc0" aria-selected="true"><b>FC-0</b>flight computer</button>
+    <button role="tab" id="tab-ecu" aria-controls="panel-ecu" aria-selected="false" tabindex="-1"><b>ECU-1</b>engine controller</button>
+    <button role="tab" id="tab-inv" aria-controls="panel-inv" aria-selected="false" tabindex="-1"><b>INV-1</b>pump inverter, ×2</button>
+    <button role="tab" id="tab-nyd" aria-controls="panel-nyd" aria-selected="false" tabindex="-1"><b>Not yet</b>designed</button>
+  </div>
+  <div class="bpanel" id="panel-fc0" role="tabpanel" aria-labelledby="tab-fc0" data-board="fc0">
+    <div><div class="pcb-fig"></div><p class="pcb-info">120 × 90 mm, six layers. Fifteen connectors, all on the edges so the cables leave outward.</p></div>
+    <div>
+      <h3>FC-0 flight computer</h3>
+      <p class="role">Runs the flight software at 50 Hz: reads every sensor, estimates the state, and commands the engine,
+        the gimbal and the RCS.</p>
+      <span class="status-tag">Routed · not ready to fabricate</span>
+      <ul class="facts">
+        <li>STM32H723 Cortex-M7 with a double-precision FPU. Instruction counts in emulation put the flight software at 1–2% of each 20 ms frame.</li>
+        <li>IMU on the board, a place for an external tactical IMU, RTK GNSS, barometer.</li>
+        <li>Three CAN-FD buses: propulsion, gimbal and RCS, auxiliary.</li>
+        <li>16 MB flash logs the whole flight; FRAM keeps the last records through a power loss.</li>
+        <li>An external watchdog and an isolated flight-termination interface that do not depend on the software.</li>
+        <li>286 parts. Schematic passes ERC; every pin checked against the vendor's pin data. 22 connections left to
+          finish by hand after autorouting.</li>
+      </ul>
+      <ul class="pcb-list" aria-label="FC-0 connectors"></ul>
+    </div>
+  </div>
+  <div class="bpanel" id="panel-ecu" role="tabpanel" aria-labelledby="tab-ecu" data-board="ecu" hidden>
+    <div><div class="pcb-fig"></div><p class="pcb-info">150 × 110 mm, six layers. Signal connectors along the top and bottom,
+      valve power on the right edge.</p></div>
+    <div>
+      <h3>ECU-1 engine controller</h3>
+      <p class="role">Sequences the engine: opens the valves, fires the igniter, reads chamber and feed pressures and
+        temperatures, and commands both pump speeds.</p>
+      <span class="status-tag">Routed · not ready to fabricate</span>
+      <ul class="facts">
+        <li>STM32G474. Ten pressure, four thermocouple, two RTD and four valve-position inputs.</li>
+        <li>Eight peak-and-hold valve and igniter channels, plus a current-controlled proportional valve.</li>
+        <li>A hardware arming chain: the valves get power only if the arm plug, the termination unit, the flight
+          computer, the watchdog and the controller all agree.</li>
+        <li>The main fuel valve is interlocked in hardware to proof of ignition.</li>
+        <li>476 parts, ERC clean. A few wide power nets still need copper pours instead of traces.</li>
+      </ul>
+      <ul class="pcb-list" aria-label="ECU-1 connectors"></ul>
+    </div>
+  </div>
+  <div class="bpanel" id="panel-inv" role="tabpanel" aria-labelledby="tab-inv" data-board="inv" hidden>
+    <div><div class="pcb-fig"></div><p class="pcb-info">150 × 105 mm, four layers of heavy copper on a cooling plate.
+      Three phase legs across the top, logic along the bottom.</p></div>
+    <div>
+      <h3>INV-1 pump inverter</h3>
+      <p class="role">Turns the pump battery into three-phase current for one pump motor. There are two, identical.</p>
+      <span class="status-tag">Placement only · routing not done</span>
+      <ul class="facts">
+        <li>150 V MOSFETs, two in parallel per switch. A full 24S pack is 100.8 V, not the nominal 80 V, so 100 V parts
+          would not survive braking.</li>
+        <li>Field-oriented control on an STM32G474: hall sensors plus a flux observer that keeps running if the halls
+          fail.</li>
+        <li>In simulation the firmware drives a motor and pump model through starts, speed steps and a full hop without
+          faults, and handles a lost battery and lost hall sensors as designed.</li>
+        <li>Open: automatic placement scatters the DC-link capacitors too far from the switches; that part needs to be
+          laid out by hand.</li>
+      </ul>
+      <ul class="pcb-list" aria-label="INV-1 connectors"></ul>
+    </div>
+  </div>
+  <div class="bpanel full" id="panel-nyd" role="tabpanel" aria-labelledby="tab-nyd" hidden>
+    <div class="nyd">
+      <div><h4>Power distribution unit</h4><p>Between the pump battery and the DC bus: pre-charge resistor, contactor and
+        fusing. Its control lines already exist on ECU-1; the unit itself is not designed.</p></div>
+      <div><h4>Laminated DC bus</h4><p>Carries the film capacitors that the inverters need next to them. Sized in the
+        inverter analysis, not drawn yet.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="wiring" id="wiring">
+  <h2 class="display reveal">How it's wired</h2>
+  <p class="sub reveal">Every link between boards, sensors and actuators, with the connector on each end. Hover or tap a
+    line. Not to scale.</p>
+  <div class="wire-wrap reveal"><svg id="wire-svg" viewBox="0 0 980 510" role="img" aria-label="Wiring diagram of the flight computer, engine controller, inverters, sensors and power."></svg></div>
+  <p class="wire-info" id="wire-info">Blue dots are CAN-FD frames: the flight computer talks to the engine controller at
+    50 Hz, and the engine controller to each inverter at 1 kHz.</p>
+  <div class="wlegend">
+    <span><i style="border-color:#2a78d6"></i>CAN-FD</span><span><i style="border-color:var(--fg2)"></i>serial, SPI, analog</span>
+    <span><i style="border-color:var(--fg2);border-top-style:dotted"></i>RF coax</span><span><i style="border-color:var(--accent);border-top-style:dashed"></i>safety and arming</span>
+    <span><i style="border-color:#8c7b56;border-top-width:5px"></i>power</span>
+  </div>
+  <div class="fam reveal">
+    <div><b>JST GH</b><p>1.25 mm locking connectors for every signal: CAN, serial, sensors, discretes.</p></div>
+    <div><b>Micro-Fit 3.0</b><p>Board power and the valve drivers, where the current is a few amps.</p></div>
+    <div><b>M5 studs</b><p>The inverters' DC bus and motor phases, at a couple of hundred amps.</p></div>
+    <div><b>SMA, RJ45, USB-C</b><p>GNSS antenna coax; Ethernet and USB only on the bench, never in flight.</p></div>
+  </div>
+  <p class="note" style="margin-top:24px">One known gap: ECU-1's arming chain expects a discrete arm signal from the flight
+    computer, and FC-0 does not have that output yet.</p>
 </section>
 
 <section class="flights" id="flights">
@@ -545,5 +886,6 @@
 </footer>
 
 <script src="assets/app.js"></script>
+<script src="assets/parts.js"></script>
 </body>
 </html>
