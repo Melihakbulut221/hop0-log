@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hop-0 engineering log</title>
 <meta name="description" content="A small reusable-rocket hop testbed, developed in simulation and hardware-in-the-loop first. Methods, results and the mistakes along the way.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hop-0 engineering log">
+<meta property="og:description" content="A small reusable-rocket testbed, built in simulation first. Hardest hardware-in-the-loop scenario: 53% to 98.7% landing success.">
+<meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hop-0 engineering log: 18 replayed landing trajectories converging on the pad.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
 <style>
   :root {
     --bg: #fcfcfb;
@@ -15,6 +25,7 @@
     --card: #ffffff;
     --code: #f0efec;
     --figbg: #fcfcfb;
+    --dot: #184f95;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -26,11 +37,12 @@
       --card: #222220;
       --code: #2c2c2a;
       --figbg: #fcfcfb;
+      --dot: #3987e5;
     }
   }
   :root[data-theme="dark"] {
     --bg: #1a1a19; --fg: #f3f2ee; --fg2: #c3c2b7; --rule: #34342f; --accent: #86b6ef; --card: #222220;
-    --code: #2c2c2a; --figbg: #fcfcfb;
+    --code: #2c2c2a; --figbg: #fcfcfb; --dot: #3987e5;
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
@@ -67,19 +79,62 @@
   nav.toc { font-size: 15px; margin: 24px 0 0; }
   nav.toc a { color: var(--fg2); text-decoration: none; margin-right: 14px; display: inline-block; }
   nav.toc a:hover { color: var(--accent); text-decoration: underline; }
+  /* hero */
+  .hero { position: relative; height: min(90vh, 820px); min-height: 560px; background: #0b1220; overflow: hidden; }
+  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hero .over { position: relative; max-width: 1040px; margin: 0 auto; padding: 44px 16px 0; color: #f3f2ee;
+                pointer-events: none; }
+  .hero .kicker { color: #9fb0c8; }
+  .hero h1 { color: #f6f5f1; max-width: 640px; font-size: clamp(30px, 4.6vw, 46px); }
+  .hero .lede { color: #c4cedd; max-width: 560px; font-size: 18px; }
+  .hero .big { font-size: clamp(34px, 6vw, 58px); font-weight: 700; letter-spacing: -.02em; color: #86b6ef;
+               font-variant-numeric: tabular-nums; line-height: 1; margin: 18px 0 4px; }
+  .hero .big small { font-size: 15px; font-weight: 500; color: #9fb0c8; letter-spacing: 0; display: block;
+                     margin-top: 6px; }
+  .hero .cap { position: absolute; left: 16px; right: 16px; bottom: 6px; margin: 0; text-align: right; font-size: 12px; color: #7d8ca3; }
+  .hero .big + .status { margin-top: 12px; }
+  .hero .status { background: rgba(255,255,255,.06); color: #c4cedd; border-color: rgba(255,255,255,.14); }
+  /* charts */
+  .chart svg { width: 100%; height: auto; display: block; }
+  .chart { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 10px 6px; }
+  .chart .grid { stroke: var(--rule); stroke-width: 1; }
+  .chart .tick { fill: var(--fg2); font-size: 12px; }
+  .chart .rowlab { fill: var(--fg); font-size: 13.5px; }
+  .chart .val { fill: var(--fg); font-size: 13px; font-weight: 600; }
+  .chart .val2 { fill: var(--fg2); font-size: 13px; }
+  .chart .track { stroke: var(--rule); stroke-width: 7; stroke-linecap: round; }
+  .chart .dot-before { fill: #86b6ef; stroke: var(--card); stroke-width: 2.5; }
+  .chart .dot-after { fill: var(--dot); stroke: var(--card); stroke-width: 2.5; }
+  .chart .tl-line { fill: none; stroke: var(--dot); stroke-width: 2.2; }
+  .legend { display: flex; gap: 22px; flex-wrap: wrap; font-size: 14px; color: var(--fg2); margin: 0 4px 8px; }
+  .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px;
+              vertical-align: -1px; }
+  /* scroll reveal */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.shown { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
   footer { border-top: 1px solid var(--rule); margin-top: 64px; padding-top: 20px; font-size: 14px; color: var(--fg2); }
 </style>
 </head>
 <body>
+<section class="hero" aria-label="Replayed landings">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <div class="over">
+    <p class="kicker">Engineering log · Phase 0</p>
+    <h1>Hop-0: a small reusable-rocket testbed, built in simulation first</h1>
+    <p class="lede">A 1.9 m, 200 kg vertical-takeoff, vertical-landing hop vehicle. Every part of it lives in software
+      first: flight dynamics, aerodynamics, structure, engine controller and the flight computer's code.</p>
+    <div class="big"><span data-count-from="53" data-count-to="98.7">98.7%</span>
+      <small>landing success in the hardest hardware-in-the-loop scenario, up from 53%</small></div>
+    <span class="status">Simulation and hardware-in-the-loop only. The vehicle has not been built or flown.</span>
+  </div>
+  <p class="cap">Replayed landings recorded from the flight software at 4x speed. Vehicles drawn larger than scale.</p>
+</section>
+
 <main>
 
 <header class="top">
-  <p class="kicker">Engineering log · Phase 0</p>
-  <h1>Hop-0: a small reusable-rocket testbed, built in simulation first</h1>
-  <p class="lede">A 1.9 m, 200 kg vertical-takeoff, vertical-landing hop vehicle. Before any hardware, every part of it
-    lives in software: the flight dynamics, the aerodynamics, the structure, the engine controller and the flight
-    computer's code. This page records what worked, what didn't, and how each claim was measured.</p>
-  <span class="status">Status: simulation and hardware-in-the-loop only. The vehicle has not been built or flown.</span>
+  <p class="lede">This page records what worked, what didn't, and how each claim was measured.</p>
   <nav class="toc">
     <a href="#stack">The stack</a><a href="#wind">Wind broke the lander</a><a href="#filter">The fix was in the filter</a>
     <a href="#tools">Trusting the right simulator</a><a href="#mistakes">Mistakes</a><a href="#numbers">Numbers</a>
@@ -87,13 +142,18 @@
   </nav>
 </header>
 
-<figure class="wide">
-  <img src="assets/before_after.png" alt="Dumbbell chart: landing success in seven hardware-in-the-loop scenarios, before and after. COTS sensors rise from 72-75 percent to 100 percent; the hardest scenario, harsh sensors with 200 ms latency and 15 percent packet loss, rises from 53 to 98.7 percent.">
-  <figcaption>The same C flight software, the same random seeds, before and after the filter and guidance work
-    described below.</figcaption>
+<figure class="wide reveal">
+  <div class="chart" data-chart="before-after">
+    <div class="legend"><span><i style="background:#86b6ef"></i>Before: when the CFD aerodynamics went in</span>
+      <span><i style="background:var(--dot)"></i>After: current flight software</span></div>
+    <noscript><img src="assets/before_after.png" alt="Landing success before and after in seven HIL scenarios."></noscript>
+  </div>
+  <figcaption>Landing success in winds up to 12 m/s, C flight software in hardware-in-the-loop, the same random seeds
+    before and after the filter and guidance work described below. "After" also has a ±10° gimbal instead of ±7°;
+    on its own that changes little.</figcaption>
 </figure>
 
-<h2 id="stack">The stack</h2>
+<h2 class="reveal" id="stack">The stack</h2>
 <p>The vehicle is a Phase-0 testbed: a 0.45 m hull, four inverted-tripod landing legs, and one 4 kN-class
   electric-pump liquid engine on a two-axis gimbal. The goal of Phase 0 is a controlled hop and landing. What exists
   today is the software and analysis around it:</p>
@@ -114,10 +174,10 @@
     simulator over a UDP protocol with timestamps, CRC, injected latency, packet loss and sensor faults.</li>
 </ul>
 
-<h2 id="wind">Wind broke the lander</h2>
+<h2 class="reveal" id="wind">Wind broke the lander</h2>
 <p>With a simple drag model, the controller landed in winds up to 12 m/s more than 96% of the time in HIL. Then
   that model was replaced with tables from CFD of the vehicle with its legs.</p>
-<figure class="wide">
+<figure class="wide reveal">
   <img src="assets/cfd_flow_slices.png" alt="Grid of twelve CFD velocity-magnitude slices around the hull at angles of attack from 0 to 180 degrees, with and without legs.">
   <figcaption>CFD velocity magnitude around the vehicle from 0° to 180° angle of attack. The bottom row shows the
     legs: they carry a quarter to a third of the side force, far below the centre of mass.</figcaption>
@@ -139,7 +199,7 @@
     actuator interference that already existed at ±7°. On its own it changes landing rates by almost nothing.</li>
 </ul>
 
-<h2 id="filter">The fix was in the filter, not the hardware</h2>
+<h2 class="reveal" id="filter">The fix was in the filter, not the hardware</h2>
 <p>The navigation filter predicts the vehicle's rotation from the gimbal torque. With the CFD aerodynamics, the gimbal
   spends much of its authority holding the aerodynamic moment, and the filter didn't know that moment existed. It kept
   predicting rotation that wasn't happening, so the attitude estimate drifted exactly when control authority was
@@ -155,13 +215,16 @@
   <li>a predictive terminal law: a finite-horizon LQR that models the attitude-loop lag and plans to null position
     and velocity at touchdown.</li>
 </ul>
-<figure class="wide">
-  <img src="assets/hil_timeline.png" alt="Chart of landings out of 300 in the hardest HIL scenario after each change: 293 with the simple aero model, 159 with CFD, then 266, 271, 276, 287, 285, 289, 294 and 296.">
-  <figcaption>Landings out of 300 in the hardest scenario after each change. Changes that did not hold up in HIL were
-    reverted and are not shown.</figcaption>
+<figure class="wide reveal">
+  <div class="chart" data-chart="timeline">
+    <noscript><img src="assets/hil_timeline.png" alt="Landings out of 300 in the hardest HIL scenario after each change."></noscript>
+  </div>
+  <figcaption>Landings out of 300 in the hardest scenario (harsh sensors, 200 ms latency, 15% packet loss, wind up to
+    12 m/s) after each change, same 300 episodes every time. Changes that did not hold up in HIL were reverted and are
+    not shown.</figcaption>
 </figure>
 
-<h2 id="tools">Trusting the right simulator</h2>
+<h2 class="reveal" id="tools">Trusting the right simulator</h2>
 <p>The hardest part was not the control design but knowing which result to believe. Three tools disagreed at
   different times: the fast Python simulation, hardware-in-the-loop, and the C code itself.</p>
 <ul>
@@ -178,7 +241,7 @@
     no differences larger than rounding.</li>
 </ul>
 
-<h2 id="mistakes">Mistakes along the way</h2>
+<h2 class="reveal" id="mistakes">Mistakes along the way</h2>
 <p>Each of these produced results that looked fine and were wrong:</p>
 <ul>
   <li><strong>The simulator ignored the centre of mass.</strong> A MuJoCo body-frame flag kept the CoM at the hull's
@@ -194,10 +257,10 @@
     screening gain turned out to be specific to it.</li>
 </ul>
 
-<h2 id="numbers">Current numbers</h2>
+<h2 class="reveal" id="numbers">Current numbers</h2>
 <p>All scenarios have mean wind up to 12 m/s with gusts. HIL rows are the C flight software over UDP, lockstep, at
   50 Hz.</p>
-<div class="tablewrap">
+<div class="tablewrap reveal">
 <table>
   <thead><tr><th>Scenario</th><th class="num">HIL landings</th></tr></thead>
   <tbody>
@@ -213,7 +276,7 @@
   "200 ms" rows add 150 ms observation and 50 ms actuation latency. A landing counts only if touchdown is below 2 m/s vertical and 1 m/s
   horizontal, within 6 m of the pad, and the vehicle stays upright.</p>
 
-<h2 id="open">Open problems</h2>
+<h2 class="reveal" id="open">Open problems</h2>
 <ul>
   <li>The worst aerodynamic-uncertainty corner (hull drag ×1.6, leg drag ×2) with 200 ms latency is still about 93%.
     It is limited by latency rather than gains.</li>
@@ -231,5 +294,6 @@
 </footer>
 
 </main>
+<script src="assets/app.js"></script>
 </body>
 </html>

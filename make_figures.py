@@ -125,3 +125,31 @@ if __name__ == "__main__":
     before_after()
     hil_timeline()
     print(OUT)
+
+
+def og_image():
+    """1200 x 630 social preview: the replayed landing trajectories (real flights from assets/flights.json)"""
+    import json
+    d = json.load(open(os.path.join(OUT, "flights.json")))
+    bg, fg, fg2, trail = "#111b2b", "#f3f2ee", "#b9c3d3", "#6da7ec"
+    fig = plt.figure(figsize=(12, 6.3), dpi=100)
+    fig.patch.set_facecolor(bg)
+    ax = fig.add_axes([0.5, 0.08, 0.47, 0.84]); ax.set_facecolor(bg)
+    for f in d["flights"]:
+        ax.plot(f["s"], f["z"], color=trail, lw=1.2, alpha=0.55)
+    ax.plot([-70, 45], [0, 0], color=fg2, lw=1.5)
+    ax.scatter([0], [0], s=60, color=fg, zorder=3)
+    ax.set_xlim(-70, 45); ax.set_ylim(-8, 240); ax.axis("off")
+    fig.text(0.05, 0.78, "Hop-0", fontsize=54, fontweight="bold", color=fg)
+    fig.text(0.05, 0.69, "engineering log", fontsize=26, color=fg2)
+    fig.text(0.05, 0.47, "A small reusable-rocket testbed,\nbuilt in simulation first", fontsize=20, color=fg,
+             linespacing=1.35)
+    fig.text(0.05, 0.30, "Hardest HIL scenario: 53% → 98.7%", fontsize=18, color=trail, fontweight="bold")
+    fig.text(0.05, 0.205, "landings on the same seeds, before and after the filter\nand guidance work", fontsize=14, color=fg2)
+    fig.text(0.05, 0.07, "18 replayed landings from the flight software; simulation only", fontsize=11, color=fg2)
+    fig.savefig(os.path.join(OUT, "og.png"), facecolor=bg)
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    og_image()
