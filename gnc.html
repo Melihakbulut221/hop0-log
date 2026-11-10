@@ -231,7 +231,10 @@
   <div class="body">
     <ul>
       <li>The worst aerodynamic-uncertainty corner (hull drag ×1.6, leg drag ×2) with 200 ms latency is now about 96%
-        (574 of 600), up from 94% before the 50 Hz attitude-gain change. It is limited by latency rather than gains.</li>
+        (574 of 600), up from 94% before the 50 Hz attitude-gain change. It is limited by latency rather than gains:
+        failures rise from none below 4 m/s of wind to 15-23% above 10 m/s, and eight variations of the lateral
+        acceleration and tilt limits changed nothing beyond noise. Until the aerodynamics is measured, the landing wind
+        limit is 8 m/s, where this corner lands 99%.</li>
       <li>Powered-descent aerodynamics, where the plume covers the base, is not modelled; the CFD descent axial force is
         an upper bound.</li>
       <li>The 20 Hz reference configuration lands 187 and 197 of 200 (about 96%) in the hardest scenario (harsh sensors,

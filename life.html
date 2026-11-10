@@ -46,7 +46,7 @@
 <header class="page-head">
   <p class="kicker">Life twin</p>
   <h1>What each flight costs</h1>
-  <p class="status-line"><span><b>Simulation only</b></span><span>600 HIL flights, hardest scenario</span><span>Life twin v0.1</span><span>Updated 2026-11-10</span></p>
+  <p class="status-line"><span><b>Simulation only</b></span><span>1700 HIL flights in two spectra</span><span>Life twin v0.1</span><span>Updated 2026-11-10</span></p>
 </header>
 <section class="sec" id="life" aria-labelledby="life-h" data-module="life" style="border-top:0;padding-top:0">
   <h2 id="life-h" class="vh">Wear account</h2>
@@ -76,6 +76,24 @@
     <div><b>22%</b><span>of the shock stroke used on average, 59% at most</span></div>
     <div><b>20%</b><span>of the pump battery used per hop on average</span></div>
   </div>
+  <h2 id="spectra">Two load spectra</h2>
+  <p>The console above flies the cautious spectrum: the hardest scenario only. The same twin was rebuilt from the 50 Hz
+    regression of the current flight software, eleven scenarios from clean COTS sensors to the hardest corner.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th class="num">Hardest scenario, previous software</th><th class="num">Eleven scenarios, current software</th></tr></thead>
+    <tbody>
+      <tr><td>HIL flights / replayed landings</td><td class="num">600 / 561</td><td class="num">1100 / 1055</td></tr>
+      <tr><td>Losses</td><td class="num">1 (95%: 0.03-0.9% per flight)</td><td class="num">0 (95% upper bound 0.35% per flight)</td></tr>
+      <tr><td>Chamber hot wall, median flights (pessimistic film)</td><td class="num">1,429 (780)</td><td class="num">1,427 (783)</td></tr>
+      <tr><td>Pump battery, median flights</td><td class="num">2,351</td><td class="num">2,405</td></tr>
+      <tr><td>Peak landing load, mean / 99th percentile</td><td class="num">2.5 / 3.4 g</td><td class="num">2.7 / 3.5 g</td></tr>
+      <tr><td>Shock stroke used, mean / most</td><td class="num">22% / 59%</td><td class="num">19% / 71%</td></tr>
+      <tr><td>Landings that crushed a honeycomb cartridge</td><td class="num">0</td><td class="num">0</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Wear barely depends on the scenario mix: every hop heats the chamber and drains the battery about the same,
+    and landing loads stay well inside the leg's envelope. Loss is the open question. No loss in 1100 flights bounds it
+    below 0.35% per flight; showing it is below 0.1% would take about 3000 loss-free flights.</p>
   <div class="lnotes">
     <div><h3>Loss, not wear, sets the life</h3><p>The first part to wear out is the chamber's hot wall, after about
       1,400 flights, 780 if film cooling turns out at the pessimistic end. That is twenty times the engine's requirement. But at

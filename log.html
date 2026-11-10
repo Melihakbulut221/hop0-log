@@ -58,7 +58,43 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1110-att"><div id="d-1110"><time datetime="2026-11-10">2026-11-10</time><span class="area">Guidance</span></div><div>
+<li class="entry" id="e-1110-fdir"><div id="d-1110"><time datetime="2026-11-10">2026-11-10</time><span class="area">Flight software</span></div><div>
+  <h2 class="eh">The Python reference learns the C code's sensor checks</h2>
+  <dl>
+    <dt>Changed</dt><dd>The Python reference of the flight software now rejects implausible sensor frames, holds or predicts
+      the command and latches safe mode exactly as the C code does.</dd>
+    <dt>Found</dt><dd class="bad">Before, the in-process HIL emulator crashed in the sensor-fault scenario that the C code
+      passes 100 of 100: the equivalence traces never contained faults, so the gap stayed invisible.</dd>
+    <dt>Measured</dt><dd>Fault-free trace re-recorded bit-identical; with 5% injected sensor faults the emulator now matches
+      HIL in 100 of 100 episodes.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#numbers">HIL numbers</a></p>
+</div></li>
+
+<li class="entry" id="e-1110-wind"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Guidance</span></div><div>
+  <h2 class="eh">Where the worst aerodynamic corner fails, and a tuning dead end</h2>
+  <dl>
+    <dt>Measured</dt><dd>In 600 HIL episodes with hull drag ×1.6 and leg drag ×2, failures rise with wind: none below 4 m/s,
+      1% at 4-8, 5% at 8-10, 15-23% above 10 m/s. Nineteen of the 26 failures are above 10 m/s.</dd>
+    <dt>Did not work</dt><dd class="bad">Eight variations of the lateral acceleration and terminal tilt limits, 800 emulator
+      episodes each: none moved the result beyond noise. The remaining failures are latency and the aerodynamics itself.</dd>
+    <dt>Decided</dt><dd>Until the aerodynamic uncertainty is measured, the landing wind limit is 8 m/s (99% in this corner).</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#open">open problems</a></p>
+</div></li>
+
+<li class="entry" id="e-1110-life2"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Life twin</span></div><div>
+  <h2 class="eh">Life twin rebuilt on eleven scenarios</h2>
+  <dl>
+    <dt>Changed</dt><dd>The wear account rebuilt from the 50 Hz regression of the current software: 1100 HIL flights in eleven
+      scenarios, 1055 of them replayed at the physics rate and matched against the HIL log.</dd>
+    <dt>Measured</dt><dd>Wear is almost unchanged (chamber about 1,430 flights, battery about 2,400). No loss in 1100 flights,
+      which bounds the loss rate below 0.35% per flight.</dd>
+  </dl>
+  <p class="ev"><a href="life.html#spectra">two load spectra</a></p>
+</div></li>
+
+<li class="entry" id="e-1110-att"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Guidance</span></div><div>
   <h2 class="eh">Stiffer attitude loop at 50 Hz</h2>
   <dl>
     <dt>Changed</dt><dd>A higher attitude-loop gain, at the 50 Hz flight rate only. Eleven candidates were screened in the
