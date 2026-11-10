@@ -51,7 +51,8 @@
       ["pack", "pdu", "power", "Pack to PDU-1", "PDU-1 J1 / J6, M8 and M6 studs; fuse and current shunt on the board, contactor off the board"],
       ["pdu", "invr", "power", "DC bus", "PDU-1 J5 / J9 to CB-1 J1 / J2, then CB-1 J3 / J4 to INV-1 J1 / J2 through conductive spacers"],
       ["pdu", "invl", "power", "DC bus", "PDU-1 J4 / J8 to CB-1 J1 / J2, then CB-1 J3 / J4 to INV-1 J1 / J2 through conductive spacers"],
-      ["ecu", "pdu", "disc", "Pre-charge and contactor", "ECU-1 J10 pins 5-8 to PDU-1 J10, Micro-Fit 3.0; status back on PDU-1 J13 (ECU-1 has no input for it yet)"]
+      ["ecu", "pdu", "disc", "Pre-charge and contactor", "ECU-1 J10 pins 5-8 to PDU-1 J10, Micro-Fit 3.0"],
+      ["pdu", "ecu", "safe", "Power-distribution status", "PDU-1 J13 to ECU-1 J18, JST GH 8-pin: opto-isolated status lines and buffered analog monitors"]
     ];
     var gE = el("g", {}, wsvg), gN = el("g", {}, wsvg), gP = el("g", {}, wsvg);
     function port(n, toward) {   // attachment point on the box edge facing the other node

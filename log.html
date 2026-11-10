@@ -58,7 +58,22 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1110-fdir"><div id="d-1110"><time datetime="2026-11-10">2026-11-10</time><span class="area">Flight software</span></div><div>
+<li class="entry" id="e-1110-ecu"><div id="d-1110"><time datetime="2026-11-10">2026-11-10</time><span class="area">Boards</span></div><div>
+  <h2 class="eh">The engine controller reads the power unit</h2>
+  <dl>
+    <dt>Changed</dt><dd>ECU-1 gained a connector for PDU-1's status: three opto-coupled lines (pre-charge done, contactor
+      closed, fault latch) and three analog monitors. The flight-computer arm vote input got a clamp and a transient suppressor.</dd>
+    <dt>Measured</dt><dd>An open harness or an unpowered PDU reads as not ready. A sustained 36 V short on the protected lines
+      stays under the logic input's rating. A single glitch can no longer abort a burn: the status must hold for 1 ms or be
+      confirmed by the bus voltage.</dd>
+    <dt>Did not work</dt><dd class="bad">Routing got worse, 25 to 34 open connections. The monitor error budget missed its first
+      limits once temperature drift and ADC error were counted; the limits were raised to 2.5 % and 3.5 % after the numbers
+      were known, which is stated in the board notes. The inverter, valve-position and sensor inputs are still unprotected.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">the boards</a></p>
+</div></li>
+
+<li class="entry" id="e-1110-fdir"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Flight software</span></div><div>
   <h2 class="eh">The Python reference learns the C code's sensor checks</h2>
   <dl>
     <dt>Changed</dt><dd>The Python reference of the flight software now rejects implausible sensor frames, holds or predicts

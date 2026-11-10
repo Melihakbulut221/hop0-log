@@ -134,7 +134,12 @@
         <li>A hardware arming chain: the valves get power only if the arm plug, the termination unit, the flight
           computer, the watchdog and the controller all agree.</li>
         <li>The main fuel valve is interlocked in hardware to proof of ignition.</li>
-        <li>476 parts, ERC clean. A few wide power nets still need copper pours instead of traces.</li>
+        <li>Reads the power-distribution unit's pre-charge, contactor and fault-latch status as active-low opto-coupled
+          lines, so an open harness or an unpowered unit reads as not ready or faulted; bus voltage, pack voltage and bus
+          current come in as analog monitors.</li>
+        <li>The status lines from the power-distribution unit and the flight-computer and arming-chain discretes survive a
+          sustained short to the vehicle battery; the flight-computer arm vote also has a transient suppressor.</li>
+        <li>524 parts, ERC clean. 34 connections, four of them signals, still need routing by hand.</li>
       </ul>
       <ul class="pcb-list" aria-label="ECU-1 connectors"></ul>
     </div>
@@ -181,13 +186,14 @@
   </div>
   <div class="bpanel full" id="panel-nyd" role="tabpanel" aria-labelledby="tab-nyd" hidden>
     <div class="nyd">
-      <div><h4>Finish the routing</h4><p>FC-0 and ECU-1 have about two dozen connections each to finish by hand. PDU-1 has 36,
+      <div><h4>Finish the routing</h4><p>FC-0 has 23 connections to finish by hand, ECU-1 34 after the latest change. PDU-1 has 36,
         including its active-discharge path, and its logic strip needs more room or a board of its own. INV-1 is placed but
         not routed.</p></div>
       <div><h4>A damper on the inverter</h4><p>The capacitor network resonates near 280 kHz and pushes the inverter's gate
         driver to its voltage limit. The fix is a small RC damper on INV-1, next to the switches.</p></div>
-      <div><h4>Status inputs on ECU-1</h4><p>PDU-1 reports pre-charge done, contactor closed and its fault latch, but the
-        engine controller has no inputs to read them yet.</p></div>
+      <div><h4>Protect the rest of ECU-1</h4><p>The PDU status lines and the arming discretes now survive a short to the
+        battery; the inverter enable and fault lines, the valve-position inputs and the pressure and temperature inputs do
+        not yet.</p></div>
       <div><h4>Measure what was assumed</h4><p>Contactor arc voltage, pack resistance, regulator start-up and the watchdog's
         timing are datasheet extrapolations or estimates until a bench test replaces them.</p></div>
     </div>
