@@ -76,6 +76,47 @@
   </div>
   <script type="application/json" id="leo-data">{"payload_vs_liftoff_mass": [{"payload_kg": 1, "liftoff_t": 2.1, "liftoff_t_min": 1.8, "liftoff_t_median": 2.3, "liftoff_t_max": 3.0, "orbit": "elliptical, 500 km perigee, about 500 x 1700 km unless the kick motor is off-loaded", "stages": "2 liquid + solid kick"}, {"payload_kg": 5, "liftoff_t": 2.9, "liftoff_t_min": 2.5, "liftoff_t_median": 3.1, "liftoff_t_max": 3.9, "orbit": "elliptical, 500 km perigee, about 500 x 1700 km unless the kick motor is off-loaded", "stages": "2 liquid + solid kick"}, {"payload_kg": 25, "liftoff_t": 5.5, "liftoff_t_min": 4.8, "liftoff_t_median": 5.8, "liftoff_t_max": 7.2, "orbit": "elliptical, 500 km perigee, about 500 x 1700 km unless the kick motor is off-loaded", "stages": "2 liquid + solid kick"}, {"payload_kg": 50, "liftoff_t": 8.0, "liftoff_t_min": 7.1, "liftoff_t_median": 8.5, "liftoff_t_max": 10.4, "orbit": "elliptical, 500 km perigee, about 500 x 1700 km unless the kick motor is off-loaded", "stages": "2 liquid + solid kick"}, {"payload_kg": 150, "liftoff_t": 14.7, "liftoff_t_min": 12.6, "liftoff_t_median": 15.7, "liftoff_t_max": 20.3, "orbit": "500 km circular", "stages": "3 liquid"}, {"payload_kg": 300, "liftoff_t": 23.0, "liftoff_t_min": 19.9, "liftoff_t_median": 24.4, "liftoff_t_max": 30.8, "orbit": "500 km circular", "stages": "3 liquid"}]}</script>
 </section>
+<section class="sec split" id="reuse" aria-labelledby="reuse-h">
+  <h2 id="reuse-h">Does landing the first stage pay?</h2>
+  <div class="body">
+    <p>Each recovery option was re-sized with the same ascent simulator and optimiser as the expendable baseline, for the
+      same 300 kg to a 500 km circular orbit, and costed with the same model.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Recovery mode</th><th class="num">Liftoff mass, same payload</th><th class="num">Payload, same liftoff mass</th>
+        <th class="num">Cost per flight at 10 flights per booster (ideal / central)</th><th class="num">Break-even flights (ideal / central)</th></tr></thead>
+      <tbody>
+        <tr><td>Propulsive landing downrange (ship)</td><td class="num">+19%</td><td class="num">−22%</td><td class="num">−34% / −24%</td><td class="num">2 / 3</td></tr>
+        <tr><td>Propulsive return to launch site</td><td class="num">+71%</td><td class="num">−58%</td><td class="num">−20% / −8%</td><td class="num">4 / 6</td></tr>
+        <tr><td>Parachute + ocean recovery</td><td class="num">+6%</td><td class="num">−8%</td><td class="num">−27% / −14%</td><td class="num">2 / 3</td></tr>
+        <tr><td>Parachute + mid-air capture</td><td class="num">+5%</td><td class="num">−8%</td><td class="num">−34% / −24%</td><td class="num">2 / 3</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">"Ideal" assumes no booster losses and no reuse overheads. "Central" adds three costs that will occur: lost
+      production learning when far fewer boosters are built, the amortised development of recovery, and booster losses during
+      commissioning. Cost changes are relative to the expendable vehicle with the same payload.</p>
+    <p><strong>Recommendation:</strong> size the first orbital product for propulsive landing on a ship and fly its first
+      missions expendable. The same vehicle carries about a fifth more when expended, about 350-370 kg, so it can earn
+      revenue while the early flights carry the usual maiden-flight risk. Return to the launch site is not recommended for
+      this class.</p>
+    <ul>
+      <li>The first stage is more than half of the cost of a flight here, so recovery pays back after two to three flights
+        per booster; for a few-kilogram launcher it would not.</li>
+      <li>Re-entry heating stays just under the limit used for operational boosters, so no braking burn is needed for heat.
+        The aerodynamic load on the way down probably does need one; a conservative design with a braking burn is about 5%
+        heavier and keeps most of the saving.</li>
+      <li>The landing needs the engine to throttle deeper than the ascent nozzle allows. The planned deep-throttle range of
+        the Hop-0 engine family is what gives margin below hover for a precise touchdown; that is one of the things Hop-0 has
+        to demonstrate.</li>
+      <li>Every landing needs all landing engines to restart, so restart reliability sets a floor on the loss rate. The
+        economics tolerate about one loss in twelve landings; the operational target is set by pad damage, production
+        cadence and restart reliability instead.</li>
+      <li>The saving is fragile: combining pessimistic refurbishment, recovery operations, learning-curve, development and
+        booster-life assumptions erases it. A recovery kit half again as heavy would make the vehicle at least a tenth heavier.
+        The booster descent is a point-mass simulation without aerodynamic control or structural loads.</li>
+    </ul>
+    <p class="ev"><span>3-DOF ascent and descent simulation, every design re-flown at half step</span><a href="log.html#e-1110-reuse">log entry</a></p>
+  </div>
+</section>
 <nav class="next" aria-label="Next page"><a href="life.html"><span>Back</span>What each flight costs</a><a href="log.html"><span>Next</span>Engineering log</a></nav>
 </div>
 </main>
