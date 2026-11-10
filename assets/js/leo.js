@@ -1,5 +1,5 @@
 /* Hop-0 site: the first orbital product. Payload vs liftoff mass from research/leo_min (site_summary.json, embedded
- * in the page), drawn as an animated chart with uncertainty bands; hover or focus a point for its row. */
+ * in the page), drawn as a chart with uncertainty bands; hover or focus a point for its row. */
 (function () {
   "use strict";
   var host = document.getElementById("leo-chart");
@@ -47,7 +47,7 @@
     g.addEventListener("mouseenter", on); g.addEventListener("focus", on); g.addEventListener("mouseleave", off); g.addEventListener("blur", off);
     return g;
   });
-  if (reduce || !("IntersectionObserver" in window)) return;
+  return;                        // drawn in its final state; the line draw-in carried no information
   var Ll = line.getTotalLength ? line.getTotalLength() : 1000;
   line.style.strokeDasharray = Ll; line.style.strokeDashoffset = Ll; band.style.opacity = 0;
   pts.forEach(function (g) { g.style.opacity = 0; });

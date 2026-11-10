@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Landing in wind · Hop-0</title>
+<meta name="description" content="How the Hop-0 guidance, navigation and control learned to land in wind up to 12 m/s once the aerodynamics came from CFD, measured after every change in hardware-in-the-loop.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Landing in wind · Hop-0">
+<meta property="og:description" content="How the Hop-0 guidance, navigation and control learned to land in wind up to 12 m/s once the aerodynamics came from CFD, measured after every change in hardware-in-the-loop.">
+<meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/gnc.html">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hop-0 engineering log: 18 replayed landing trajectories converging on the pad.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="gnc">
+<a class="skip" href="#main">Skip to content</a>
+<!-- site header: identical on every page -->
+<header class="bar">
+ <div class="wrap">
+  <a class="home-link" href="index.html"><span class="mark" aria-hidden="true"><svg viewBox="0 0 22 22"><rect x="8.5" y="2" width="5" height="14" rx="2.5" fill="#fafaf6"/><path d="M8.5 13 L4 19 M13.5 13 L18 19" stroke="#fafaf6" stroke-width="1.8"/></svg></span>Hop-0 engineering log</a>
+  <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+  <nav id="site-nav" aria-label="Site">
+   <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="gnc.html" aria-current="page">Landing</a></li>
+    <li><a href="vehicle.html">Vehicle</a></li>
+    <li><a href="avionics.html">Avionics</a></li>
+    <li><a href="life.html">Life</a></li>
+    <li><a href="orbit.html">Orbit</a></li>
+    <li><a href="log.html">Log</a></li>
+   </ul>
+  </nav>
+ </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+<header class="page-head">
+  <p class="kicker">Guidance, navigation and control</p>
+  <h1>Landing in wind</h1>
+  <p class="lede">How the lander learned to land in wind up to 12 m/s once the aerodynamics came from CFD, measured after
+    every change with the C flight software in hardware-in-the-loop (HIL).</p>
+  <p class="status-line"><span><b>Simulation only</b></span><span>HIL rows: C flight software over UDP, lockstep, 50 Hz</span><span>Updated 2026-11-10</span></p>
+  <ul class="toc" aria-label="On this page">
+    <li><a href="#flights">Recorded flights</a></li><li><a href="#wind">Wind and the filter</a></li>
+    <li><a href="#timeline">Every change</a></li><li><a href="#numbers">Current numbers</a></li>
+    <li><a href="#tools">Which simulator to trust</a></li><li><a href="#mistakes">Mistakes</a></li><li><a href="#open">Open problems</a></li>
+  </ul>
+</header>
+
+<section class="sec" id="flights" aria-labelledby="flights-h" data-module="flights">
+  <h2 id="flights-h">Recorded flights</h2>
+  <p>Six landings, each with a different sensor suite and wind, flown by the Python reference of the flight software
+    (step-equivalent to the C code) in the plant with CFD aerodynamics. The whole trajectory is drawn; Replay plays it back.</p>
+  <p class="note">All six are successful landings, picked to span the scenarios. Failures are not replayed here; they are
+    counted in <a href="#numbers">the numbers</a>.</p>
+  <div class="fgrid" id="fgrid"></div>
+</section>
+
+<section class="sec" id="wind" aria-labelledby="wind-h" data-module="flights hilcharts">
+  <div class="banner">
+    <svg class="bg" id="banner-bg" aria-hidden="true"></svg>
+    <div class="in">
+      <h2 id="wind-h">Wind broke the lander. The fix was in the filter.</h2>
+      <p>With a simple drag model the lander made 293 of 300 in the hardest HIL scenario. CFD of the vehicle with its
+        legs moved the centre of pressure below the centre of mass, and it fell to 159. Leg fairings and a bigger gimbal
+        did not bring it back. One extra state in the navigation filter, then a series of guidance changes, did.</p>
+    </div>
+  </div>
+  <figure>
+    <div class="chart" data-chart="before-after">
+      <div class="legend"><span><i class="k-before"></i>Before: when the CFD aerodynamics went in</span>
+        <span><i class="k-after"></i>After: current flight software</span></div>
+      <noscript><img src="assets/before_after.png" alt="Landing success before and after in seven HIL scenarios." style="width:100%"></noscript>
+    </div>
+    <figcaption>Landing success in winds up to 12 m/s, C flight software in hardware-in-the-loop, the same random seeds
+      before and after: 100 episodes per row, 300 for the two lower rows (seed set A). "After" also has a ±10° gimbal
+      instead of ±7°; on its own that changes little.</figcaption>
+  </figure>
+  <div class="split" style="margin-top:var(--sp-7)">
+    <h3>What happened</h3>
+    <div class="body">
+      <p>With a simple drag model, the controller landed in winds up to 12 m/s more than 96% of the time in HIL. Then
+        that model was replaced with tables from CFD of the vehicle with its legs.</p>
+      <p>The legs pull the centre of pressure 0.15–0.5 m below the centre of mass in side flow and in descent. Falling tail
+        first, the vehicle is aerodynamically unstable. In HIL the hardest scenario dropped from 293 to 159 landings out of
+        300, and even the clean COTS-sensor case fell to 75% (75 of 100).</p>
+      <h4 style="margin-top:var(--sp-5)">The hardware answer, and why it didn't help</h4>
+      <p>The obvious response was hardware. I designed leg fairings and a ±10° gimbal (up from ±7°) and checked both
+        with structural analysis.</p>
+      <ul>
+        <li><strong>Fixed fairings made things worse.</strong> In crossflow they act as fins: CFD gave 2.3–2.6 times the leg
+          side force.</li>
+        <li><strong>Free-swivelling fairings passed the structural checks.</strong> But CFD showed only a 9–14% leg-force
+          reduction in hover side wind, because about 60% of the leg force comes from parts that cannot be faired. With
+          their extra mass (5.8 kg of parts, 6.8 kg at vehicle level with the growth allowance), the simulator landed less
+          often, not more. They were dropped.</li>
+        <li><strong>The ±10° gimbal is feasible</strong> with a re-laid-out aft bay. Its clearance sweep also found an
+          actuator interference that already existed at ±7°. On its own it changes landing rates by almost nothing.</li>
+      </ul>
+      <h4 style="margin-top:var(--sp-5)">The filter</h4>
+      <p>The navigation filter predicts the vehicle's rotation from the gimbal torque. With the CFD aerodynamics, the gimbal
+        spends much of its authority holding the aerodynamic moment, and the filter didn't know that moment existed. It
+        kept predicting rotation that wasn't happening, so the attitude estimate drifted exactly when control authority was
+        tightest.</p>
+      <p>The fix is one extra state in the filter: an angular-acceleration disturbance, learnt from the gyro residual. It
+        went into Python and C together and is tested for C/Python equivalence. Together with the ±10° gimbal, it took the
+        hardest HIL scenario from 159 to 266 of 300. The rest came from guidance:</p>
+      <ul>
+        <li>wider tilt limits near the ground, to stop the vehicle arriving at the pad still drifting;</li>
+        <li>a descent-speed limit that keeps the divert feasible when drag is high;</li>
+        <li>higher terminal-gate heights;</li>
+        <li>a predictive terminal law: a finite-horizon LQR that models the attitude-loop lag and plans to null position
+          and velocity at touchdown;</li>
+        <li>a stiffer attitude loop at the 50 Hz flight rate, found by screening eleven candidates in the in-process HIL
+          emulator and then confirmed in HIL on every scenario.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="timeline" aria-labelledby="timeline-h" data-module="hilcharts">
+  <h2 id="timeline-h">Every change, measured</h2>
+  <p>The hardest scenario (harsh sensors, 200 ms latency, 15% packet loss, wind up to 12 m/s), the same 300 episodes
+    after every step. A change is kept when it holds up in HIL; changes that did not were reverted and are not shown
+    (they are in the <a href="log.html">log</a>). Step 7 is within noise and was kept because it removes a step in the
+    thrust command.</p>
+  <figure style="margin-bottom:0">
+    <div class="chart" data-chart="timeline" id="tl-chart">
+      <div class="legend"><span><i class="k-after"></i>seed set A, 300 episodes</span>
+        <span><i class="k-b"></i>held-out seed set B, 300 episodes, where it was run</span></div>
+      <noscript><img src="assets/hil_timeline.png" alt="Landings out of 300 in the hardest HIL scenario after each change." style="width:100%"></noscript>
+    </div>
+    <figcaption>Each step links to its log entry. At 300 episodes one landing is 0.33%; steps of two or three landings are
+      within run-to-run noise. Some of the earlier steps were chosen on set A itself, which is why the held-out set B was
+      added on 2026-11-07: the terminal velocity law gained 11 landings on set A and 4 on set B.</figcaption>
+  </figure>
+  <ol class="steps" id="chips" aria-label="Steps, with links to the log"></ol>
+</section>
+
+<section class="sec split" id="numbers" aria-labelledby="numbers-h">
+  <h2 id="numbers-h">Current numbers</h2>
+  <div class="body">
+    <p>All scenarios have mean wind up to 12 m/s with gusts. HIL rows are the C flight software over UDP, lockstep, at
+      50 Hz.</p>
+    <div class="tablewrap">
+    <table class="stack">
+      <thead><tr><th>Scenario</th><th class="num">Episodes</th><th>Seeds</th><th class="num">HIL landings</th></tr></thead>
+      <tbody>
+        <tr id="n-cots"><td data-label="Scenario">COTS sensors / + 5% sensor faults / + 15% packet loss</td><td data-label="Episodes" class="num">100 each</td><td data-label="Seeds">A</td><td data-label="HIL landings" class="num">100 / 100 / 100 of 100</td></tr>
+        <tr id="n-harsh"><td data-label="Scenario">Harsh sensors / + 200 ms latency</td><td data-label="Episodes" class="num">100 each</td><td data-label="Seeds">A</td><td data-label="HIL landings" class="num">100 / 100 of 100</td></tr>
+        <tr id="n-hardest"><td data-label="Scenario">Harsh + 200 ms + 15% loss (two disjoint seed sets)</td><td data-label="Episodes" class="num">300 + 300</td><td data-label="Seeds">A, B</td><td data-label="HIL landings" class="num">299, 298 of 300</td></tr>
+        <tr id="n-noradar"><td data-label="Scenario">No radar, 1 Hz GNSS with 200 ms lag</td><td data-label="Episodes" class="num">300</td><td data-label="Seeds">A</td><td data-label="HIL landings" class="num">299 of 300</td></tr>
+        <tr id="n-aero"><td data-label="Scenario">Worst aerodynamic-uncertainty corner, harsh + 200 ms (two disjoint seed sets)</td><td data-label="Episodes" class="num">300 + 300</td><td data-label="Seeds">A, B</td><td data-label="HIL landings" class="num">283, 291 of 300</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <h3 id="landing-criteria" style="margin:var(--sp-5) 0 var(--sp-3)">What the words mean</h3>
+    <dl class="defs">
+      <dt>Landed</dt><dd>A landing counts only if touchdown is below 2 m/s vertical and 1 m/s horizontal, within 6 m of the
+        pad, and the vehicle stays upright.</dd>
+      <dt>Harsh sensors</dt><dd>1.5 m position noise, 1° attitude noise, 1°/s gyro noise and gyro bias.</dd>
+      <dt>200 ms</dt><dd>150 ms observation and 50 ms actuation latency.</dd>
+      <dt>15% packet loss</dt><dd>15% of the frames between simulator and flight software are bad: 10% dropped and 5%
+        corrupted, so that their checksum fails.</dd>
+      <dt>Worst aerodynamic corner</dt><dd>hull drag ×1.6, leg drag ×2 against the CFD tables.</dd>
+      <dt>Seed sets</dt><dd>A: the seeds used for every HIL comparison since the plant was rebuilt; some earlier changes were
+        chosen on it. B: three further blocks of 100 seeds, kept for confirmation. Screening runs use a third range of
+        seeds, disjoint from both.</dd>
+      <dt>Python, HIL, emulator</dt><dd>Python: the fast simulation with the Python reference of the flight software. HIL:
+        the C flight software as its own process over UDP. Emulator: an in-process copy of the HIL server that reproduces
+        HIL episode by episode, used for screening.</dd>
+    </dl>
+  </div>
+</section>
+
+<section class="sec split" id="tools" aria-labelledby="tools-h">
+  <h2 id="tools-h">Trusting the right simulator</h2>
+  <div class="body">
+    <p class="big-quote">A gain that only shows up in the fast simulator is not a gain.</p>
+    <p>The hardest part was not the control design but knowing which result to believe. Three tools disagreed at
+      different times: the fast Python simulation, hardware-in-the-loop, and the C code itself.</p>
+    <ul>
+      <li><strong>The fast Python loop did not model packet loss, and it twice pointed the wrong way.</strong> A filter
+        gain it recommended made the 20 Hz HIL worst case worse (186 to 172 of 200). I wrote an in-process emulator of the
+        HIL server, with the same random streams, latency, packet-loss and command-horizon logic. It reproduces HIL
+        episode by episode (300 of 300 identical in the deterministic scenarios). Tuning now happens there, on seed sets
+        disjoint from the ones used for confirmation in HIL.</li>
+      <li><strong>The quick diagnostic tool ran a legacy filter mode</strong> (no accelerometer, GNSS every frame, no
+        radar). For two changes it reported regressions that the flight configuration did not have. It now runs the
+        flight filter by default.</li>
+      <li><strong>Float32 against float64 exposed threshold races</strong> in the control law: a timer compared
+        against a threshold, and a feed-forward that stepped on and off. Both were fixed with ramps and margins. They now
+        cause no differences larger than rounding.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec split" id="mistakes" aria-labelledby="mistakes-h">
+  <h2 id="mistakes-h">Mistakes along the way</h2>
+  <div class="body">
+    <p>Each of these produced results that looked fine and were wrong:</p>
+    <ul>
+      <li><strong>The simulator ignored the centre of mass.</strong> A MuJoCo body-frame flag kept the CoM at the hull's
+        geometric centre, so every controller before that fix was tuned on the wrong plant.
+        <a href="log.html#e-1103-com">Log</a></li>
+      <li><strong>Touchdown speed was measured after the bounce.</strong> It was read after the leg-contact impulse, so
+        early "successful" learned policies were in fact crashing.</li>
+      <li><strong>A "±10° gimbal helps" result was an artifact.</strong> The study overrode the gimbal limit in the
+        simulator and controller but not in the navigation filter's own copy of the constant. The filter then
+        under-modelled gimbal torque by 30%, which happened to offset the missing aerodynamic moment.
+        <a href="log.html#e-1104-filter">Log</a></li>
+      <li><strong>A double-counted mass.</strong> The unsprung leg masses were counted twice, which made the touchdown
+        lateral speed 45% worse. <a href="log.html#e-1104-plant-v4">Log</a></li>
+      <li><strong>The same seeds in screening and confirmation.</strong> One seed set was used for both. Part of a
+        screening gain turned out to be specific to it. <a href="log.html#e-1107-20hz">Log</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec split" id="open" aria-labelledby="open-h">
+  <h2 id="open-h">Open problems</h2>
+  <div class="body">
+    <ul>
+      <li>The worst aerodynamic-uncertainty corner (hull drag ×1.6, leg drag ×2) with 200 ms latency is now about 96%
+        (574 of 600), up from 94% before the 50 Hz attitude-gain change. It is limited by latency rather than gains.</li>
+      <li>Powered-descent aerodynamics, where the plume covers the base, is not modelled; the CFD descent axial force is
+        an upper bound.</li>
+      <li>The 20 Hz reference configuration lands 187 and 197 of 200 (about 96%) in the hardest scenario (harsh sensors,
+        150 + 50 ms latency, 15% packet loss) on the two seed sets; parameter tuning has not moved it further. The flight
+        software runs at 50 Hz, so this is a reference only.</li>
+      <li>Structure, legs, boards and engine cooling have their own open items: <a href="vehicle.html#open">vehicle</a>,
+        <a href="avionics.html#open">avionics</a>.</li>
+    </ul>
+  </div>
+</section>
+
+<nav class="next" aria-label="Next page"><a href="index.html"><span>Back</span>Home</a><a href="vehicle.html"><span>Next</span>The vehicle</a></nav>
+</div>
+</main>
+
+<!-- site footer: identical on every page -->
+<footer>
+ <div class="wrap fgrid2">
+  <div>
+   <p class="fname">Hop-0</p>
+   <p>Hasan Melih. Phase 0 of a longer plan toward a small reusable launcher. This site shows methods and results;
+     detailed design data and flight code are not published.</p>
+   <p>Simulation only: nothing on this site has been built or flown.</p>
+  </div>
+  <ul aria-label="Pages">
+   <li><a href="index.html">Home</a></li><li><a href="gnc.html">Landing</a></li><li><a href="vehicle.html">Vehicle</a></li>
+   <li><a href="avionics.html">Avionics</a></li><li><a href="life.html">Life</a></li><li><a href="orbit.html">Orbit</a></li>
+   <li><a href="log.html">Log</a></li>
+  </ul>
+ </div>
+</footer>
+
+<script src="assets/js/boot.js"></script>
+</body>
+</html>

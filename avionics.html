@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avionics and flight software · Hop-0</title>
+<meta name="description" content="Hop-0 flight software (a C port checked step by step against its Python reference, MISRA C:2012, QEMU Cortex-M7), the hardware-in-the-loop setup, five circuit boards drawn from their layouts and the vehicle wiring.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Avionics and flight software · Hop-0">
+<meta property="og:description" content="Hop-0 flight software (a C port checked step by step against its Python reference, MISRA C:2012, QEMU Cortex-M7), the hardware-in-the-loop setup, five circuit boards drawn from their layouts and the vehicle wiring.">
+<meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/avionics.html">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hop-0 engineering log: 18 replayed landing trajectories converging on the pad.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="avionics">
+<a class="skip" href="#main">Skip to content</a>
+<!-- site header: identical on every page -->
+<header class="bar">
+ <div class="wrap">
+  <a class="home-link" href="index.html"><span class="mark" aria-hidden="true"><svg viewBox="0 0 22 22"><rect x="8.5" y="2" width="5" height="14" rx="2.5" fill="#fafaf6"/><path d="M8.5 13 L4 19 M13.5 13 L18 19" stroke="#fafaf6" stroke-width="1.8"/></svg></span>Hop-0 engineering log</a>
+  <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+  <nav id="site-nav" aria-label="Site">
+   <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="gnc.html">Landing</a></li>
+    <li><a href="vehicle.html">Vehicle</a></li>
+    <li><a href="avionics.html" aria-current="page">Avionics</a></li>
+    <li><a href="life.html">Life</a></li>
+    <li><a href="orbit.html">Orbit</a></li>
+    <li><a href="log.html">Log</a></li>
+   </ul>
+  </nav>
+ </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+<header class="page-head">
+  <p class="kicker">Avionics</p>
+  <h1>Avionics and flight software</h1>
+  <p class="lede">The code the flight computer will run, the loop that tests it against the simulator, and the five
+    circuit boards it will run on. The boards are designed, not built.</p>
+  <p class="status-line"><span><b>Simulation only</b></span><span>No board is ready to fabricate</span><span>Updated 2026-11-10</span></p>
+  <ul class="toc" aria-label="On this page">
+    <li><a href="#software">Flight software</a></li><li><a href="#hil">Hardware-in-the-loop</a></li>
+    <li><a href="#boards">Boards</a></li><li><a href="#wiring">Wiring</a></li><li><a href="#open">Open</a></li>
+  </ul>
+</header>
+
+<section class="sec split" id="software" aria-labelledby="software-h">
+  <h2 id="software-h">Flight software</h2>
+  <div class="body">
+    <p>A C port that matches the Python reference to about 10<sup>-6</sup> step by step. It passes static analysis (gcc
+      analyzer, clang-tidy, cppcheck with MISRA C:2012), runs fuzzing under ASan and UBSan, and runs on a Cortex-M7
+      target in QEMU with the same outputs.</p>
+    <p>It runs at 50 Hz on the flight computer: it reads every sensor, estimates the state with a multi-rate navigation
+      filter (50 Hz IMU, sparse and delayed GNSS, radar altimeter), and commands the engine, the gimbal and the RCS.
+      Guidance, navigation and control: a classical controller with a multi-rate navigation filter, plus a predictive
+      terminal law. An estimate from instruction counts in emulation puts the worst frame at 0.7–1.4% of the 20 ms frame,
+      assuming 1–2 cycles per instruction; it has not been measured on the board yet.</p>
+    <div class="stats">
+      <div><b>10<sup>-6</sup></b><span>largest step-by-step difference between the C code and the Python reference</span></div>
+      <div><b>~1%</b><span>of the 20 ms frame on the STM32H723 (0.7–1.4%), estimated from instruction counts in QEMU; not measured</span></div>
+      <div><b>MISRA</b><span>C:2012 rules checked with cppcheck, plus gcc analyzer and clang-tidy</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec split" id="hil" aria-labelledby="hil-h">
+  <h2 id="hil-h">Hardware-in-the-loop</h2>
+  <div class="body">
+    <p>The C flight software runs as a separate process and talks to the simulator over a UDP protocol with timestamps,
+      CRC, injected latency, packet loss and sensor faults. Every landing number on this site marked HIL comes from this
+      loop, run in lockstep at 50 Hz.</p>
+    <p>An in-process emulator of the HIL server, with the same random streams, latency, packet-loss and command-horizon
+      logic, reproduces HIL episode by episode (300 of 300 identical in the deterministic scenarios). Candidate changes
+      are screened there and then confirmed in HIL on other seeds. Why that mattered is on
+      <a href="gnc.html#tools">Landing: trusting the right simulator</a>.</p>
+  </div>
+</section>
+
+<section class="sec" id="boards" aria-labelledby="boards-h" data-module="boards">
+  <h2 id="boards-h">The boards</h2>
+  <p>Five printed circuit boards, drawn from their layouts. Hover a connector on the board, or hover or focus it in the
+    list, to see what plugs into it.</p>
+  <div class="tabs" id="board-tabs" role="tablist" aria-label="Boards">
+    <button role="tab" id="tab-fc0" aria-controls="panel-fc0" aria-selected="true"><b>FC-0</b>flight computer</button>
+    <button role="tab" id="tab-ecu" aria-controls="panel-ecu" aria-selected="false" tabindex="-1"><b>ECU-1</b>engine controller</button>
+    <button role="tab" id="tab-inv" aria-controls="panel-inv" aria-selected="false" tabindex="-1"><b>INV-1</b>pump inverter, ×2</button>
+    <button role="tab" id="tab-pdu" aria-controls="panel-pdu" aria-selected="false" tabindex="-1"><b>PDU-1</b>power distribution</button>
+    <button role="tab" id="tab-cb" aria-controls="panel-cb" aria-selected="false" tabindex="-1"><b>CB-1</b>DC-bus capacitors, ×2</button>
+    <button role="tab" id="tab-nyd" aria-controls="panel-nyd" aria-selected="false" tabindex="-1"><b>Still open</b>before fabrication</button>
+  </div>
+  <div class="bpanel" id="panel-fc0" role="tabpanel" aria-labelledby="tab-fc0" data-board="fc0">
+    <div><div class="pcb-fig"></div><p class="pcb-info">120 × 90 mm, six layers. Sixteen connectors, all on the edges so the cables leave outward.</p></div>
+    <div>
+      <h3>FC-0 flight computer</h3>
+      <p class="role">Runs the flight software at 50 Hz: reads every sensor, estimates the state, and commands the engine,
+        the gimbal and the RCS.</p>
+      <span class="tag">Routed · not ready to fabricate</span>
+      <ul class="facts">
+        <li>STM32H723 Cortex-M7 with a double-precision FPU. An estimate from instruction counts in emulation puts the flight software at 0.7–1.4% of each 20 ms frame (not yet measured on the board).</li>
+        <li>IMU on the board, a place for an external tactical IMU, RTK GNSS, barometer.</li>
+        <li>Three CAN-FD buses: propulsion, gimbal and RCS, auxiliary.</li>
+        <li>16 MB flash logs the whole flight; FRAM keeps the last records through a power loss.</li>
+        <li>An external watchdog and an isolated flight-termination interface that do not depend on the software.</li>
+        <li>An arm vote to the engine controller through two series stages, each gated in hardware by the watchdog and
+          the reset line: a hung or rebooting processor withdraws it, and an open wire reads as safe.</li>
+        <li>318 parts. Schematic passes ERC; every pin checked against the vendor's pin data. 23 connections left to
+          finish by hand after autorouting.</li>
+      </ul>
+      <ul class="pcb-list" aria-label="FC-0 connectors"></ul>
+    </div>
+  </div>
+  <div class="bpanel" id="panel-ecu" role="tabpanel" aria-labelledby="tab-ecu" data-board="ecu" hidden>
+    <div><div class="pcb-fig"></div><p class="pcb-info">150 × 110 mm, six layers. Signal connectors along the top and bottom,
+      valve power on the right edge.</p></div>
+    <div>
+      <h3>ECU-1 engine controller</h3>
+      <p class="role">Sequences the engine: opens the valves, fires the igniter, reads chamber and feed pressures and
+        temperatures, and commands both pump speeds.</p>
+      <span class="tag">Routed · not ready to fabricate</span>
+      <ul class="facts">
+        <li>STM32G474. Ten pressure, four thermocouple, two RTD and four valve-position inputs.</li>
+        <li>Eight peak-and-hold valve and igniter channels, plus a current-controlled proportional valve.</li>
+        <li>A hardware arming chain: the valves get power only if the arm plug, the termination unit, the flight
+          computer, the watchdog and the controller all agree.</li>
+        <li>The main fuel valve is interlocked in hardware to proof of ignition.</li>
+        <li>476 parts, ERC clean. A few wide power nets still need copper pours instead of traces.</li>
+      </ul>
+      <ul class="pcb-list" aria-label="ECU-1 connectors"></ul>
+    </div>
+  </div>
+  <div class="bpanel" id="panel-inv" role="tabpanel" aria-labelledby="tab-inv" data-board="inv" hidden>
+    <div><div class="pcb-fig"></div><p class="pcb-info">150 × 105 mm, four layers of heavy copper on a cooling plate.
+      Three phase legs across the top, logic along the bottom.</p></div>
+    <div>
+      <h3>INV-1 pump inverter</h3>
+      <p class="role">Turns the pump battery into three-phase current for one pump motor. There are two, identical.</p>
+      <span class="tag">Placement only · routing not done</span>
+      <ul class="facts">
+        <li>150 V MOSFETs, two in parallel per switch. A full 24S pack is 100.8 V, not the nominal 80 V, already above
+          the rating of 100 V parts before braking adds a few volts.</li>
+        <li>Field-oriented control on an STM32G474: hall sensors plus a flux observer that keeps running if the halls
+          fail.</li>
+        <li>In simulation the firmware drives a motor and pump model through starts, speed steps and a full hop without
+          faults, and handles a lost battery and lost hall sensors as designed.</li>
+        <li>Open: automatic placement scatters the DC-link capacitors too far from the switches; that part needs to be
+          laid out by hand.</li>
+      </ul>
+      <ul class="pcb-list" aria-label="INV-1 connectors"></ul>
+    </div>
+  </div>
+  <div class="bpanel" id="panel-pdu" role="tabpanel" aria-labelledby="tab-pdu" data-board="pdu" hidden>
+    <div><div class="pcb-fig"></div><p class="pcb-info">170 × 110 mm. Hover a connector for what it carries.</p></div>
+    <div>
+      <h3>PDU-1 power distribution unit</h3>
+      <p class="role">Sits between the pump battery and the DC bus of the two inverters: fuses the pack, pre-charges the bus, closes the main contactor and reports back to the engine controller.</p>
+      <span class="tag">Placed and routed · DRC 9 violations · routing incomplete: 36 connections, including the active-discharge path, are still open · not ready to fabricate</span>
+      <ul class="facts"><li>The contactor cannot close until the bus has charged to 95 % of the pack voltage. The interlock is built from comparators and gates, independent of any firmware.</li><li>A hardware one-shot limits each pre-charge attempt and a cool-down timer blocks the next one, which bounds the energy the pre-charge resistors take into a shorted bus.</li><li>Two hardware over-current thresholds, one fast and one timed, open the contactor for faults downstream of it. Faults upstream of the contactor are cleared by the fuse alone.</li><li>The high-voltage side is isolated from the logic: isolated amplifiers for the voltages and current, isolated switch drivers for the pre-charge and discharge switches, and a 7 mm barrier with no copper on any layer.</li><li>233 parts including off-board items, ERC clean. 47 of 47 sizing checks pass: pre-charge energy, resistor pulse rating, fuse and contactor coordination, copper temperature rise, spacing.</li></ul>
+      <ul class="pcb-list" aria-label="PDU-1 connectors"></ul>
+    </div>
+  </div>
+  <div class="bpanel" id="panel-cb" role="tabpanel" aria-labelledby="tab-cb" data-board="cb" hidden>
+    <div><div class="pcb-fig"></div><p class="pcb-info">168 × 158 mm. Hover a connector for what it carries.</p></div>
+    <div>
+      <h3>CB-1 DC-bus capacitor board, ×2</h3>
+      <p class="role">Carries the film capacitor bank of one inverter on a laminated, heavy-copper board that bolts straight onto the inverter&#x27;s DC terminals.</p>
+      <span class="tag">Placed, planes only · DRC 0 violations, 0 unconnected · not ready to fabricate</span>
+      <ul class="facts"><li>Four copper layers alternate positive and negative, so the bus itself adds almost no inductance; the two bolted posts to the inverter dominate.</li><li>Analysis of the capacitor network found a resonance between the inverter&#x27;s ceramic capacitors and this bank. A damper on this board would not help; it has to sit on the inverter, next to the switches.</li><li>Real film capacitors weigh about 2.6 times what the first estimate assumed. A half-populated bank passes the ripple checks only together with the damper on the inverter.</li><li>Capacitor current sharing was checked with ±20 % capacitance tolerance in a Monte Carlo run.</li><li>35 parts, ERC clean. 15 of 15 checks pass.</li></ul>
+      <ul class="pcb-list" aria-label="CB-1 connectors"></ul>
+    </div>
+  </div>
+  <div class="bpanel full" id="panel-nyd" role="tabpanel" aria-labelledby="tab-nyd" hidden>
+    <div class="nyd">
+      <div><h4>Finish the routing</h4><p>FC-0 and ECU-1 have about two dozen connections each to finish by hand. PDU-1 has 36,
+        including its active-discharge path, and its logic strip needs more room or a board of its own. INV-1 is placed but
+        not routed.</p></div>
+      <div><h4>A damper on the inverter</h4><p>The capacitor network resonates near 280 kHz and pushes the inverter's gate
+        driver to its voltage limit. The fix is a small RC damper on INV-1, next to the switches.</p></div>
+      <div><h4>Status inputs on ECU-1</h4><p>PDU-1 reports pre-charge done, contactor closed and its fault latch, but the
+        engine controller has no inputs to read them yet.</p></div>
+      <div><h4>Measure what was assumed</h4><p>Contactor arc voltage, pack resistance, regulator start-up and the watchdog's
+        timing are datasheet extrapolations or estimates until a bench test replaces them.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="wiring" aria-labelledby="wiring-h" data-module="wiring">
+  <h2 id="wiring-h">How it's wired</h2>
+  <p>Every link between boards, sensors and actuators, with the connector on each end. Hover or tap a
+    line; the same links are listed in the table below the diagram. Not to scale.</p>
+  <div class="wire-wrap"><svg id="wire-svg" viewBox="0 0 980 510" role="img" aria-label="Wiring diagram of the flight computer, engine controller, inverters, sensors and power."></svg></div>
+  <p class="wire-info" id="wire-info">Blue dots mark the CAN-FD links: the flight computer talks to the engine controller at
+    50 Hz, and the engine controller to each inverter at 1 kHz.</p>
+  <div class="wlegend">
+    <span><i class="k-can"></i>CAN-FD</span><span><i class="k-data"></i>serial, SPI, analog</span>
+    <span><i class="k-rf"></i>RF coax</span><span><i class="k-safe"></i>safety and arming</span>
+    <span><i class="k-power"></i>power</span>
+  </div>
+  <details class="more"><summary>All links as a table</summary>
+    <div class="tablewrap"><table><thead><tr><th>Link</th><th>From, to</th><th>Type</th><th>Connector</th></tr></thead>
+      <tbody id="wire-table"></tbody></table></div>
+  </details>
+  <div class="fam">
+    <div><b>JST GH</b><p>1.25 mm locking connectors for every signal: CAN, serial, sensors, discretes.</p></div>
+    <div><b>Micro-Fit 3.0</b><p>Board power and the valve drivers, where the current is a few amps.</p></div>
+    <div><b>M5 studs</b><p>The inverters' DC bus and motor phases, at a couple of hundred amps.</p></div>
+    <div><b>SMA, RJ45, USB-C</b><p>GNSS antenna coax; Ethernet and USB only on the bench, never in flight.</p></div>
+  </div>
+  <p class="note" style="margin-top:var(--sp-5)">The flight-computer arm vote shares the flight software with the engine
+    controller's own vote, so the arm plug and the flight termination unit are the independent members of the chain.</p>
+</section>
+
+<section class="sec split" id="open" aria-labelledby="open-h">
+  <h2 id="open-h">Open on the avionics</h2>
+  <div class="body">
+    <ul>
+      <li>None of the five boards is fabrication-ready: FC-0 and ECU-1 are routed with connections left to finish by hand,
+        PDU-1 has 36 connections open including its active-discharge path, INV-1 is placed but not routed, and CB-1 is
+        placed with planes only. The details are under <a href="#boards">Still open</a>.</li>
+      <li>The capacitor network needs a damper on the inverter, and ECU-1 needs inputs for the PDU-1 status lines.</li>
+      <li>Contactor arc voltage, pack resistance, regulator start-up and the watchdog's timing are estimates until bench
+        tests replace them.</li>
+    </ul>
+  </div>
+</section>
+
+<nav class="next" aria-label="Next page"><a href="vehicle.html"><span>Back</span>The vehicle</a><a href="life.html"><span>Next</span>What each flight costs</a></nav>
+</div>
+</main>
+
+<!-- site footer: identical on every page -->
+<footer>
+ <div class="wrap fgrid2">
+  <div>
+   <p class="fname">Hop-0</p>
+   <p>Hasan Melih. Phase 0 of a longer plan toward a small reusable launcher. This site shows methods and results;
+     detailed design data and flight code are not published.</p>
+   <p>Simulation only: nothing on this site has been built or flown.</p>
+  </div>
+  <ul aria-label="Pages">
+   <li><a href="index.html">Home</a></li><li><a href="gnc.html">Landing</a></li><li><a href="vehicle.html">Vehicle</a></li>
+   <li><a href="avionics.html">Avionics</a></li><li><a href="life.html">Life</a></li><li><a href="orbit.html">Orbit</a></li>
+   <li><a href="log.html">Log</a></li>
+  </ul>
+ </div>
+</footer>
+
+<script src="assets/js/boot.js"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The first orbital product · Hop-0</title>
+<meta name="description" content="How small can a rocket be and still reach orbit, and which size is worth building: a minimum-launcher study with payload against liftoff mass, each design flown to orbit in a 3-DOF ascent simulation.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The first orbital product · Hop-0">
+<meta property="og:description" content="How small can a rocket be and still reach orbit, and which size is worth building: a minimum-launcher study with payload against liftoff mass, each design flown to orbit in a 3-DOF ascent simulation.">
+<meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/orbit.html">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hop-0 engineering log: 18 replayed landing trajectories converging on the pad.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="orbit">
+<a class="skip" href="#main">Skip to content</a>
+<!-- site header: identical on every page -->
+<header class="bar">
+ <div class="wrap">
+  <a class="home-link" href="index.html"><span class="mark" aria-hidden="true"><svg viewBox="0 0 22 22"><rect x="8.5" y="2" width="5" height="14" rx="2.5" fill="#fafaf6"/><path d="M8.5 13 L4 19 M13.5 13 L18 19" stroke="#fafaf6" stroke-width="1.8"/></svg></span>Hop-0 engineering log</a>
+  <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+  <nav id="site-nav" aria-label="Site">
+   <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="gnc.html">Landing</a></li>
+    <li><a href="vehicle.html">Vehicle</a></li>
+    <li><a href="avionics.html">Avionics</a></li>
+    <li><a href="life.html">Life</a></li>
+    <li><a href="orbit.html" aria-current="page">Orbit</a></li>
+    <li><a href="log.html">Log</a></li>
+   </ul>
+  </nav>
+ </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+<header class="page-head">
+  <p class="kicker">Beyond Phase 0</p>
+  <h1>The first orbital product</h1>
+  <p class="status-line"><span><b>A study, not a vehicle design</b></span><span>3-DOF ascent simulation</span><span>Updated 2026-11-10</span></p>
+</header>
+<section class="sec" id="orbit" aria-labelledby="orbit-h" data-module="leo" style="border-top:0;padding-top:0">
+  <h2 id="orbit-h" class="vh">Payload against liftoff mass</h2>
+  <p class="lede">Hop-0 is the first step toward a small launcher. How small can a rocket be and still reach orbit,
+    and which size is worth building? Every design below was flown to orbit in a 3-DOF ascent simulation with its own
+    optimised steering before it counted, and carries a performance reserve.</p>
+  <div class="grid2">
+    <div>
+      <div class="chart" id="leo-chart"><div class="legend"><span><i class="k-after"></i>circular 500 km orbit</span>
+        <span><i class="k-hollow"></i>500 km perigee, elliptical (solid kick stage)</span>
+        <span><i class="k-rec"></i>recommended</span></div></div>
+      <p class="pcb-info" id="leo-info">Hover or tap a point. The shaded band is each point's own 5-95 % range over the uncertain
+        technology inputs; model-form uncertainty is not included.</p>
+      <details class="more"><summary>Data table</summary><div class="tablewrap"><table><caption>Liftoff mass for each payload to a 500 km orbit</caption><thead><tr><th class="num">Payload [kg]</th><th class="num">Liftoff [t]</th><th class="num">5-95 % [t]</th></tr></thead><tbody><tr><td class="num">1</td><td class="num">2.1</td><td class="num">1.8-3.0</td></tr><tr><td class="num">5</td><td class="num">2.9</td><td class="num">2.5-3.9</td></tr><tr><td class="num">25</td><td class="num">5.5</td><td class="num">4.8-7.2</td></tr><tr><td class="num">50</td><td class="num">8.0</td><td class="num">7.1-10.4</td></tr><tr><td class="num">150</td><td class="num">14.7</td><td class="num">12.6-20.3</td></tr><tr><td class="num">300</td><td class="num">23.0</td><td class="num">19.9-30.8</td></tr></tbody></table></div></details>
+    </div>
+    <div>
+      <div class="stats" style="--n:2">
+        <div><b>~2 t</b><span>smallest vehicle that reaches orbit: 2.1 t with 1 kg, 2.9 t with 5 kg payload; a demonstrator</span></div>
+        <div><b>~23 t</b><span>recommended first product: about 300 kg to 500 km (range 20-31 t)</span></div>
+        <div><b>3</b><span>stages in every design that closed; two liquid stages never win with this engine class</span></div>
+        <div><b>+15 %</b><span>simulator optimism against a flown launcher, carried as an extra margin</span></div>
+      </div>
+      <ul class="ins"><li>Shrinking the payload from 5 kg to 1 kg saves only about a quarter of the liftoff mass: avionics, fairing and minimum-gauge structure set a floor of about two tonnes.</li><li>The smallest vehicle that reaches orbit is a demonstrator, not a product: its cost per flight is several times what the market pays for a few kilograms.</li><li>Cost per kilogram falls by more than an order of magnitude between 5 kg and 150 kg of payload; only around the 300 kg class does the estimated cost per flight fall below what dedicated small launches sell for today, which sets the size of the first commercial product.</li><li>Engine efficiency is the largest single lever: about 5 % more specific impulse saves roughly a sixth of the liftoff mass.</li><li>The simulator is consistent with a flown three-stage micro launcher (a calibrated check: some inputs of that vehicle are not public and were assumed) and over-predicts a flown two-stage launcher by about 15 %; the sizing carries an extra margin for that bias. Comparable launchers under development quote 10-25 % less payload for a similar liftoff mass, so the curve is on the optimistic side of its peers.</li></ul>
+      <p class="note">Minimum within the studied architecture: first-stage thrust-to-weight, engine count and nozzles were
+        not traded. Expendable vehicles; composite-class structure. A study, not a vehicle design.</p>
+    </div>
+  </div>
+  <script type="application/json" id="leo-data">{"payload_vs_liftoff_mass": [{"payload_kg": 1, "liftoff_t": 2.1, "liftoff_t_min": 1.8, "liftoff_t_median": 2.3, "liftoff_t_max": 3.0, "orbit": "elliptical, 500 km perigee, about 500 x 1700 km unless the kick motor is off-loaded", "stages": "2 liquid + solid kick"}, {"payload_kg": 5, "liftoff_t": 2.9, "liftoff_t_min": 2.5, "liftoff_t_median": 3.1, "liftoff_t_max": 3.9, "orbit": "elliptical, 500 km perigee, about 500 x 1700 km unless the kick motor is off-loaded", "stages": "2 liquid + solid kick"}, {"payload_kg": 25, "liftoff_t": 5.5, "liftoff_t_min": 4.8, "liftoff_t_median": 5.8, "liftoff_t_max": 7.2, "orbit": "elliptical, 500 km perigee, about 500 x 1700 km unless the kick motor is off-loaded", "stages": "2 liquid + solid kick"}, {"payload_kg": 50, "liftoff_t": 8.0, "liftoff_t_min": 7.1, "liftoff_t_median": 8.5, "liftoff_t_max": 10.4, "orbit": "elliptical, 500 km perigee, about 500 x 1700 km unless the kick motor is off-loaded", "stages": "2 liquid + solid kick"}, {"payload_kg": 150, "liftoff_t": 14.7, "liftoff_t_min": 12.6, "liftoff_t_median": 15.7, "liftoff_t_max": 20.3, "orbit": "500 km circular", "stages": "3 liquid"}, {"payload_kg": 300, "liftoff_t": 23.0, "liftoff_t_min": 19.9, "liftoff_t_median": 24.4, "liftoff_t_max": 30.8, "orbit": "500 km circular", "stages": "3 liquid"}]}</script>
+</section>
+<nav class="next" aria-label="Next page"><a href="life.html"><span>Back</span>What each flight costs</a><a href="log.html"><span>Next</span>Engineering log</a></nav>
+</div>
+</main>
+
+<!-- site footer: identical on every page -->
+<footer>
+ <div class="wrap fgrid2">
+  <div>
+   <p class="fname">Hop-0</p>
+   <p>Hasan Melih. Phase 0 of a longer plan toward a small reusable launcher. This site shows methods and results;
+     detailed design data and flight code are not published.</p>
+   <p>Simulation only: nothing on this site has been built or flown.</p>
+  </div>
+  <ul aria-label="Pages">
+   <li><a href="index.html">Home</a></li><li><a href="gnc.html">Landing</a></li><li><a href="vehicle.html">Vehicle</a></li>
+   <li><a href="avionics.html">Avionics</a></li><li><a href="life.html">Life</a></li><li><a href="orbit.html">Orbit</a></li>
+   <li><a href="log.html">Log</a></li>
+  </ul>
+ </div>
+</footer>
+
+<script src="assets/js/boot.js"></script>
+</body>
+</html>

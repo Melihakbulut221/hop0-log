@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What each flight costs · Hop-0</title>
+<meta name="description" content="The Hop-0 life twin: a wear account built from 600 hardware-in-the-loop flights, remaining life per part, landing loads, and why loss rather than wear sets the vehicle's life.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="What each flight costs · Hop-0">
+<meta property="og:description" content="The Hop-0 life twin: a wear account built from 600 hardware-in-the-loop flights, remaining life per part, landing loads, and why loss rather than wear sets the vehicle's life.">
+<meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/life.html">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hop-0 engineering log: 18 replayed landing trajectories converging on the pad.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="life">
+<a class="skip" href="#main">Skip to content</a>
+<!-- site header: identical on every page -->
+<header class="bar">
+ <div class="wrap">
+  <a class="home-link" href="index.html"><span class="mark" aria-hidden="true"><svg viewBox="0 0 22 22"><rect x="8.5" y="2" width="5" height="14" rx="2.5" fill="#fafaf6"/><path d="M8.5 13 L4 19 M13.5 13 L18 19" stroke="#fafaf6" stroke-width="1.8"/></svg></span>Hop-0 engineering log</a>
+  <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+  <nav id="site-nav" aria-label="Site">
+   <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="gnc.html">Landing</a></li>
+    <li><a href="vehicle.html">Vehicle</a></li>
+    <li><a href="avionics.html">Avionics</a></li>
+    <li><a href="life.html" aria-current="page">Life</a></li>
+    <li><a href="orbit.html">Orbit</a></li>
+    <li><a href="log.html">Log</a></li>
+   </ul>
+  </nav>
+ </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+<header class="page-head">
+  <p class="kicker">Life twin</p>
+  <h1>What each flight costs</h1>
+  <p class="status-line"><span><b>Simulation only</b></span><span>600 HIL flights, hardest scenario</span><span>Life twin v0.1</span><span>Updated 2026-11-10</span></p>
+</header>
+<section class="sec" id="life" aria-labelledby="life-h" data-module="life" style="border-top:0;padding-top:0">
+  <h2 id="life-h" class="vh">Wear account</h2>
+  <p class="lede">The twin keeps a wear account. Every flight record is turned into damage for each part that wears
+    out: the chamber's hot wall, the pump battery, the shocks, the honeycomb, the struts, the welded hull zones and the
+    gimbal actuators. The flights here are 600 hardware-in-the-loop flights in the hardest scenario, flown by the
+    flight software one revision before its latest attitude-gain change, so this is a cautious load spectrum.</p>
+  <div class="lgrid">
+    <div class="lconsole" id="life-console" aria-live="off">
+      <div class="lc-top">
+        <div><p class="k">Flights flown</p><div class="lc-n">0</div></div>
+        <div><p class="k" style="text-align:right">Chance it is still flying</p><div class="lc-alive">100%</div></div>
+      </div>
+      <div class="lc-bars"></div>
+      <div class="lc-foot"><p class="lc-log"></p><button type="button" class="lc-play">Replay from flight 0</button></div>
+    </div>
+    <div>
+      <div class="chart" id="life-chart"><div class="legend"><span><i class="k-after"></i>median, nominal assumptions</span>
+        <span><i class="k-before"></i>chamber with pessimistic film cooling</span></div></div>
+      <p class="note" style="margin-top:var(--sp-3)">Wear bars use the mean damage per flight. The chance of still flying uses the one loss
+        in 600 flights; its 95% interval is 0.03% to 0.9% per flight, so the curve is uncertain by a factor of a few.</p>
+    </div>
+  </div>
+  <div class="stats" style="--n:4">
+    <div><b>2.5 g</b><span>mean peak landing load; 99th percentile 3.4 g</span></div>
+    <div><b>0 / 561</b><span>landings that crushed a honeycomb cartridge</span></div>
+    <div><b>22%</b><span>of the shock stroke used on average, 59% at most</span></div>
+    <div><b>20%</b><span>of the pump battery used per hop on average</span></div>
+  </div>
+  <div class="lnotes">
+    <div><h3>Loss, not wear, sets the life</h3><p>The first part to wear out is the chamber's hot wall, after about
+      1,400 flights, 780 if film cooling turns out at the pessimistic end. That is twenty times the engine's requirement. But at
+      one loss in 600 flights in this scenario, the vehicle is more likely to be lost than worn out. Reliability is where the
+      work goes next.</p></div>
+    <div><h3>What the numbers rest on</h3><p>Leg loads come from replaying each HIL flight at the physics rate and
+      checking it against the HIL log, episode by episode. The battery cycle life, the weld fatigue class and the shock service
+      interval are assumptions until a datasheet or a test replaces them; the twin says which.</p></div>
+    <div><h3>A bug it found</h3><p>Building the twin exposed a sign error in the simulator's honeycomb limiter: past
+      its crush point it stiffened the leg instead of capping the force. No landing in these records reached that point, so no
+      result changes, but it would have mattered for crash studies.</p></div>
+    <div><h3>Next: real data</h3><p>The same step that adds a simulated flight will add a real one, from telemetry and
+      a stroke sensor on each leg. The first static fires and drop tests will replace the assumptions one by one.</p></div>
+  </div>
+  <script type="application/json" id="life-data">{"per_flight": {"chamber": 0.0007000047278176741, "battery": 0.00042551953754794915, "honeycomb": 0.0, "shock": 0.019999999999999997, "strut": 7.476101347153706e-16, "structure": 7.583230206918308e-06, "actuators": 1.523306639928699e-05}, "median": {"chamber": 1429.0, "battery": 2351.0, "honeycomb": 20000.0, "shock": 50.0, "strut": 20000.0, "structure": 20000.0, "actuators": 20000.0}, "pess_chamber": 780.0, "p_loss": 0.0016666666666666668, "g": [2.46, 3.42, 3.87]}</script>
+</section>
+<nav class="next" aria-label="Next page"><a href="avionics.html"><span>Back</span>Avionics</a><a href="orbit.html"><span>Next</span>The first orbital product</a></nav>
+</div>
+</main>
+
+<!-- site footer: identical on every page -->
+<footer>
+ <div class="wrap fgrid2">
+  <div>
+   <p class="fname">Hop-0</p>
+   <p>Hasan Melih. Phase 0 of a longer plan toward a small reusable launcher. This site shows methods and results;
+     detailed design data and flight code are not published.</p>
+   <p>Simulation only: nothing on this site has been built or flown.</p>
+  </div>
+  <ul aria-label="Pages">
+   <li><a href="index.html">Home</a></li><li><a href="gnc.html">Landing</a></li><li><a href="vehicle.html">Vehicle</a></li>
+   <li><a href="avionics.html">Avionics</a></li><li><a href="life.html">Life</a></li><li><a href="orbit.html">Orbit</a></li>
+   <li><a href="log.html">Log</a></li>
+  </ul>
+ </div>
+</footer>
+
+<script src="assets/js/boot.js"></script>
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engineering log · Hop-0</title>
+<meta name="description" content="Dated entries of the Hop-0 digital twin since 2026-11-03: what changed, what was measured, and what did not work or was reverted.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Engineering log · Hop-0">
+<meta property="og:description" content="Dated entries of the Hop-0 digital twin since 2026-11-03: what changed, what was measured, and what did not work or was reverted.">
+<meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/log.html">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hop-0 engineering log: 18 replayed landing trajectories converging on the pad.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="log">
+<a class="skip" href="#main">Skip to content</a>
+<!-- site header: identical on every page -->
+<header class="bar">
+ <div class="wrap">
+  <a class="home-link" href="index.html"><span class="mark" aria-hidden="true"><svg viewBox="0 0 22 22"><rect x="8.5" y="2" width="5" height="14" rx="2.5" fill="#fafaf6"/><path d="M8.5 13 L4 19 M13.5 13 L18 19" stroke="#fafaf6" stroke-width="1.8"/></svg></span>Hop-0 engineering log</a>
+  <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+  <nav id="site-nav" aria-label="Site">
+   <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="gnc.html">Landing</a></li>
+    <li><a href="vehicle.html">Vehicle</a></li>
+    <li><a href="avionics.html">Avionics</a></li>
+    <li><a href="life.html">Life</a></li>
+    <li><a href="orbit.html">Orbit</a></li>
+    <li><a href="log.html" aria-current="page">Log</a></li>
+   </ul>
+  </nav>
+ </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+<header class="page-head">
+  <p class="kicker">Log</p>
+  <h1>Engineering log</h1>
+  <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
+    the episodes run. HIL is the C flight software in hardware-in-the-loop; Python is the fast simulation; the emulator is
+    the in-process copy of the HIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
+  <p class="status-line"><span><b>29 entries</b></span><span>2026-11-03 to 2026-11-10</span><span>Simulation only</span></p>
+  <ul class="toc" aria-label="Jump to a day">
+    <li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
+    <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
+  </ul>
+</header>
+
+<ol class="log" reversed>
+
+<li class="entry" id="e-1110-att"><div id="d-1110"><time datetime="2026-11-10">2026-11-10</time><span class="area">Guidance</span></div><div>
+  <h2 class="eh">Stiffer attitude loop at 50 Hz</h2>
+  <dl>
+    <dt>Changed</dt><dd>A higher attitude-loop gain, at the 50 Hz flight rate only. Eleven candidates were screened in the
+      emulator on seeds disjoint from HIL; the predictive law's own settings were already the best of their sweep.</dd>
+    <dt>Measured</dt><dd>Emulator, worst aerodynamic corner: 760 to 776 of 800. HIL worst aerodynamic corner 281 to 283
+      (set A) and 282 to 291 (set B) of 300; hardest scenario 296 to 299 (A) and 294 to 298 (B); no radar 298 to 299.
+      COTS and harsh rows stayed at 100 of 100. The baseline column was re-run and reproduced the earlier HIL numbers exactly.</dd>
+    <dt>Did not work</dt><dd class="bad">At 20 Hz the same change was net 3 landings worse in 400, so the 20 Hz configuration
+      keeps the old gain. The gain still leaves about 1.5 to 2 times margin to where the loop went unstable in an earlier sweep.</dd>
+  </dl>
+  <p class="ev"><span>HIL, 300 episodes per set</span><a href="gnc.html#timeline">step 11 of the timeline</a></p>
+</div></li>
+
+<li class="entry" id="e-1110-life"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Life twin</span></div><div>
+  <h2 class="eh">Life twin v0.1: a wear account per flight</h2>
+  <dl>
+    <dt>Changed</dt><dd>Every flight record is turned into damage for each part that wears out. Built from 600 HIL episodes of
+      the hardest scenario (both seed sets), flown by the software before the attitude-gain change above.</dd>
+    <dt>Measured</dt><dd>The chamber's hot wall wears out first, after about 1,400 flights (780 with pessimistic film
+      cooling). Leg loads replayed at the physics rate matched the HIL log for 561 landings. One loss in 600 flights.</dd>
+    <dt>Found</dt><dd class="bad">A sign error in the simulator's honeycomb limiter: past its crush point it stiffened the
+      leg instead of capping the force. No recorded landing reached that point, so no result changed (a re-play of three
+      episodes after the fix was bit-identical).</dd>
+  </dl>
+  <p class="ev"><a href="life.html">What each flight costs</a></p>
+</div></li>
+
+<li class="entry" id="e-1110-leo"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Orbit study</span></div><div>
+  <h2 class="eh">How small an orbital launcher can be</h2>
+  <dl>
+    <dt>Changed</dt><dd>A minimum-launcher study: every design was flown to orbit in a 3-DOF ascent simulation with its own
+      optimised steering before it counted.</dd>
+    <dt>Measured</dt><dd>About 2.1 t is the smallest vehicle that reaches orbit, with 1 kg (2.9 t with 5 kg): a demonstrator. The recommended
+      first product is about 23 t (range 20-31 t) for about 300 kg to 500 km. The simulator over-predicts a flown two-stage
+      launcher by about 15%, carried as extra margin.</dd>
+    <dt>Limits</dt><dd>Minimum within the studied architecture; a study, not a vehicle design.</dd>
+  </dl>
+  <p class="ev"><a href="orbit.html">The first orbital product</a></p>
+</div></li>
+
+<li class="entry" id="e-1110-pdu"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Boards</span></div><div>
+  <h2 class="eh">PDU-1 power distribution and CB-1 capacitor boards</h2>
+  <dl>
+    <dt>Changed</dt><dd>A power-distribution unit with a hardware pre-charge interlock, two hardware over-current thresholds
+      and isolated sensing; a laminated film-capacitor board for each inverter.</dd>
+    <dt>Measured</dt><dd>PDU-1: 47 of 47 sizing checks pass. CB-1: 15 of 15 checks pass, DRC clean.</dd>
+    <dt>Found</dt><dd class="bad">Real film capacitors weigh about 2.6 times the first estimate. The capacitor network
+      resonates with the inverter's ceramic capacitors; the damper has to sit on INV-1, not on CB-1. PDU-1 still has 36
+      connections open, including its active-discharge path.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">The boards</a></p>
+</div></li>
+
+<li class="entry" id="e-1110-arm"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Boards</span></div><div>
+  <h2 class="eh">FC-0 arm vote to the engine controller</h2>
+  <dl>
+    <dt>Changed</dt><dd>A fail-safe discrete arm output from the flight computer into the engine controller's arming chain,
+      through two series stages gated in hardware by the watchdog and the reset line.</dd>
+    <dt>Found</dt><dd class="bad">The watchdog was strapped for a timeout shorter than the 20 ms frame, so the board would have
+      been reset every frame; corrected.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#wiring">How it's wired</a></p>
+</div></li>
+
+<li class="entry" id="e-1109-diag"><div id="d-1109"><time datetime="2026-11-09">2026-11-09</time><span class="area">Tools</span></div><div>
+  <h2 class="eh">The quick diagnostic tool now flies the flight filter</h2>
+  <dl>
+    <dt>Changed</dt><dd>The fast diagnostic simulation now runs the flight software's own filter configuration (accelerometer,
+      sparse GNSS, radar, command horizon) by default. The legacy mode stays available.</dd>
+    <dt>Measured</dt><dd>With it, the predictive law below is equal or better in all 11 scenarios checked, by up to 13 of 400
+      in the worst aerodynamic corner.</dd>
+    <dt>Lesson</dt><dd class="bad">Every earlier "Python" table was in the legacy mode, which is clearly pessimistic, and in two
+      changes it pointed the opposite way to the flight configuration.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#tools">Trusting the right simulator</a></p>
+</div></li>
+
+<li class="entry" id="e-1109-lqr"><div><time datetime="2026-11-09">2026-11-09</time><span class="area">Guidance</span></div><div>
+  <h2 class="eh">Predictive terminal guidance</h2>
+  <dl>
+    <dt>Changed</dt><dd>A finite-horizon LQR for the last part of the descent that models the attitude-loop lag and plans to
+      null position and velocity at touchdown. Deterministic in embedded C, equivalent to Python.</dd>
+    <dt>Measured</dt><dd>Emulator, hardest scenario: 780 to 790 of 800, hard landings 14 to 7. HIL hardest scenario 294 to
+      296 (set A) and 289 to 294 (set B) of 300. Other HIL rows within noise.</dd>
+    <dt>Did not work</dt><dd class="bad">Running only inside the terminal gate made no difference: the final lateral state is
+      set higher up. The legacy diagnostic mode showed a regression that the flight configuration did not have.</dd>
+  </dl>
+  <p class="ev"><span>HIL, 300 episodes per set</span><a href="gnc.html#timeline">step 10</a></p>
+</div></li>
+
+<li class="entry" id="e-1108-kad"><div id="d-1108"><time datetime="2026-11-08">2026-11-08</time><span class="area">Navigation</span></div><div>
+  <h2 class="eh">Disturbance-state gain tied to the filter mode</h2>
+  <dl>
+    <dt>Changed</dt><dd>The gain of the angular-disturbance state now depends on whether the filter uses the accelerometer.
+      Screened in the emulator on the worst aerodynamic corner with latency.</dd>
+    <dt>Measured</dt><dd>Emulator 362 to 379 of 400. HIL target scenario 269 to 273 (A) and 275 to 279 (B) of 300; hardest
+      scenario 289 to 294.</dd>
+    <dt>Did not work</dt><dd class="bad">Without the accelerometer the same gain hurts with harsh sensors (398 to 380 of 400 in
+      the legacy diagnostic mode), hence the split by mode.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#timeline">step 9</a></p>
+</div></li>
+
+<li class="entry" id="e-1108-gate"><div><time datetime="2026-11-08">2026-11-08</time><span class="area">Guidance</span></div><div>
+  <h2 class="eh">Higher terminal gate</h2>
+  <dl>
+    <dt>Changed</dt><dd>Higher floors for the terminal-gate heights, for every sensor class. From here on, screening and
+      confirmation seeds are disjoint by rule.</dd>
+    <dt>Measured</dt><dd>Emulator 379 to 391 of 400. HIL hardest scenario 285 to 289 (A) and 283 to 289 (B); hard landings
+      roughly halved. 20 Hz hardest scenario 183 to 194 of 200.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#timeline">step 8</a></p>
+</div></li>
+
+<li class="entry" id="e-1108-ramp"><div><time datetime="2026-11-08">2026-11-08</time><span class="area">Guidance</span></div><div>
+  <h2 class="eh">Smoother braking feed-forward</h2>
+  <dl>
+    <dt>Changed</dt><dd>The braking feed-forward now ramps to zero at the flare instead of stepping, in Python and C.</dd>
+    <dt>Measured</dt><dd>A one-step thrust jump is gone; the float32 equivalence margin improved about three times. HIL no
+      radar 298 to 300, hardest scenario 287 to 285 (within noise). Kept for the smoother command.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#timeline">step 7</a></p>
+</div></li>
+
+<li class="entry" id="e-1108-sweeps"><div><time datetime="2026-11-08">2026-11-08</time><span class="area">Guidance</span></div><div>
+  <h2 class="eh">Two sweeps that found nothing</h2>
+  <dl>
+    <dt>Tried</dt><dd>A full re-sweep of the 20 Hz configuration, and the attitude gain on the hardest scenario at 50 Hz.</dd>
+    <dt>Did not work</dt><dd class="bad">At 20 Hz no candidate beat the noise and the best one went opposite ways on the two
+      HIL seed sets. At 50 Hz the gain gave +3 of 600, at the noise limit, while reducing stability margin. Neither was
+      applied. (The gain was applied on 2026-11-10 after a sweep on a different scenario.)</dd>
+  </dl>
+</div></li>
+
+<li class="entry" id="e-1107-20hz"><div id="d-1107"><time datetime="2026-11-07">2026-11-07</time><span class="area">Guidance</span></div><div>
+  <h2 class="eh">20 Hz with harsh sensors: tried, reverted twice</h2>
+  <dl>
+    <dt>Tried</dt><dd>Filter and guidance settings for the 20 Hz reference configuration, first from the fast Python loop,
+      then from the new emulator.</dd>
+    <dt>Did not work</dt><dd class="bad">The filter gain the Python loop recommended made the HIL hardest case worse, 186 to
+      172 of 200: the Python loop did not model packet loss. A second candidate gained +1 on a second seed set and cost 3
+      landings in a deterministic 50 Hz scenario. Both reverted. One seed block had been used in screening and in the
+      "held-out" HIL set; since then the sets are disjoint.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#mistakes">Mistakes</a></p>
+</div></li>
+
+<li class="entry" id="e-1107-emulator"><div><time datetime="2026-11-07">2026-11-07</time><span class="area">Tools</span></div><div>
+  <h2 class="eh">An in-process emulator of the HIL server</h2>
+  <dl>
+    <dt>Changed</dt><dd>The HIL server's random streams, latency, packet-loss and command-horizon logic in-process, without
+      the network, in parallel.</dd>
+    <dt>Measured</dt><dd>It reproduces HIL episode by episode: 300 of 300 identical in the deterministic scenario, totals within
+      one landing in the lossy ones. It correctly shows the misleading 20 Hz recommendation above as a regression.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#hil">Hardware-in-the-loop</a></p>
+</div></li>
+
+<li class="entry" id="e-1107-termvel"><div><time datetime="2026-11-07">2026-11-07</time><span class="area">Guidance</span></div><div>
+  <h2 class="eh">Terminal velocity law</h2>
+  <dl>
+    <dt>Changed</dt><dd>A slower, less aggressive lateral approach to the pad. The vehicle had been overshooting the pad
+      under latency and lost frames.</dd>
+    <dt>Measured</dt><dd>Chosen among ten HIL variants on set A: hardest scenario 276 to 287 of 300. On the held-out set B,
+      introduced for this check: 282 to 286. No radar 295 to 298.</dd>
+    <dt>Lesson</dt><dd class="bad">The gain on set B was about a third of the gain on set A: part of it was fitted to the seeds.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#timeline">step 6</a></p>
+</div></li>
+
+<li class="entry" id="e-1107-cotsgate"><div><time datetime="2026-11-07">2026-11-07</time><span class="area">Guidance</span></div><div>
+  <h2 class="eh">Better sensors, harder landings</h2>
+  <dl>
+    <dt>Found</dt><dd>In the worst aerodynamic corner, COTS sensors landed less often than harsh ones (185 against 195 of
+      200). A margin that raised the terminal gate for noisy position fixes was also giving the vehicle time to damp its
+      lateral drift; with better sensors the gate was lower and the time was missing.</dd>
+    <dt>Changed</dt><dd>A floor under the gate heights for every sensor class.</dd>
+    <dt>Measured</dt><dd>HIL COTS rows 97 / 98 / 94 to 100 / 100 / 100 of 100; worst aerodynamic corner with COTS 185 to
+      195 of 200. Harsh rows unchanged by construction.</dd>
+  </dl>
+</div></li>
+
+<li class="entry" id="e-1107-divert"><div><time datetime="2026-11-07">2026-11-07</time><span class="area">Guidance</span></div><div>
+  <h2 class="eh">Divert-feasibility sink limit</h2>
+  <dl>
+    <dt>Changed</dt><dd>In descent, the sink rate is limited so that the remaining divert can still be completed with the
+      available tilt when drag is high.</dd>
+    <dt>Measured</dt><dd>Python worst aerodynamic corner 342 to 358 of 400 (held-out seeds 335 to 355). HIL hardest
+      scenario 271 to 276; first HIL runs of the worst corner: 185 (COTS) and 195 (harsh) of 200.</dd>
+    <dt>Did not work</dt><dd class="bad">COTS with lost frames went 97 to 94 of 100, at the noise limit for 100 episodes, and
+      led to the entry above.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#timeline">step 5</a></p>
+</div></li>
+
+<li class="entry" id="e-1106-tilt"><div id="d-1106"><time datetime="2026-11-06">2026-11-06</time><span class="area">Guidance</span></div><div>
+  <h2 class="eh">Terminal tilt limits for 12 m/s wind</h2>
+  <dl>
+    <dt>Found</dt><dd>The remaining failures arrived at the terminal gate still drifting sideways; the tilt allowed near the
+      ground was too small to stop that drift and hold against the wind.</dd>
+    <dt>Changed</dt><dd>Wider tilt limits near the ground.</dd>
+    <dt>Measured</dt><dd>Python harsh 364 to 387 of 400 on the tuning seeds, 363 to 378 on unseen seeds. HIL hardest
+      scenario 266 to 271, no radar 281 to 295, harsh with latency 90 to 93.</dd>
+    <dt>Did not work</dt><dd class="bad">The first variant touched down tilted at 20 Hz and cost 17 landings there; the flare
+      limit was pulled back until 20 Hz was neutral.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#timeline">step 4</a></p>
+</div></li>
+
+<li class="entry" id="e-1104-fairings"><div id="d-1104"><time datetime="2026-11-04">2026-11-04</time><span class="area">Aerodynamics</span></div><div>
+  <h2 class="eh">Leg fairings: designed, checked, dropped</h2>
+  <dl>
+    <dt>Tried</dt><dd>Free-swivelling leg fairings, designed and checked with finite elements after fixed fairings had been
+      rejected: in crossflow they act as fins (1.9–3.4 times the lateral leg force in a strip model; CFD later gave
+      2.3–2.6 times).</dd>
+    <dt>Measured</dt><dd>CFD of the faired legs: only a 9–14% leg-force reduction in hover side wind, because about 60% of
+      the leg force comes from parts that cannot be faired. In simulation with their mass (5.8 kg of parts, 6.8 kg at vehicle level with growth): harsh 364 to
+      353 of 400, COTS 381 to 363.</dd>
+    <dt>Decision</dt><dd class="bad">Dropped. The extra mass lowers the centre of mass and shortens the gimbal's lever arm by
+      more than the aerodynamics give back.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#wind">Wind broke the lander</a></p>
+</div></li>
+
+<li class="entry" id="e-1104-filter"><div><time datetime="2026-11-04">2026-11-04</time><span class="area">Navigation</span></div><div>
+  <h2 class="eh">One extra state in the navigation filter</h2>
+  <dl>
+    <dt>Found</dt><dd>A "±10° gimbal helps" study result was an artifact: the filter kept its own ±7° constant and
+      under-modelled gimbal torque by 30%, which happened to offset the aerodynamic moment it did not know about.</dd>
+    <dt>Changed</dt><dd>An angular-acceleration disturbance state, learnt from the gyro residual, in Python and C together;
+      the ±10° gimbal applied as well.</dd>
+    <dt>Measured</dt><dd>HIL hardest scenario 159 to 266 of 300; no radar 192 to 281; COTS 75 to 96 of 100; harsh 72 to 99.
+      On its own the bigger gimbal changes the rate within noise.</dd>
+    <dt>Found</dt><dd class="bad">A C bug: the new state was not reset between episodes. Fixed; C/Python equivalence back
+      within tolerance.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#wind">The filter</a> · <a href="gnc.html#timeline">step 3</a></p>
+</div></li>
+
+<li class="entry" id="e-1104-gimbal"><div><time datetime="2026-11-04">2026-11-04</time><span class="area">Mechanical</span></div><div>
+  <h2 class="eh">Gimbal clearance sweep</h2>
+  <dl>
+    <dt>Changed</dt><dd>A sweep that moves the engine group and its actuators through every corner of the gimbal range and
+      checks each moving part against each fixed one; a re-laid-out aft bay.</dd>
+    <dt>Found</dt><dd class="bad">On the earlier layout an actuator envelope was already touching the film-cooling feed ring (0.06–0.15 mm) at ±7°, a clash
+      the older check missed because it left the actuators out.</dd>
+    <dt>Measured</dt><dd>Closest approach now 8.0 mm for the engine group and 12.6 mm for the actuators, against 5 mm required.</dd>
+  </dl>
+  <p class="ev"><a href="vehicle.html#gimbal">Gimbal clearance</a></p>
+</div></li>
+
+<li class="entry" id="e-1104-cfd"><div><time datetime="2026-11-04">2026-11-04</time><span class="area">Aerodynamics</span></div><div>
+  <h2 class="eh">CFD aerodynamics in the simulator</h2>
+  <dl>
+    <dt>Changed</dt><dd>RANS CFD force and moment tables of the vehicle with its legs, 0° to 180° angle of attack, replace
+      the simple drag model, with uncertainty factors on hull and leg drag drawn per episode.</dd>
+    <dt>Measured</dt><dd>The legs put the centre of pressure 0.15–0.5 m below the centre of mass in side flow and descent.
+      Python harsh 386 to 222 of 400. HIL hardest scenario 293 to 159 of 300; COTS 100 to 75 of 100.</dd>
+    <dt>Did not work</dt><dd class="bad">Gain sweeps did not fix it (best 81 against 73 of 96). A lower descent-speed limit
+      helped a little. The real fix came the same day, in the filter.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#wind">Wind broke the lander</a> · <a href="gnc.html#timeline">step 2</a></p>
+</div></li>
+
+<li class="entry" id="e-1104-plant-v4"><div><time datetime="2026-11-04">2026-11-04</time><span class="area">Plant</span></div><div>
+  <h2 class="eh">Plant v4: tripod legs and a stiffer aft body</h2>
+  <dl>
+    <dt>Changed</dt><dd>The inverted-tripod leg model with direction-dependent damping and a honeycomb limiter, random foot
+      friction, a 2 ms physics step, the revised engine.</dd>
+    <dt>Found</dt><dd class="bad">The unsprung leg masses were counted twice, which made the touchdown lateral speed 45%
+      worse. Found by separating the effects one at a time; fixed.</dd>
+    <dt>Measured</dt><dd>HIL with the simple aerodynamics: hardest scenario 293 of 300, no radar 296 of 300.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#timeline">step 1</a></p>
+</div></li>
+
+<li class="entry" id="e-1103-legs"><div id="d-1103"><time datetime="2026-11-03">2026-11-03</time><span class="area">Structure</span></div><div>
+  <h2 class="eh">Legs, aft body and deck redesigned</h2>
+  <dl>
+    <dt>Changed</dt><dd>Inverted-tripod legs, a thicker base frame with doubler plates, a ribbed avionics deck with struts to
+      the pressure vessel.</dd>
+    <dt>Measured</dt><dd>0 tip-overs, bounces, bottomed shocks or crushed cartridges in the 800 drops inside the envelope (400
+      per propellant load; the full grid of 1320 per load also covers drops outside it). Landing-case margins +0.30 or better. Deck first mode 163 Hz.</dd>
+    <dt>Found</dt><dd class="bad">Friction: at a coefficient of 1 the peak deceleration reaches 17.5 g; a low-friction landing
+      surface (0.6 or below) was recommended; the next day's leg study made it a condition of its margins. A stiff ring at the nose joint is still needed.</dd>
+  </dl>
+  <p class="ev"><a href="vehicle.html#legs">Landing legs</a> · <a href="vehicle.html#deck">Avionics deck</a></p>
+</div></li>
+
+<li class="entry" id="e-1103-fea"><div><time datetime="2026-11-03">2026-11-03</time><span class="area">Structure</span></div><div>
+  <h2 class="eh">First finite-element pass: four findings against the design</h2>
+  <dl>
+    <dt>Found</dt><dd class="bad">The regenerative cooling exceeded its wall-temperature limits because of an error in the
+      cooling model. The first legs could not carry foot friction. The aft body had negative margins at the leg
+      attachments. The flat avionics deck resonated where the 50 Hz loop folds its noise.</dd>
+    <dt>Measured</dt><dd>Tanks lowest margin +0.25, buckling +6.8, hull first bending mode about 100 Hz.</dd>
+    <dt>Then</dt><dd>The cooling model was corrected and the chamber redesigned; it now depends on a film-cooling
+      effectiveness that must be measured before such a chamber is built.</dd>
+  </dl>
+  <p class="ev"><a href="vehicle.html#structure">Structure</a></p>
+</div></li>
+
+<li class="entry" id="e-1103-ecu"><div><time datetime="2026-11-03">2026-11-03</time><span class="area">Boards</span></div><div>
+  <h2 class="eh">Engine controller and pump inverters</h2>
+  <dl>
+    <dt>Changed</dt><dd>ECU-1 with a hardware arming chain and a fuel-valve interlock to proof of ignition; INV-1 pump
+      inverters with field-oriented control.</dd>
+    <dt>Measured</dt><dd>Schematics ERC clean. In simulation the controller goes to the right abort in all of its fault
+      scenarios, and the inverter firmware drives a motor and pump model through a full hop.</dd>
+    <dt>Found</dt><dd class="bad">A full 24S pack is 100.8 V, not the nominal 80 V: already above the rating of
+      100 V switches before regenerative braking adds a few volts, so the inverter uses 150 V parts.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">The boards</a></p>
+</div></li>
+
+<li class="entry" id="e-1103-engine"><div><time datetime="2026-11-03">2026-11-03</time><span class="area">Plant</span></div><div>
+  <h2 class="eh">A rate-limited engine response</h2>
+  <dl>
+    <dt>Changed</dt><dd>The simulator's first-order throttle model is replaced by the rate-limited response of the transient
+      engine and controller model, in the plant and in the navigation filter's thrust prediction.</dd>
+    <dt>Measured</dt><dd>Fit error about seven times smaller than the old model. Guidance re-validated in Python: 393 to 400
+      of 400 across sensor classes and rates.</dd>
+  </dl>
+</div></li>
+
+<li class="entry" id="e-1103-v8"><div><time datetime="2026-11-03">2026-11-03</time><span class="area">Guidance</span></div><div>
+  <h2 class="eh">Aerodynamic-moment estimator in the controller: rejected</h2>
+  <dl>
+    <dt>Tried</dt><dd>Estimating the aerodynamic moment from the derivative of the filtered body rates and feeding it forward.</dd>
+    <dt>Measured</dt><dd>Paired test, 600 episodes: in the hardest centre-of-pressure case failures fell from 20 to 9; in the
+      realistic spread they rose from 2 to 7.</dd>
+    <dt>Decision</dt><dd class="bad">Rejected: the derivative carried sensor noise into the attitude loop. The better route,
+      a disturbance state inside the filter without a derivative, came the next day.</dd>
+  </dl>
+</div></li>
+
+<li class="entry" id="e-1103-plant-v3"><div><time datetime="2026-11-03">2026-11-03</time><span class="area">Plant</span></div><div>
+  <h2 class="eh">Plant v3: mass properties from CAD</h2>
+  <dl>
+    <dt>Changed</dt><dd>A mass table from the CAD model (mass, centre of mass and inertia at every propellant load), the
+      real gimbal pivot, sprung legs, gimbal backlash and a thrust cut at touchdown.</dd>
+    <dt>Measured</dt><dd>HIL: COTS 100 / 100 / 100 of 100, harsh 100 and 99, hardest scenario 296 of 300, no radar 297 of 300.</dd>
+    <dt>Open</dt><dd class="bad">In this controller, backlash up to several times the specified limit did not change the
+      landing rate, which contradicts a sensitivity found with a different controller; to be settled by an actuator test.</dd>
+  </dl>
+</div></li>
+
+<li class="entry" id="e-1103-com"><div><time datetime="2026-11-03">2026-11-03</time><span class="area">Plant</span></div><div>
+  <h2 class="eh">The simulator ignored the centre of mass</h2>
+  <dl>
+    <dt>Found</dt><dd class="bad">A MuJoCo body-frame flag kept the centre of mass at the hull's geometric centre. The gimbal
+      lever arm was too long and the aerodynamic moment was always zero. Every guidance and HIL result before this date
+      was measured on the wrong plant.</dd>
+    <dt>Measured</dt><dd>On the corrected plant the previous controller landed 37% to 44.5% of 200 episodes.</dd>
+    <dt>Changed</dt><dd>Retuned attitude gains and integral authority. Python on unseen seeds: 397 to 400 of 400 across sensor
+      classes at 50 and 20 Hz.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#mistakes">Mistakes</a></p>
+</div></li>
+
+</ol>
+
+<nav class="next" aria-label="Next page"><a href="orbit.html"><span>Back</span>The first orbital product</a><a href="index.html"><span>Next</span>Home</a></nav>
+</div>
+</main>
+
+<!-- site footer: identical on every page -->
+<footer>
+ <div class="wrap fgrid2">
+  <div>
+   <p class="fname">Hop-0</p>
+   <p>Hasan Melih. Phase 0 of a longer plan toward a small reusable launcher. This site shows methods and results;
+     detailed design data and flight code are not published.</p>
+   <p>Simulation only: nothing on this site has been built or flown.</p>
+  </div>
+  <ul aria-label="Pages">
+   <li><a href="index.html">Home</a></li><li><a href="gnc.html">Landing</a></li><li><a href="vehicle.html">Vehicle</a></li>
+   <li><a href="avionics.html">Avionics</a></li><li><a href="life.html">Life</a></li><li><a href="orbit.html">Orbit</a></li>
+   <li><a href="log.html">Log</a></li>
+  </ul>
+ </div>
+</footer>
+
+<script src="assets/js/boot.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 /* Hop-0 site: "Mechanical design" section (#mechanical).
- * Charts are drawn from the JSON block inside the section (#mech-data), animate in when they scroll into view, and
- * show a tooltip on hover, tap or keyboard focus. prefers-reduced-motion gives the final state at once.
+ * Charts are drawn from the JSON block inside the section (#mech-data) in their final state and show a tooltip on
+ * hover, tap or keyboard focus.
  * No dependencies. Safe to load on a page without the section. */
 (function () {
   "use strict";
@@ -25,8 +25,10 @@
   }
   function fx(v, n) { return Number(v).toFixed(n === undefined ? 1 : n); }
   function sgn(v, n) { return (v < 0 ? "−" : "+") + Math.abs(v).toFixed(n === undefined ? 2 : n); }
+  // Charts are drawn in their final state: entrance animations carried no information. The interactive parts
+  // (propellant slider, hover read-outs) are unchanged.
   function onVisible(node, fn, th) {
-    if (reduce || !("IntersectionObserver" in window)) { fn(true); return; }
+    if (true) { fn(true); return; }
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { io.disconnect(); fn(false); } });
     }, { threshold: th || 0.3 });

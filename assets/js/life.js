@@ -1,6 +1,6 @@
 /* Hop-0 site: the life twin. A console that flies the vehicle through recorded flights and keeps the wear account,
- * and a remaining-life chart. Numbers come from research/life (600 HIL flights of the current flight software, the
- * hardest scenario). No dependencies; prefers-reduced-motion shows the final state. */
+ * and a remaining-life chart. Numbers come from research/life (600 HIL flights in the hardest scenario, flight
+ * software one revision before the 2026-11-10 attitude-gain change). No dependencies; prefers-reduced-motion shows the final state. */
 (function () {
   "use strict";
   var host = document.getElementById("life-console");
@@ -58,16 +58,12 @@
       var n = Math.round(N_END * (Math.pow(30, u) - 1) / 29);   // slow at first, faster later
       state(n);
       if (u < 1) requestAnimationFrame(f);
-      else { playing = false; btn.textContent = "Fly again"; btn.disabled = false; }
+      else { playing = false; btn.textContent = "Replay from flight 0"; btn.disabled = false; }
     })(t0);
   }
   btn.addEventListener("click", run);
-  if (reduce || !("IntersectionObserver" in window)) state(N_END);
-  else {
-    state(0);
-    var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); run(); } }, { threshold: 0.4 });
-    io.observe(host);
-  }
+  state(N_END);                  // the result is shown at once; the button replays the account from flight 0
+  if (reduce) btn.hidden = true;
   if (/[?&]debug=1/.test(location.search)) window.__life = state;
 
   // remaining-life chart: median flights until each item needs replacing or servicing, log scale
@@ -99,7 +95,7 @@
     el("circle", { cx: x(D.pess_chamber), cy: y, r: 5, class: "dot-before" }, svg);
   }
   function setp(e) { marks.forEach(function (m) { var xv = x(Math.pow(m.v, e)); m.bar.setAttribute("x2", xv); m.dot.setAttribute("cx", xv); m.lab.setAttribute("x", xv + 12); }); }
-  if (reduce || !("IntersectionObserver" in window)) setp(1);
+  if (true) setp(1);              // drawn in its final state
   else {
     setp(0);
     var io2 = new IntersectionObserver(function (es) {
