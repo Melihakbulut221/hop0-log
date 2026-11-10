@@ -453,6 +453,27 @@
   .lnotes p { margin: 0; }
   @media (max-width: 760px) { .lnotes { grid-template-columns: 1fr; } }
 
+
+  /* first orbital product */
+  .leo { padding: 72px 0 24px; border-top: 1px solid var(--rule); }
+  .leo-grid { display: grid; grid-template-columns: 7fr 5fr; gap: 32px; align-items: start; }
+  @media (max-width: 900px) { .leo-grid { grid-template-columns: 1fr; } }
+  .leo-band { fill: #86b6ef; opacity: .28; }
+  .leo-line { fill: none; stroke: var(--dot); stroke-width: 2.2; }
+  .leo-err { stroke: var(--dot); stroke-width: 1.5; opacity: .5; }
+  .leo-dot { fill: var(--dot); stroke: var(--card); stroke-width: 2.5; }
+  .leo-dot.hollow { fill: var(--card); stroke: var(--dot); stroke-width: 2.5; }
+  .leo-pt { cursor: pointer; transition: opacity .2s; }
+  .leo-pt:focus { outline: none; }
+  .leo-pt.rec .leo-dot { fill: var(--accent); stroke: var(--card); }
+  #leo-chart svg.dim .leo-pt:not(.hl) { opacity: .3 !important; }
+  .leo-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 2px solid var(--fg); }
+  .leo-tiles > div { padding: 14px 12px 12px 0; border-bottom: 1px solid var(--rule); }
+  .leo-tiles b { display: block; font-size: 38px; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
+  .leo-tiles span { font-size: 14px; color: var(--fg2); }
+  .leo ul.ins { padding-left: 20px; margin: 18px 0 0; }
+  .leo ul.ins li { margin: 8px 0; }
+
   footer { background: #191919; color: #d8d7d0; padding: 56px 0 40px; }
   footer .word { font-size: clamp(64px, 14vw, 200px); font-weight: 800; letter-spacing: -.06em; line-height: .85; color: #fafaf6; margin: 0 0 30px; }
   footer p { max-width: 640px; font-size: 15px; margin: 0 0 10px; }
@@ -486,6 +507,7 @@
   <a href="#mistakes">Mistakes</a>
   <a href="#numbers">Numbers</a>
   <a href="#open">Open problems</a>
+  <a href="#orbit">The first orbital product</a>
   <a href="#twin">What “digital twin” means here</a>
 </nav>
 
@@ -1161,6 +1183,36 @@
 
 </section>
 
+
+<section class="leo" id="orbit">
+  <h2 class="display reveal">The first<br>orbital product</h2>
+  <p class="sub reveal">Hop-0 is the first step toward a small launcher. How small can a rocket be and still reach orbit,
+    and which size is worth building? Every design below was flown to orbit in a 3-DOF ascent simulation with its own
+    optimised steering before it counted, and carries a performance reserve.</p>
+  <div class="leo-grid">
+    <div class="reveal">
+      <div class="chart" id="leo-chart"><div class="legend"><span><i style="background:var(--dot)"></i>circular 500 km orbit</span>
+        <span><i style="background:var(--card);border:2px solid var(--dot);box-sizing:border-box"></i>500 km perigee, elliptical (solid kick stage)</span>
+        <span><i style="background:var(--accent)"></i>recommended</span></div>
+        <noscript><table><tr><th>Payload [kg]</th><th>Liftoff [t]</th><th>5-95 % [t]</th></tr><tr><td>1</td><td>2.1</td><td>1.8-3.0</td></tr><tr><td>5</td><td>2.9</td><td>2.5-3.9</td></tr><tr><td>25</td><td>5.5</td><td>4.8-7.2</td></tr><tr><td>50</td><td>8.0</td><td>7.1-10.4</td></tr><tr><td>150</td><td>14.7</td><td>12.6-20.3</td></tr><tr><td>300</td><td>23.0</td><td>19.9-30.8</td></tr></table></noscript></div>
+      <p class="pcb-info" id="leo-info">Hover or tap a point. The shaded band is each point's own 5-95 % range over the uncertain
+        technology inputs; model-form uncertainty is not included.</p>
+    </div>
+    <div class="reveal">
+      <div class="leo-tiles">
+        <div><b>~2 t</b><span>smallest vehicle that reaches orbit, 1-5 kg payload: a demonstrator</span></div>
+        <div><b>~23 t</b><span>recommended first product: about 300 kg to 500 km (range 20-31 t)</span></div>
+        <div><b>3</b><span>stages in every design that closed; two liquid stages never win with this engine class</span></div>
+        <div><b>+15 %</b><span>simulator optimism against a flown launcher, carried as an extra margin</span></div>
+      </div>
+      <ul class="ins"><li>Shrinking the payload from 5 kg to 1 kg saves only about a quarter of the liftoff mass: avionics, fairing and minimum-gauge structure set a floor of about two tonnes.</li><li>The smallest vehicle that reaches orbit is a demonstrator, not a product: its cost per flight is several times what the market pays for a few kilograms.</li><li>Cost per kilogram falls by more than an order of magnitude between 5 kg and 150 kg of payload; only around the 300 kg class does the estimated cost per flight fall below what dedicated small launches sell for today, which sets the size of the first commercial product.</li><li>Engine efficiency is the largest single lever: about 5 % more specific impulse saves roughly a sixth of the liftoff mass.</li><li>The simulator is consistent with a flown three-stage micro launcher (a calibrated check: some inputs of that vehicle are not public and were assumed) and over-predicts a flown two-stage launcher by about 15 %; the sizing carries an extra margin for that bias. Comparable launchers under development quote 10-25 % less payload for a similar liftoff mass, so the curve is on the optimistic side of its peers.</li></ul>
+      <p class="note">Minimum within the studied architecture: first-stage thrust-to-weight, engine count and nozzles were
+        not traded. Expendable vehicles; composite-class structure. A study, not a vehicle design.</p>
+    </div>
+  </div>
+  <script type="application/json" id="leo-data">{"payload_vs_liftoff_mass": [{"payload_kg": 1, "liftoff_t": 2.1, "liftoff_t_min": 1.8, "liftoff_t_median": 2.3, "liftoff_t_max": 3.0, "orbit": "elliptical, 500 km perigee, about 500 x 1700 km unless the kick motor is off-loaded", "stages": "2 liquid + solid kick"}, {"payload_kg": 5, "liftoff_t": 2.9, "liftoff_t_min": 2.5, "liftoff_t_median": 3.1, "liftoff_t_max": 3.9, "orbit": "elliptical, 500 km perigee, about 500 x 1700 km unless the kick motor is off-loaded", "stages": "2 liquid + solid kick"}, {"payload_kg": 25, "liftoff_t": 5.5, "liftoff_t_min": 4.8, "liftoff_t_median": 5.8, "liftoff_t_max": 7.2, "orbit": "elliptical, 500 km perigee, about 500 x 1700 km unless the kick motor is off-loaded", "stages": "2 liquid + solid kick"}, {"payload_kg": 50, "liftoff_t": 8.0, "liftoff_t_min": 7.1, "liftoff_t_median": 8.5, "liftoff_t_max": 10.4, "orbit": "elliptical, 500 km perigee, about 500 x 1700 km unless the kick motor is off-loaded", "stages": "2 liquid + solid kick"}, {"payload_kg": 150, "liftoff_t": 14.7, "liftoff_t_min": 12.6, "liftoff_t_median": 15.7, "liftoff_t_max": 20.3, "orbit": "500 km circular", "stages": "3 liquid"}, {"payload_kg": 300, "liftoff_t": 23.0, "liftoff_t_min": 19.9, "liftoff_t_median": 24.4, "liftoff_t_max": 30.8, "orbit": "500 km circular", "stages": "3 liquid"}]}</script>
+</section>
+
 <section class="quotes" aria-label="Lessons from the log">
   <p class="k">From the log</p>
   <div class="qbox" id="qbox">
@@ -1206,5 +1258,6 @@
 <script src="assets/parts.js"></script>
 <script src="assets/mech.js"></script>
 <script src="assets/life.js"></script>
+<script src="assets/leo.js"></script>
 </body>
 </html>
