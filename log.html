@@ -119,6 +119,21 @@
   <p class="ev"><a href="vehicle.html#legs">landing legs</a> · <a href="vehicle.html#mass">mass</a></p>
 </div></li>
 
+<li class="entry" id="e-1110-inv"><div id="d-1110"><time datetime="2026-11-10">2026-11-10</time><span class="area">Boards</span></div><div>
+  <h2 class="eh">A damper on the inverter, and the capacitor board follows</h2>
+  <dl>
+    <dt>Changed</dt><dd>INV-1 gained an RC damper across its DC link, its DC studs moved to 12 mm apart, and its ceramic
+      capacitors moved next to the switches. CB-1 was re-laid out to land on the new studs.</dd>
+    <dt>Measured</dt><dd>The capacitor-network resonance peak dropped about tenfold; the gate driver's high-side offset pin stays
+      at or below 118 V across the swept wiring inductance. The ceramic capacitors now sit about 5 mm from the switch tabs
+      instead of 31-37 mm. An independent model reproduced the damper within 0.1 V.</dd>
+    <dt>Did not work</dt><dd class="bad">The first damper was sized for a 5 mm post; the real stud is 7 mm, which left the
+      resistors without margin. The re-selected damper keeps the margin but dissipates about 9 W. The gate resistors still
+      sit 22-49 mm from the switches and 84 connections are open: not ready to build.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">the boards</a></p>
+</div></li>
+
 <li class="entry" id="e-1110-ecu"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Boards</span></div><div>
   <h2 class="eh">The engine controller reads the power unit</h2>
   <dl>

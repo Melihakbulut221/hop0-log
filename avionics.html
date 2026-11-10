@@ -150,17 +150,8 @@
     <div>
       <h3>INV-1 pump inverter</h3>
       <p class="role">Turns the pump battery into three-phase current for one pump motor. There are two, identical.</p>
-      <span class="tag">Placement only · routing not done</span>
-      <ul class="facts">
-        <li>150 V MOSFETs, two in parallel per switch. A full 24S pack is 100.8 V, not the nominal 80 V, already above
-          the rating of 100 V parts before braking adds a few volts.</li>
-        <li>Field-oriented control on an STM32G474: hall sensors plus a flux observer that keeps running if the halls
-          fail.</li>
-        <li>In simulation the firmware drives a motor and pump model through starts, speed steps and a full hop without
-          faults, and handles a lost battery and lost hall sensors as designed.</li>
-        <li>Open: automatic placement scatters the DC-link capacitors too far from the switches; that part needs to be
-          laid out by hand.</li>
-      </ul>
+      <span class="tag">Power stage placed with copper and via arrays; signal side auto-routed, design-rule check clean, 84 connections still open · not ready to fabricate</span>
+      <ul class="facts"><li>150 V MOSFETs, two in parallel per switch. A full 24S pack is 100.8 V, not the nominal 80 V, already above the rating of 100 V switches before regenerative braking adds a few volts.</li><li>The inverter now carries the damper that the capacitor-board analysis asked for: twenty-four ceramic capacitors in series with twelve low-inductance power resistors, split across the three legs between the positive bus and the low-side return.</li><li>The resonance between the inverter&#x27;s ceramic capacitors and the film bank was re-derived independently and checked against the capacitor-board model. With the damper and the two bus studs moved to 12 mm apart, the peak impedance drops about tenfold, and the gate driver&#x27;s high-side offset pin (VS) stays about 4 V below the driver&#x27;s recommended limit with nominal capacitor values, across the range of inverter-side wiring inductance that was swept.</li><li>The damper was sized for the real stud height under the capacitor board; its resistors keep a margin of about 40 % against their derated rating in the worst case.</li><li>A ceramic damper was chosen over a film capacitor: the film damps slightly better, but the ceramic version weighs less than a quarter as much and avoids a tall leaded part on a board that has to survive launch vibration.</li><li>All sixty DC-link capacitors now sit in rows directly above the high-side switches, on both sides of the board, within 10 mm of the switch tabs and over the stacked supply and return planes. The estimated commutation-loop inductance fell by about a sixth; it is an analytic estimate that still needs a double-pulse measurement.</li><li>347 parts, no ERC errors; the pin assignment check against the vendor&#x27;s open pin data still passes.</li><li>The signal side was auto-routed with separate clearance rules for the bus and the three floating high-side gate-drive domains, plus a documented exception for the gate driver&#x27;s own fine-pitch package. The design-rule check is clean; 84 connections are left for manual routing, and the gate resistors still have to be moved next to the switches before the board can be built.</li><li>Field-oriented control on an STM32G474: hall sensors plus a flux observer that keeps running if the halls fail.</li></ul>
       <ul class="pcb-list" aria-label="INV-1 connectors"></ul>
     </div>
   </div>
@@ -180,17 +171,17 @@
       <h3>CB-1 DC-bus capacitor board, ×2</h3>
       <p class="role">Carries the film capacitor bank of one inverter on a laminated, heavy-copper board that bolts straight onto the inverter&#x27;s DC terminals.</p>
       <span class="tag">Placed, planes only · DRC 0 violations, 0 unconnected · not ready to fabricate</span>
-      <ul class="facts"><li>Four copper layers alternate positive and negative, so the bus itself adds almost no inductance; the two bolted posts to the inverter dominate.</li><li>Analysis of the capacitor network found a resonance between the inverter&#x27;s ceramic capacitors and this bank. A damper on this board would not help; it has to sit on the inverter, next to the switches.</li><li>Real film capacitors weigh about 2.6 times what the first estimate assumed. A half-populated bank passes the ripple checks only together with the damper on the inverter.</li><li>Capacitor current sharing was checked with ±20 % capacitance tolerance in a Monte Carlo run.</li><li>35 parts, ERC clean. 15 of 15 checks pass.</li></ul>
+      <ul class="facts"><li>Four copper layers alternate positive and negative, so the bus itself adds almost no inductance; the two bolted studs to the inverter dominate, which is why they were moved close together.</li><li>Analysis of the capacitor network found a resonance between the inverter&#x27;s ceramic capacitors and this bank. A damper on this board would not help; it has to sit on the inverter, next to the switches.</li><li>Real film capacitors weigh about 2.6 times what the first estimate assumed. The full bank is the baseline; a half-populated bank is an option only together with the damper on the inverter, and then with little margin.</li><li>Capacitor current sharing was checked with ±20 % capacitance tolerance in a Monte Carlo run.</li><li>35 parts, ERC clean. 16 of 16 checks pass.</li></ul>
       <ul class="pcb-list" aria-label="CB-1 connectors"></ul>
     </div>
   </div>
   <div class="bpanel full" id="panel-nyd" role="tabpanel" aria-labelledby="tab-nyd" hidden>
     <div class="nyd">
       <div><h4>Finish the routing</h4><p>FC-0 has 23 connections to finish by hand, ECU-1 34 after the latest change. PDU-1 has 36,
-        including its active-discharge path, and its logic strip needs more room or a board of its own. INV-1 is placed but
-        not routed.</p></div>
-      <div><h4>A damper on the inverter</h4><p>The capacitor network resonates near 280 kHz and pushes the inverter's gate
-        driver to its voltage limit. The fix is a small RC damper on INV-1, next to the switches.</p></div>
+        including its active-discharge path, and its logic strip needs more room or a board of its own. INV-1 has 84.</p></div>
+      <div><h4>Inverter gate networks and a pulse test</h4><p>The damper is on INV-1 and the capacitor network now stays
+        under the gate driver's limit on paper, but the gate resistors sit 22-49 mm from the switches and the commutation
+        loop is an estimate. Both need fixing and measuring with a double-pulse test before the board is built.</p></div>
       <div><h4>Protect the rest of ECU-1</h4><p>The PDU status lines and the arming discretes now survive a short to the
         battery; the inverter enable and fault lines, the valve-position inputs and the pressure and temperature inputs do
         not yet.</p></div>
@@ -231,9 +222,10 @@
   <div class="body">
     <ul>
       <li>None of the five boards is fabrication-ready: FC-0 and ECU-1 are routed with connections left to finish by hand,
-        PDU-1 has 36 connections open including its active-discharge path, INV-1 is placed but not routed, and CB-1 is
+        PDU-1 has 36 connections open including its active-discharge path, INV-1 is auto-routed with 84 open, and CB-1 is
         placed with planes only. The details are under <a href="#boards">Still open</a>.</li>
-      <li>The capacitor network needs a damper on the inverter, and ECU-1 needs inputs for the PDU-1 status lines.</li>
+      <li>The inverter's gate networks must move next to the switches and the commutation loop must be measured with a
+        double-pulse test; ECU-1's inverter, valve-position and sensor inputs still lack short-to-battery protection.</li>
       <li>Contactor arc voltage, pack resistance, regulator start-up and the watchdog's timing are estimates until bench
         tests replace them.</li>
     </ul>
