@@ -390,7 +390,9 @@
         ["J5", 141, 46, "stud", "Motor phase C", "M5 stud"],
         ["J6", 96, 100.5, GH(6), "Engine-controller harness: CAN-FD, 12 V, enable, fault (mates ECU-1 J5 or J6)", "JST GH 6-pin"],
         ["J7", 30, 91, [7, 7], "Debug (SWD)", "Cortex 10-pin, 1.27 mm"],
-        ["J8", 116, 100.5, GH(7), "Motor: three hall sensors, 5 V, temperature sensor", "JST GH 7-pin"]] }
+        ["J8", 116, 100.5, GH(7), "Motor: three hall sensors, 5 V, temperature sensor", "JST GH 7-pin"]] },
+    pdu: {"w": 170.0, "h": 110.0, "holes": [[4.0, 4.0], [4.0, 106.0], [166.0, 4.0], [166.0, 106.0]], "zones": [[1, 1, 39.5, 108, "Logic, vehicle-bus side"], [40.5, 1, 7, 108, "Isolation barrier"], [48.5, 22, 62, 21, "Pre-charge"], [48.5, 44, 62, 17, "Active discharge"], [48.5, 62, 45, 46, "Isolated sensing"], [112, 22, 56, 86, "DC bus studs and copper planes"]], "ics": [[31.0, 29.9, 4.6, 2.7, "Logic", "Hardware interlock: pre-charge window, over-current latch, contactor enable"], [97.5, 12.0, 54.1, 32.0, "Fuse", "Main fuse, bolted between two studs"], [98.0, 98.0, 85.1, 20.1, "Shunt", "Bus current shunt, bolted between two studs"], [44.0, 36.0, 13.0, 6.4, "ISO", "Isolated switch driver, pre-charge"], [44.0, 55.0, 13.0, 6.4, "ISO", "Isolated switch driver, discharge"], [44.0, 67.9, 11.9, 11.0, "ISO", "Isolated 5 V supply"], [44.0, 79.0, 13.0, 6.4, "ISO", "Isolated amplifier, pack voltage"], [44.0, 89.0, 13.0, 6.4, "ISO", "Isolated amplifier, bus voltage"], [44.0, 99.0, 13.0, 6.4, "ISO", "Isolated amplifier, bus current"], [55.0, 41.0, 7.2, 5.7, "Q", "Pre-charge switch"], [55.0, 58.0, 7.2, 5.7, "Q", "Discharge switch"]], "conns": [["J1", 60.0, 12.0, "stud", "Pump battery positive in; also the fuse's first terminal", "M8 ring lug"], ["J2", 135.0, 12.0, "stud", "Fused positive, cable to the contactor", "M8 ring lug"], ["J3", 158.0, 28.0, "stud", "DC bus positive, back from the contactor", "M8 ring lug"], ["J4", 160.0, 46.0, "stud", "DC bus positive to the LOX inverter's capacitor board", "M6 ring lug"], ["J5", 160.0, 77.0, "stud", "DC bus positive to the RP-1 inverter's capacitor board", "M6 ring lug"], ["J6", 68.0, 98.0, "stud", "Pump battery negative in; also the shunt's first terminal", "M6 ring lug"], ["J7", 128.0, 98.0, "stud", "DC bus negative, after the current shunt", "Shunt tab"], ["J8", 160.0, 61.0, "stud", "DC bus negative to the LOX inverter's capacitor board", "M6 ring lug"], ["J9", 160.0, 92.0, "stud", "DC bus negative to the RP-1 inverter's capacitor board", "M6 ring lug"], ["J10", 4.0, 36.0, [9.8, 11.2], "Pre-charge and contactor commands from the engine controller", "Molex Micro-Fit 3.0, 2x2"], ["J11", 4.0, 16.0, [9.8, 11.2], "Logic power from the vehicle bus", "Molex Micro-Fit 3.0, 2x2"], ["J12", 4.0, 56.0, [9.8, 14.2], "Contactor coil and auxiliary contact", "Molex Micro-Fit 3.0, 2x3"], ["J13", 4.5, 86.0, [6.4, 14.5], "Isolated status to the engine controller: pre-charge done, contactor closed, fault latch, bus voltage and current", "JST GH 8-pin"], ["J14", 60.0, 88.0, [7.0, 6.4], "Shunt sense wires (Kelvin)", "JST GH 2-pin"]], "oriented": true},
+    cb: {"w": 168.0, "h": 158.0, "holes": [[3.2, 3.2], [3.2, 154.8], [149.0, 154.8], [149.0, 3.2]], "zones": [[6, 7, 141, 147, "Film capacitor array"], [150, 3, 17, 50, "Inverter interface"]], "ics": [[158, 27, 12, 40, "Bus", "laminated bus: DC+ and DC- planes stacked 0.2 mm apart"], [24.0, 19.0, 32, 22, "C", "10 uF polypropylene film capacitor"], [59.0, 19.0, 32, 22, "C", "10 uF polypropylene film capacitor"], [94.0, 19.0, 32, 22, "C", "10 uF polypropylene film capacitor"], [129.0, 19.0, 32, 22, "C", "10 uF polypropylene film capacitor"], [24.0, 43.5, 32, 22, "C", "10 uF polypropylene film capacitor"], [59.0, 43.5, 32, 22, "C", "10 uF polypropylene film capacitor"], [94.0, 43.5, 32, 22, "C", "10 uF polypropylene film capacitor"], [129.0, 43.5, 32, 22, "C", "10 uF polypropylene film capacitor"], [24.0, 68.0, 32, 22, "C", "10 uF polypropylene film capacitor"], [59.0, 68.0, 32, 22, "C", "10 uF polypropylene film capacitor"], [94.0, 68.0, 32, 22, "C", "10 uF polypropylene film capacitor"], [129.0, 68.0, 32, 22, "C", "10 uF polypropylene film capacitor"], [24.0, 92.5, 32, 22, "C", "10 uF polypropylene film capacitor"], [59.0, 92.5, 32, 22, "C", "10 uF polypropylene film capacitor"], [94.0, 92.5, 32, 22, "C", "10 uF polypropylene film capacitor"], [129.0, 92.5, 32, 22, "C", "10 uF polypropylene film capacitor"], [24.0, 117.0, 32, 22, "C", "10 uF polypropylene film capacitor"], [59.0, 117.0, 32, 22, "C", "10 uF polypropylene film capacitor"], [94.0, 117.0, 32, 22, "C", "10 uF polypropylene film capacitor"], [129.0, 117.0, 32, 22, "C", "10 uF polypropylene film capacitor"], [24.0, 141.5, 32, 22, "C", "10 uF polypropylene film capacitor"], [59.0, 141.5, 32, 22, "C", "10 uF polypropylene film capacitor"], [94.0, 141.5, 32, 22, "C", "10 uF polypropylene film capacitor"], [129.0, 141.5, 32, 22, "C", "10 uF polypropylene film capacitor"]], "conns": [["J1", 158.0, 100.0, "stud", "DC bus positive in, from the PDU", "M6 ring lug"], ["J2", 158.0, 124.0, "stud", "DC bus negative in, from the PDU", "M6 ring lug"], ["J3", 158.0, 14.0, "stud", "DC bus positive to the inverter, through a conductive spacer", "Inverter M5 stud"], ["J4", 158.0, 40.0, "stud", "DC bus negative to the inverter, through a conductive spacer", "Inverter M5 stud"]], "oriented": true}
   };
 
   function drawBoard(host, key) {
@@ -421,7 +423,7 @@
         el("circle", { cx: P(x), cy: P(y), r: 2.6 * k, class: "hole" }, g);
       } else {
         d = c[3].slice();
-        if (x < 10 || x > B.w - 10) d = [d[1], d[0]];     // left/right-edge connectors stand vertical
+        if (!B.oriented && (x < 10 || x > B.w - 10)) d = [d[1], d[0]];     // left/right-edge connectors stand vertical
         el("rect", { x: P(x - d[0] / 2), y: P(y - d[1] / 2), width: d[0] * k, height: d[1] * k, rx: 2 }, g);
       }
       var hh = d ? d[1] : 9.2, ty = y < 10 ? P(y) + 5.5 * k + 6 : (y > B.h - 12 ? P(y) - 4.2 * k : (x < 10 || x > B.w - 10 ? P(y) + 5 : P(y) + hh / 2 * k + 18));
@@ -508,7 +510,7 @@
       ecu: [520, 150, 170, 120, "ECU-1 engine controller", "board"], sens: [520, 30, 170, 44, "Pressure, temp. sensors", "dev"],
       flame: [520, 330, 170, 44, "Flame sensor", "dev"], valves: [520, 430, 170, 44, "Valves, igniter", "dev"],
       invl: [790, 120, 170, 64, "INV-1 LOX pump", "board"], invr: [790, 236, 170, 64, "INV-1 RP-1 pump", "board"],
-      pmp: [790, 30, 170, 44, "Pump motors ×2", "dev"], pdu: [790, 360, 170, 44, "PDU + DC bus", "pwr"],
+      pmp: [790, 30, 170, 44, "Pump motors ×2", "dev"], pdu: [790, 360, 170, 44, "PDU-1 + CB-1 ×2", "pwr"],
       pack: [790, 450, 170, 44, "24S pump battery", "pwr"]
     };
     // [from, to, type, title, connector detail]
@@ -532,9 +534,10 @@
       ["ecu", "invr", "can", "Inverter harness", "ECU-1 J6 to INV-1 J6, JST GH 6-pin: CAN-FD at 1 kHz, 12 V, enable, fault"],
       ["invl", "pmp", "power", "Motor phases", "INV-1 J3–J5, M5 studs; hall sensors and temperature on J8, JST GH 7-pin"],
       ["invr", "pmp", "power", "Motor phases", "INV-1 J3–J5, M5 studs; hall sensors and temperature on J8, JST GH 7-pin"],
-      ["pack", "pdu", "power", "Pack to DC bus", "pre-charge resistor and contactor, switched by ECU-1"],
-      ["pdu", "invr", "power", "DC bus", "INV-1 J1/J2, M5 studs, laminated bus with film capacitors"],
-      ["pdu", "invl", "power", "DC bus", "INV-1 J1/J2, M5 studs"]
+      ["pack", "pdu", "power", "Pack to PDU-1", "PDU-1 J1 / J6, M8 and M6 studs; fuse and current shunt on the board, contactor off the board"],
+      ["pdu", "invr", "power", "DC bus", "PDU-1 J5 / J9 to CB-1 J1 / J2, then CB-1 J3 / J4 to INV-1 J1 / J2 through conductive spacers"],
+      ["pdu", "invl", "power", "DC bus", "PDU-1 J4 / J8 to CB-1 J1 / J2, then CB-1 J3 / J4 to INV-1 J1 / J2 through conductive spacers"],
+      ["ecu", "pdu", "disc", "Pre-charge and contactor", "ECU-1 J10 pins 5-8 to PDU-1 J10, Micro-Fit 3.0; status back on PDU-1 J13 (ECU-1 has no input for it yet)"]
     ];
     var gE = el("g", {}, wsvg), gN = el("g", {}, wsvg), gP = el("g", {}, wsvg);
     function port(n, toward) {   // attachment point on the box edge facing the other node

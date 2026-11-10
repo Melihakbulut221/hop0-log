@@ -848,13 +848,15 @@
 
 <section class="boards" id="boards">
   <h2 class="display reveal">The boards</h2>
-  <p class="sub reveal">Three printed circuit boards, drawn from their layouts. Hover a connector, on the board or in the
+  <p class="sub reveal">Five printed circuit boards, drawn from their layouts. Hover a connector, on the board or in the
     list, to see what plugs into it.</p>
   <div class="tabs reveal" id="board-tabs" role="tablist" aria-label="Boards">
     <button role="tab" id="tab-fc0" aria-controls="panel-fc0" aria-selected="true"><b>FC-0</b>flight computer</button>
     <button role="tab" id="tab-ecu" aria-controls="panel-ecu" aria-selected="false" tabindex="-1"><b>ECU-1</b>engine controller</button>
     <button role="tab" id="tab-inv" aria-controls="panel-inv" aria-selected="false" tabindex="-1"><b>INV-1</b>pump inverter, ×2</button>
-    <button role="tab" id="tab-nyd" aria-controls="panel-nyd" aria-selected="false" tabindex="-1"><b>Not yet</b>designed</button>
+    <button role="tab" id="tab-pdu" aria-controls="panel-pdu" aria-selected="false" tabindex="-1"><b>PDU-1</b>power distribution</button>
+    <button role="tab" id="tab-cb" aria-controls="panel-cb" aria-selected="false" tabindex="-1"><b>CB-1</b>DC-bus capacitors, ×2</button>
+    <button role="tab" id="tab-nyd" aria-controls="panel-nyd" aria-selected="false" tabindex="-1"><b>Still open</b>before fabrication</button>
   </div>
   <div class="bpanel" id="panel-fc0" role="tabpanel" aria-labelledby="tab-fc0" data-board="fc0">
     <div><div class="pcb-fig"></div><p class="pcb-info">120 × 90 mm, six layers. Sixteen connectors, all on the edges so the cables leave outward.</p></div>
@@ -916,12 +918,37 @@
       <ul class="pcb-list" aria-label="INV-1 connectors"></ul>
     </div>
   </div>
+  <div class="bpanel" id="panel-pdu" role="tabpanel" aria-labelledby="tab-pdu" data-board="pdu" hidden>
+    <div><div class="pcb-fig"></div><p class="pcb-info">170 × 110 mm. Hover a connector for what it carries.</p></div>
+    <div>
+      <h3>PDU-1 power distribution unit</h3>
+      <p class="role">Sits between the pump battery and the DC bus of the two inverters: fuses the pack, pre-charges the bus, closes the main contactor and reports back to the engine controller.</p>
+      <span class="status-tag">Placed and routed · DRC 9 violations · routing incomplete: 36 connections, including the active-discharge path, are still open · not ready to fabricate</span>
+      <ul class="facts"><li>The contactor cannot close until the bus has charged to 95 % of the pack voltage. The interlock is built from comparators and gates, independent of any firmware.</li><li>A hardware one-shot limits each pre-charge attempt and a cool-down timer blocks the next one, which bounds the energy the pre-charge resistors take into a shorted bus.</li><li>Two hardware over-current thresholds, one fast and one timed, open the contactor for faults downstream of it. Faults upstream of the contactor are cleared by the fuse alone.</li><li>The high-voltage side is isolated from the logic: isolated amplifiers for the voltages and current, isolated switch drivers for the pre-charge and discharge switches, and a 7 mm barrier with no copper on any layer.</li><li>233 parts including off-board items, ERC clean. 47 of 47 sizing checks pass: pre-charge energy, resistor pulse rating, fuse and contactor coordination, copper temperature rise, spacing.</li></ul>
+      <ul class="pcb-list" aria-label="PDU-1 connectors"></ul>
+    </div>
+  </div>
+  <div class="bpanel" id="panel-cb" role="tabpanel" aria-labelledby="tab-cb" data-board="cb" hidden>
+    <div><div class="pcb-fig"></div><p class="pcb-info">168 × 158 mm. Hover a connector for what it carries.</p></div>
+    <div>
+      <h3>CB-1 DC-bus capacitor board, ×2</h3>
+      <p class="role">Carries the film capacitor bank of one inverter on a laminated, heavy-copper board that bolts straight onto the inverter&#x27;s DC terminals.</p>
+      <span class="status-tag">Placed, planes only · DRC 0 violations, 0 unconnected · not ready to fabricate</span>
+      <ul class="facts"><li>Four copper layers alternate positive and negative, so the bus itself adds almost no inductance; the two bolted posts to the inverter dominate.</li><li>Analysis of the capacitor network found a resonance between the inverter&#x27;s ceramic capacitors and this bank. A damper on this board would not help; it has to sit on the inverter, next to the switches.</li><li>Real film capacitors weigh about 2.6 times what the first estimate assumed. A half-populated bank passes the ripple checks only together with the damper on the inverter.</li><li>Capacitor current sharing was checked with ±20 % capacitance tolerance in a Monte Carlo run.</li><li>35 parts, ERC clean. 15 of 15 checks pass.</li></ul>
+      <ul class="pcb-list" aria-label="CB-1 connectors"></ul>
+    </div>
+  </div>
   <div class="bpanel full" id="panel-nyd" role="tabpanel" aria-labelledby="tab-nyd" hidden>
     <div class="nyd">
-      <div><h4>Power distribution unit</h4><p>Between the pump battery and the DC bus: pre-charge resistor, contactor and
-        fusing. Its control lines already exist on ECU-1; the unit itself is not designed.</p></div>
-      <div><h4>Laminated DC bus</h4><p>Carries the film capacitors that the inverters need next to them. Sized in the
-        inverter analysis, not drawn yet.</p></div>
+      <div><h4>Finish the routing</h4><p>FC-0 and ECU-1 have about two dozen connections each to finish by hand. PDU-1 has 36,
+        including its active-discharge path, and its logic strip needs more room or a board of its own. INV-1 is placed but
+        not routed.</p></div>
+      <div><h4>A damper on the inverter</h4><p>The capacitor network resonates near 280 kHz and pushes the inverter's gate
+        driver to its voltage limit. The fix is a small RC damper on INV-1, next to the switches.</p></div>
+      <div><h4>Status inputs on ECU-1</h4><p>PDU-1 reports pre-charge done, contactor closed and its fault latch, but the
+        engine controller has no inputs to read them yet.</p></div>
+      <div><h4>Measure what was assumed</h4><p>Contactor arc voltage, pack resistance, regulator start-up and the watchdog's
+        timing are datasheet extrapolations or estimates until a bench test replaces them.</p></div>
     </div>
   </div>
 </section>
