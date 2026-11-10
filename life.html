@@ -80,23 +80,24 @@
   <p>The console above flies the cautious spectrum: the hardest scenario only. The same twin was rebuilt from the 50 Hz
     regression of the current flight software, eleven scenarios from clean COTS sensors to the hardest corner.</p>
   <div class="tablewrap"><table>
-    <thead><tr><th></th><th class="num">Hardest scenario, previous software</th><th class="num">Eleven scenarios, current software</th></tr></thead>
+    <thead><tr><th></th><th class="num">Hardest scenario, plant v4, earlier software</th><th class="num">Eleven scenarios, plant v4</th><th class="num">Eleven scenarios, plant v5 (current)</th></tr></thead>
     <tbody>
-      <tr><td>HIL flights / replayed landings</td><td class="num">600 / 561</td><td class="num">1100 / 1055</td></tr>
-      <tr><td>Losses</td><td class="num">1 (95%: 0.03-0.9% per flight)</td><td class="num">0 (95% upper bound 0.35% per flight)</td></tr>
-      <tr><td>Chamber hot wall, median flights (pessimistic film)</td><td class="num">1,429 (780)</td><td class="num">1,427 (783)</td></tr>
-      <tr><td>Pump battery, median flights</td><td class="num">2,351</td><td class="num">2,405</td></tr>
-      <tr><td>Peak landing load, mean / 99th percentile</td><td class="num">2.5 / 3.4 g</td><td class="num">2.7 / 3.5 g</td></tr>
-      <tr><td>Shock stroke used, mean / most</td><td class="num">22% / 59%</td><td class="num">19% / 71%</td></tr>
-      <tr><td>Landings that crushed a honeycomb cartridge</td><td class="num">0</td><td class="num">0</td></tr>
+      <tr><td>HIL flights / replayed landings</td><td class="num">600 / 561</td><td class="num">1100 / 1055</td><td class="num">1100 / 1100</td></tr>
+      <tr><td>Losses</td><td class="num">1 (95%: 0.03-0.9% per flight)</td><td class="num">0 (95% upper bound 0.35% per flight)</td><td class="num">0 (95% upper bound 0.35% per flight)</td></tr>
+      <tr><td>Chamber hot wall, median flights (pessimistic film)</td><td class="num">1,429 (780)</td><td class="num">1,427 (783)</td><td class="num">1,424 (778)</td></tr>
+      <tr><td>Pump battery, median flights</td><td class="num">2,351</td><td class="num">2,405</td><td class="num">2,371</td></tr>
+      <tr><td>Peak landing load, mean / 99th percentile</td><td class="num">2.5 / 3.4 g</td><td class="num">2.7 / 3.5 g</td><td class="num">2.8 / 3.6 g</td></tr>
+      <tr><td>Shock stroke used, mean / most</td><td class="num">22% / 59%</td><td class="num">19% / 71%</td><td class="num">17% / 37%</td></tr>
+      <tr><td>Landings that crushed a honeycomb cartridge</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
     </tbody>
   </table></div>
   <p class="note">Wear barely depends on the scenario mix: every hop heats the chamber and drains the battery about the same,
     and landing loads stay well inside the leg's envelope. Loss is the open question. No loss in 1100 flights bounds it
     below 0.35% per flight; showing it is below 0.1% would take about 3000 loss-free flights.</p>
-  <p class="note">Both load spectra were built on plant v4. Plant v5 (2026-11-10) carries the heavier CAD v0.4 legs, whose
-    moving mass per leg went from 1.32 to 1.95 kg, so the landings are being replayed on plant v5; the wear side is
-    expected to change little. The numbers on this page are from plant v4 until that replay is done.
+  <p class="note">Plant v5 (2026-11-10) carries the heavier CAD v0.4 legs, whose moving mass per leg went from 1.32 to
+    1.95 kg. Its column is the same eleven-scenario regression replayed on plant v5; all 1100 landings matched the HIL log.
+    Wear is unchanged; the heavier feet raise the peak landing load a little, but the landings are cleaner, so the shock
+    uses at most 37% of its stroke instead of 71%. The console above still flies the cautious plant v4 spectrum.
     <a href="log.html#e-1110-plantv5">Log</a>.</p>
   <div class="lnotes">
     <div><h3>Loss, not wear, sets the life</h3><p>The first part to wear out is the chamber's hot wall, after about
