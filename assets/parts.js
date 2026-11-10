@@ -352,7 +352,8 @@
         ["J12", 66, 85.5, GH(6), "Four 0–5 V analog inputs + 5 V", "JST GH 6-pin"],
         ["J13", 80, 86.5, [9, 7], "USB-C: configuration and log download (bench)", "USB-C"],
         ["J14", 97, 78, [16, 18], "Ethernet: hardware-in-the-loop bench and ground", "RJ45"],
-        ["J15", 84, 30, [7, 7], "Debug (SWD)", "Cortex 10-pin, 1.27 mm"]] },
+        ["J15", 84, 30, [7, 7], "Debug (SWD)", "Cortex 10-pin, 1.27 mm"],
+        ["J16", 4.5, 26, GH(2), "Arm vote to the engine controller: fail-safe discrete (mates ECU-1 J7)", "JST GH 2-pin"]] },
     ecu: { w: 150, h: 110, holes: [[4, 4], [146, 4], [4, 106], [146, 106]],
       zones: [[4, 16, 50, 80, "Power input, protection, regulators"], [102, 20, 30, 84, "Valve and igniter drivers ×8"], [12, 86, 100, 14, "Pressure, thermocouple and RTD front ends"]],
       ics: [[68, 54, 14, 14, "MCU", "STM32G474"], [36, 15, 4.9, 3.9, "CAN", "CAN-FD transceiver"], [50, 15, 4.9, 3.9, "CAN", "CAN-FD transceiver"], [66, 15, 4.9, 3.9, "CAN", "CAN-FD transceiver"]],
@@ -526,6 +527,7 @@
       ["flame", "ecu", "data", "Ignition proof", "ECU-1 J8, JST GH 3-pin"],
       ["ecu", "valves", "power", "Valves and igniter", "ECU-1 J9, J10, J17, Molex Micro-Fit 3.0 2×4, peak-and-hold drivers"],
       ["fts", "ecu", "safe", "Arming chain", "ECU-1 J7, JST GH 8-pin: arm plug AND termination unit AND flight-computer arm"],
+      ["fc", "ecu", "safe", "Flight-computer arm vote", "FC-0 J16 to ECU-1 J7, JST GH 2-pin: a fail-safe discrete gated by the watchdog"],
       ["ecu", "invl", "can", "Inverter harness", "ECU-1 J5 to INV-1 J6, JST GH 6-pin: CAN-FD at 1 kHz, 12 V, enable, fault"],
       ["ecu", "invr", "can", "Inverter harness", "ECU-1 J6 to INV-1 J6, JST GH 6-pin: CAN-FD at 1 kHz, 12 V, enable, fault"],
       ["invl", "pmp", "power", "Motor phases", "INV-1 J3–J5, M5 studs; hall sensors and temperature on J8, JST GH 7-pin"],
@@ -555,7 +557,7 @@
       N[id].g = g;
     }
     // board nodes list their connectors
-    [["fc", "J1–J15 · 120 × 90 mm"], ["ecu", "J1–J17 · 150 × 110 mm"], ["invl", "J1–J8"], ["invr", "J1–J8"]].forEach(function (x) {
+    [["fc", "J1–J16 · 120 × 90 mm"], ["ecu", "J1–J17 · 150 × 110 mm"], ["invl", "J1–J8"], ["invr", "J1–J8"]].forEach(function (x) {
       var b = N[x[0]]; el("text", { x: b[0] + 12, y: b[1] + (b[3] > 60 ? 48 : b[3] - 12), class: "w-sub" }, b.g).textContent = x[1];
     });
     var info = document.getElementById("wire-info"), def = info ? info.innerHTML : "";

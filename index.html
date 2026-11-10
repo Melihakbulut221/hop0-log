@@ -835,7 +835,7 @@
     <button role="tab" id="tab-nyd" aria-controls="panel-nyd" aria-selected="false" tabindex="-1"><b>Not yet</b>designed</button>
   </div>
   <div class="bpanel" id="panel-fc0" role="tabpanel" aria-labelledby="tab-fc0" data-board="fc0">
-    <div><div class="pcb-fig"></div><p class="pcb-info">120 × 90 mm, six layers. Fifteen connectors, all on the edges so the cables leave outward.</p></div>
+    <div><div class="pcb-fig"></div><p class="pcb-info">120 × 90 mm, six layers. Sixteen connectors, all on the edges so the cables leave outward.</p></div>
     <div>
       <h3>FC-0 flight computer</h3>
       <p class="role">Runs the flight software at 50 Hz: reads every sensor, estimates the state, and commands the engine,
@@ -847,7 +847,9 @@
         <li>Three CAN-FD buses: propulsion, gimbal and RCS, auxiliary.</li>
         <li>16 MB flash logs the whole flight; FRAM keeps the last records through a power loss.</li>
         <li>An external watchdog and an isolated flight-termination interface that do not depend on the software.</li>
-        <li>286 parts. Schematic passes ERC; every pin checked against the vendor's pin data. 22 connections left to
+        <li>An arm vote to the engine controller through two series stages, each gated in hardware by the watchdog and
+          the reset line: a hung or rebooting processor withdraws it, and an open wire reads as safe.</li>
+        <li>318 parts. Schematic passes ERC; every pin checked against the vendor's pin data. 23 connections left to
           finish by hand after autorouting.</li>
       </ul>
       <ul class="pcb-list" aria-label="FC-0 connectors"></ul>
@@ -920,8 +922,8 @@
     <div><b>M5 studs</b><p>The inverters' DC bus and motor phases, at a couple of hundred amps.</p></div>
     <div><b>SMA, RJ45, USB-C</b><p>GNSS antenna coax; Ethernet and USB only on the bench, never in flight.</p></div>
   </div>
-  <p class="note" style="margin-top:24px">One known gap: ECU-1's arming chain expects a discrete arm signal from the flight
-    computer, and FC-0 does not have that output yet.</p>
+  <p class="note" style="margin-top:24px">The flight-computer arm vote shares the flight software with the engine
+    controller's own vote, so the arm plug and the flight termination unit are the independent members of the chain.</p>
 </section>
 
 <section class="flights" id="flights">
