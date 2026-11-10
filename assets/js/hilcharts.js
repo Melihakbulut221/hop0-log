@@ -37,7 +37,7 @@
   var BA = [
     ["COTS sensors", 75, 100, 100], ["COTS + 5% sensor faults", 75, 100, 100], ["COTS + 15% packet loss", 72, 100, 100],
     ["Harsh sensors", 72, 100, 100], ["Harsh + 200 ms latency", 57, 100, 100],
-    ["Harsh + 200 ms + 15% loss", 159, 299, 300], ["No radar, 1 Hz GNSS", 192, 299, 300]
+    ["Harsh + 200 ms + 15% loss", 159, 300, 300], ["No radar, 1 Hz GNSS", 192, 298, 300]
   ];
   function beforeAfter(host) {
     var narrow = host.clientWidth < 560;      // phones: row label above its bar, real-size text
@@ -78,7 +78,8 @@
 
   /* ------------------------------------------------------------------ HIL timeline */
   // [step, landings of 300 on seed set A, on held-out seed set B (null: not run), log entry, date]
-  // Sources: research/plantfix/README.md HIL tables (2026-11-04 ... 2026-11-10).
+  // Sources: research/plantfix/README.md HIL tables (2026-11-04 ... 2026-11-10). Steps 1-11 on plant v4, step 12 on
+  // plant v5 (CAD v0.4 legs) with the filter reading the composite mass properties.
   var TL = [
     ["Simple aero model (before CFD)", 293, null, "e-1104-plant-v4", "11-04"],
     ["CFD aerodynamics added", 159, null, "e-1104-cfd", "11-04"],
@@ -90,7 +91,8 @@
     ["Higher terminal gate", 289, 289, "e-1108-gate", "11-08"],
     ["Filter gain in accelerometer mode", 294, 289, "e-1108-kad", "11-08"],
     ["Predictive terminal guidance (LQR)", 296, 294, "e-1109-lqr", "11-09"],
-    ["Stiffer attitude loop at 50 Hz", 299, 298, "e-1110-att", "11-10"]
+    ["Stiffer attitude loop at 50 Hz", 299, 298, "e-1110-att", "11-10"],
+    ["Filter models the whole vehicle (plant v5)", 300, 299, "e-1110-filtermass", "11-10"]
   ];
   function timeline(host) {
     var narrow = host.clientWidth < 560;
@@ -98,7 +100,7 @@
         left = narrow ? 34 : 300, right = narrow ? 70 : 70, H = top + rowH * TL.length + 30, dy = narrow ? 12 : 0;
     var svg = el("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-labelledby": "tl-title" }, host);
     el("title", { id: "tl-title" }, svg).textContent =
-      "Landings out of 300 in the hardest HIL scenario after each change, seed set A: 293, 159, 266, 271, 276, 287, 285, 289, 294, 296, 299; held-out seed set B, where run: 282, 286, 283, 289, 289, 294, 298.";
+      "Landings out of 300 in the hardest HIL scenario after each change, seed set A: 293, 159, 266, 271, 276, 287, 285, 289, 294, 296, 299, 300; held-out seed set B, where run: 282, 286, 283, 289, 289, 294, 298, 299.";
     var x = function (p) { return left + (p - 40) / 60 * (W - left - right); };
     (narrow ? [40, 60, 80, 100] : [40, 50, 60, 70, 80, 90, 100]).forEach(function (t) {
       el("line", { x1: x(t), x2: x(t), y1: top - 6, y2: H - 26, class: "grid" }, svg);

@@ -82,8 +82,9 @@
       <noscript><img src="assets/before_after.png" alt="Landing success before and after in seven HIL scenarios." style="width:100%"></noscript>
     </div>
     <figcaption>Landing success in winds up to 12 m/s, C flight software in hardware-in-the-loop, the same random seeds
-      before and after: 100 episodes per row, 300 for the two lower rows (seed set A). "After" also has a ±10° gimbal
-      instead of ±7°; on its own that changes little.</figcaption>
+      before and after: 100 episodes per row, 300 for the two lower rows (seed set A). "After" is the current flight
+      software on plant v5 (the CAD v0.4 legs, 2026-11-10); it also has a ±10° gimbal instead of ±7°, which on its own
+      changes little.</figcaption>
   </figure>
   <div class="split" style="margin-top:var(--sp-7)">
     <h3>What happened</h3>
@@ -141,25 +142,53 @@
     </div>
     <figcaption>Each step links to its log entry. At 300 episodes one landing is 0.33%; steps of two or three landings are
       within run-to-run noise. Some of the earlier steps were chosen on set A itself, which is why the held-out set B was
-      added on 2026-11-07: the terminal velocity law gained 11 landings on set A and 4 on set B.</figcaption>
+      added on 2026-11-07: the terminal velocity law gained 11 landings on set A and 4 on set B. Steps 1 to 11 were
+      measured on plant v4, step 12 on plant v5.</figcaption>
   </figure>
   <ol class="steps" id="chips" aria-label="Steps, with links to the log"></ol>
+  <div class="sub" id="vehicle-model">
+    <h3>Step 12: the filter's model of the vehicle</h3>
+    <p>Step 12 is a correction, not a new law. When the heavier legs of CAD v0.4 went into the plant (plant v5), the same
+      flight software fell from 299 to 275 of 300 in the hardest scenario. Changing one input at a time in the emulator
+      showed that only the legs' moving mass mattered: returning it to its old value brought back 299. The navigation
+      filter read its mass, inertia and centre of mass from the simulator's hull body, and since plant v4 the simulator has
+      carried the moving part of each leg as a separate body at the foot. So the filter modelled the vehicle without those
+      masses: too little pitch inertia, a centre of mass too high, and a gimbal torque model that predicted more angular
+      acceleration than the vehicle had. With the lighter legs the error was small; the heavier struts exposed it. The
+      filter now uses the mass properties of the whole vehicle, in Python and in the C code.</p>
+    <div class="tablewrap">
+    <table class="stack">
+      <caption>Emulator, hardest scenario, 300 episodes, plant v5 unless noted</caption>
+      <thead><tr><th>Filter mass model</th><th class="num">Landings</th></tr></thead>
+      <tbody>
+        <tr><td data-label="Filter mass model">New legs, filter reads the hull body (old behaviour)</td><td data-label="Landings" class="num">275</td></tr>
+        <tr><td data-label="Filter mass model">New legs, filter reads the whole vehicle</td><td data-label="Landings" class="num">300</td></tr>
+        <tr><td data-label="Filter mass model">New legs, filter and controller scaling read the whole vehicle</td><td data-label="Landings" class="num">300</td></tr>
+        <tr><td data-label="Filter mass model">Old legs (plant v4), filter reads the whole vehicle</td><td data-label="Landings" class="num">300 (299 with the hull body)</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="small muted">It belongs to the same family as the gimbal-limit artifact and the missing aerodynamic moment
+      (<a href="#mistakes">mistakes</a>): the filter's internal model of the vehicle quietly differed from the plant.
+      <a href="log.html#e-1110-filtermass">Log entry</a>.</p>
+  </div>
 </section>
 
 <section class="sec split" id="numbers" aria-labelledby="numbers-h">
   <h2 id="numbers-h">Current numbers</h2>
   <div class="body">
     <p>All scenarios have mean wind up to 12 m/s with gusts. HIL rows are the C flight software over UDP, lockstep, at
-      50 Hz.</p>
+      50 Hz unless marked 20 Hz. Plant v5 (CAD v0.4 legs) with the filter reading the whole vehicle, 2026-11-10.</p>
     <div class="tablewrap">
     <table class="stack">
       <thead><tr><th>Scenario</th><th class="num">Episodes</th><th>Seeds</th><th class="num">HIL landings</th></tr></thead>
       <tbody>
         <tr id="n-cots"><td data-label="Scenario">COTS sensors / + 5% sensor faults / + 15% packet loss</td><td data-label="Episodes" class="num">100 each</td><td data-label="Seeds">A</td><td data-label="HIL landings" class="num">100 / 100 / 100 of 100</td></tr>
         <tr id="n-harsh"><td data-label="Scenario">Harsh sensors / + 200 ms latency</td><td data-label="Episodes" class="num">100 each</td><td data-label="Seeds">A</td><td data-label="HIL landings" class="num">100 / 100 of 100</td></tr>
-        <tr id="n-hardest"><td data-label="Scenario">Harsh + 200 ms + 15% loss (two disjoint seed sets)</td><td data-label="Episodes" class="num">300 + 300</td><td data-label="Seeds">A, B</td><td data-label="HIL landings" class="num">299, 298 of 300</td></tr>
-        <tr id="n-noradar"><td data-label="Scenario">No radar, 1 Hz GNSS with 200 ms lag</td><td data-label="Episodes" class="num">300</td><td data-label="Seeds">A</td><td data-label="HIL landings" class="num">299 of 300</td></tr>
-        <tr id="n-aero"><td data-label="Scenario">Worst aerodynamic-uncertainty corner, harsh + 200 ms (two disjoint seed sets)</td><td data-label="Episodes" class="num">300 + 300</td><td data-label="Seeds">A, B</td><td data-label="HIL landings" class="num">283, 291 of 300</td></tr>
+        <tr id="n-hardest"><td data-label="Scenario">Harsh + 200 ms + 15% loss (two disjoint seed sets)</td><td data-label="Episodes" class="num">300 + 300</td><td data-label="Seeds">A, B</td><td data-label="HIL landings" class="num">300, 299 of 300</td></tr>
+        <tr id="n-noradar"><td data-label="Scenario">No radar, 1 Hz GNSS with 200 ms lag</td><td data-label="Episodes" class="num">300</td><td data-label="Seeds">A</td><td data-label="HIL landings" class="num">298 of 300</td></tr>
+        <tr id="n-aero"><td data-label="Scenario">Worst aerodynamic-uncertainty corner, harsh + 200 ms (two disjoint seed sets)</td><td data-label="Episodes" class="num">300 + 300</td><td data-label="Seeds">A, B</td><td data-label="HIL landings" class="num">293, 299 of 300</td></tr>
+        <tr id="n-20hz"><td data-label="Scenario">20 Hz reference: harsh + 200 ms / hardest scenario (two disjoint seed sets)</td><td data-label="Episodes" class="num">100; 200 + 200</td><td data-label="Seeds">A; A, B</td><td data-label="HIL landings" class="num">100 of 100; 199, 199 of 200</td></tr>
       </tbody>
     </table>
     </div>
@@ -209,6 +238,10 @@
   <div class="body">
     <p>Each of these produced results that looked fine and were wrong:</p>
     <ul>
+      <li><strong>The filter modelled the vehicle without its legs.</strong> From plant v4 it read the hull body, from which
+        the simulator takes the leg struts out; with light struts it cost one landing in 300, with the heavier redesigned
+        struts 24. Fixed by giving the filter the whole vehicle's mass properties.
+        <a href="log.html#e-1110-filtermass">Log</a></li>
       <li><strong>The simulator ignored the centre of mass.</strong> A MuJoCo body-frame flag kept the CoM at the hull's
         geometric centre, so every controller before that fix was tuned on the wrong plant.
         <a href="log.html#e-1103-com">Log</a></li>
@@ -230,16 +263,16 @@
   <h2 id="open-h">Open problems</h2>
   <div class="body">
     <ul>
-      <li>The worst aerodynamic-uncertainty corner (hull drag ×1.6, leg drag ×2) with 200 ms latency is now about 96%
-        (574 of 600), up from 94% before the 50 Hz attitude-gain change. It is limited by latency rather than gains:
-        failures rise from none below 4 m/s of wind to 15-23% above 10 m/s, and eight variations of the lateral
-        acceleration and tilt limits changed nothing beyond noise. Until the aerodynamics is measured, the landing wind
-        limit is 8 m/s, where this corner lands 99%.</li>
+      <li>The worst aerodynamic-uncertainty corner (hull drag ×1.6, leg drag ×2) with 200 ms latency now lands 592 of
+        600 (293 and 299 on the two seed sets). An earlier version of this page said it was limited by latency rather
+        than gains; that was wrong. Most of its failures were the filter's vehicle-model error
+        (<a href="#vehicle-model">step 12</a>). Failures by mean wind: 0 of 395 up to 8 m/s, 1 of 103 at 8-10, 2 of 59 at
+        10-11, 5 of 43 at 11-12 m/s. Until the aerodynamics is measured, the landing wind limit in this corner is
+        10 m/s (99.8%); the earlier 8 m/s recommendation is withdrawn.</li>
       <li>Powered-descent aerodynamics, where the plume covers the base, is not modelled; the CFD descent axial force is
         an upper bound.</li>
-      <li>The 20 Hz reference configuration lands 187 and 197 of 200 (about 96%) in the hardest scenario (harsh sensors,
-        150 + 50 ms latency, 15% packet loss) on the two seed sets; parameter tuning has not moved it further. The flight
-        software runs at 50 Hz, so this is a reference only.</li>
+      <li>The two load spectra of the <a href="life.html">life twin</a> were built on plant v4 and are being replayed on
+        plant v5.</li>
       <li>Structure, legs, boards and engine cooling have their own open items: <a href="vehicle.html#open">vehicle</a>,
         <a href="avionics.html#open">avionics</a>.</li>
     </ul>

@@ -7,7 +7,7 @@
 <meta name="description" content="A digital twin of a small reusable rocket, built before the rocket: flight dynamics, CFD aerodynamics, structure, guidance and the real flight code in hardware-in-the-loop. Simulation only; nothing has been built or flown.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hop-0 engineering log">
-<meta property="og:description" content="A digital twin of a small reusable rocket, built before the rocket. Hardest hardware-in-the-loop scenario: 159 to 299 of 300 landings.">
+<meta property="og:description" content="A digital twin of a small reusable rocket, built before the rocket. Hardest hardware-in-the-loop scenario: 159 to 300 of 300 landings.">
 <meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/">
 <meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
 <meta property="og:image:width" content="1200">
@@ -78,13 +78,14 @@
   </div>
   <dl>
     <dt>Vehicle</dt><dd>1.9 m, 200 kg fuelled, four inverted-tripod legs, one electric-pump liquid engine on a two-axis
-      gimbal. CAD model v0.3: 89.8 kg dry, 4.4% over its Phase-0 budget. <a href="vehicle.html">Vehicle</a></dd>
-    <dt>Landing</dt><dd>In the hardest hardware-in-the-loop scenario the C flight software lands 299 and 298 of 300 on
+      gimbal. CAD model v0.4: 91.4 kg dry, 6.3% over its Phase-0 budget; the simulator flies it since 2026-11-10. <a href="vehicle.html">Vehicle</a></dd>
+    <dt>Landing</dt><dd>In the hardest hardware-in-the-loop scenario the C flight software lands 300 and 299 of 300 on
       two disjoint seed sets. <a href="gnc.html#numbers">Numbers</a></dd>
     <dt>Electronics</dt><dd>Five boards. FC-0 and ECU-1 routed, PDU-1 routing incomplete, INV-1 placed only, CB-1 placed
       with planes. None is ready to fabricate. <a href="avionics.html#boards">Boards</a></dd>
-    <dt>Open</dt><dd>One negative structural margin, at the nose joint; leg strut walls must get thicker; powered-descent
-      aerodynamics not modelled; film-cooling effectiveness not measured. <a href="gnc.html#open">Open problems</a></dd>
+    <dt>Open</dt><dd>One negative structural margin, at the nose joint; every leg joint must be zero-clearance and at least about
+      40 kN/mm stiff to keep the first leg mode at or above about 75 Hz; powered-descent aerodynamics not modelled; film-cooling effectiveness
+      not measured. <a href="gnc.html#open">Open problems</a></dd>
   </dl>
 </section>
 
@@ -93,12 +94,13 @@
   <p class="lede">Each number below states the scenario, how many runs it rests on and where its table is.</p>
   <div class="results">
     <article class="result">
-      <span class="big num">159 &rarr; 299<small> of 300</small></span>
+      <span class="big num">159 &rarr; 300<small> of 300</small></span>
       <h3>Landings in the hardest hardware-in-the-loop scenario</h3>
       <p>After CFD aerodynamics replaced the simple drag model the lander fell from 293 to 159; one extra state in the
-        navigation filter and a series of guidance changes brought it back. In percent: 53% to 99.7%.</p>
+        navigation filter, a series of guidance changes and a correction of the filter's model of the vehicle brought it
+        back. In percent: 53% to 100%; on the held-out seeds 99.7%.</p>
       <p class="ev"><span>HIL, C flight software, 50 Hz</span><span>harsh sensors, 200 ms latency, 15% packet loss,
-        wind up to 12 m/s</span><span>300 episodes per run; seed set A 299, held-out set B 298</span>
+        wind up to 12 m/s</span><span>300 episodes per run; seed set A 300, held-out set B 299</span><span>plant v5</span>
         <span class="ev-src"><a href="gnc.html#numbers">Table, scenario definitions, landing criteria</a> ·
         <a href="gnc.html#timeline">every step</a></span></p>
     </article>
@@ -136,8 +138,8 @@
 <section class="sec" id="pages" aria-labelledby="pages-h">
   <h2 id="pages-h">The log, by subsystem</h2>
   <ul class="pagelist">
-    <li><a href="gnc.html">Landing</a><p>299 of 300 in the hardest HIL scenario, after falling to 159.</p><span>flights, wind, every change, numbers</span></li>
-    <li><a href="vehicle.html">Vehicle</a><p>89.8 kg dry, 4.4% over budget; one open negative margin.</p><span>CAD, mass, structure, legs</span></li>
+    <li><a href="gnc.html">Landing</a><p>300 of 300 in the hardest HIL scenario, after falling to 159.</p><span>flights, wind, every change, numbers</span></li>
+    <li><a href="vehicle.html">Vehicle</a><p>91.4 kg dry, 6.3% over budget; one open negative margin.</p><span>CAD, mass, structure, legs</span></li>
     <li><a href="avionics.html">Avionics</a><p>Flight code checked against its reference; five boards, none ready to fabricate.</p><span>software, HIL, boards, wiring</span></li>
     <li><a href="life.html">Life</a><p>One loss in 600 flights sets the life, not wear.</p><span>wear account per flight</span></li>
     <li><a href="orbit.html">Orbit</a><p>About 23 t for 300 kg to 500 km; about 2.1 t is the smallest that reaches orbit.</p><span>minimum-launcher study</span></li>
@@ -181,14 +183,14 @@
 <section class="sec" id="latest" aria-labelledby="latest-h">
   <h2 id="latest-h">Latest in the log</h2>
   <ul class="logteaser">
+    <li><time datetime="2026-11-10">2026-11-10</time><div><a href="log.html#e-1110-filtermass">The filter modelled the vehicle without its leg masses</a>
+      <span>Heavier legs in the plant exposed it (299 to 275 of 300); with the fix the hardest scenario lands 300 and 299 of 300.</span></div></li>
+    <li><time datetime="2026-11-10">2026-11-10</time><div><a href="log.html#e-1110-legs4">Leg struts resized</a>
+      <span>The old struts fall below their factors of safety once their own inertia counts; new lowest strut margin +0.18.</span></div></li>
     <li><time datetime="2026-11-10">2026-11-10</time><div><a href="log.html#e-1110-att">Stiffer attitude loop at 50 Hz</a>
       <span>Hardest HIL scenario 296 to 299 of 300 (held-out set 294 to 298). Applied at 50 Hz only: at 20 Hz it was not better.</span></div></li>
-    <li><time datetime="2026-11-10">2026-11-10</time><div><a href="log.html#e-1110-life">Life twin v0.1</a>
-      <span>Wear account from 600 HIL flights; found a sign error in the simulator's honeycomb limiter. No result changed.</span></div></li>
-    <li><time datetime="2026-11-10">2026-11-10</time><div><a href="log.html#e-1110-leo">Smallest orbital launcher study</a>
-      <span>About 2.1 t reaches orbit with 1 kg (2.9 t with 5 kg); the first product is about 23 t for 300 kg.</span></div></li>
-    <li><time datetime="2026-11-09">2026-11-09</time><div><a href="log.html#e-1109-lqr">Predictive terminal guidance</a>
-      <span>Better on both HIL seed sets; the quick diagnostic tool disagreed because it ran a different filter mode.</span></div></li>
+    <li><time datetime="2026-11-10">2026-11-10</time><div><a href="log.html#e-1110-life2">Life twin rebuilt on eleven scenarios</a>
+      <span>1100 HIL flights of the current software: wear almost unchanged, no loss, loss rate below 0.35% per flight.</span></div></li>
   </ul>
   <p style="margin-top:var(--sp-4)"><a href="log.html">All entries since 2026-11-03</a></p>
 </section>

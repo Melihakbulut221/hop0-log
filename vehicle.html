@@ -49,12 +49,11 @@
   <p class="lede">The vehicle is a Phase-0 testbed: a 0.45 m hull, four inverted-tripod landing legs, and one 4 kN-class
     electric-pump liquid engine on a two-axis gimbal. The goal of Phase 0 is a controlled hop and landing. It exists as
     code before it exists as metal.</p>
-  <p class="status-line"><span><b>Simulation only</b></span><span>CAD model v0.3</span><span>Nothing here has been built or tested</span><span>Updated 2026-11-10</span></p>
+  <p class="status-line"><span><b>Simulation only</b></span><span>CAD model v0.4</span><span>Nothing here has been built or tested</span><span>Updated 2026-11-10</span></p>
   <dl class="defs mass-line" aria-label="Masses used on this site">
-    <dt>89.8 kg</dt><dd>dry, CAD best estimate, without growth allowance ("about 90 kg dry")</dd>
-    <dt>107.7 kg</dt><dd>dry with the 20% growth allowance, the current CAD model</dd>
-    <dt>107.3 kg</dt><dd>dry with growth, the mass table the simulator flies (previous CAD revision)</dd>
-    <dt>205.3 kg</dt><dd>at take-off, with 97.5 kg of propellant ("about 200 kg fuelled")</dd>
+    <dt>91.4 kg</dt><dd>dry, CAD best estimate (v0.4), without growth allowance ("about 91 kg dry")</dd>
+    <dt>109.7 kg</dt><dd>dry with the 20% growth allowance; the simulator flies this table since plant v5 (2026-11-10)</dd>
+    <dt>207.2 kg</dt><dd>at take-off, with 97.5 kg of propellant ("about 200 kg fuelled")</dd>
   </dl>
   <ul class="toc" aria-label="On this page">
     <li><a href="#model">How it is modelled</a></li><li><a href="#apart">Take it apart</a></li>
@@ -97,7 +96,7 @@
     <div class="xp-steps">
       <article class="xp-step on"><div><p class="n">The whole vehicle</p><h3>1.9 m, five bays</h3>
         <p>Nose, forward avionics bay, two propellant tanks with an intertank between them, and an aft bay that holds
-          the engine, pumps, power electronics and the legs. About 90 kg dry by the CAD estimate, about 200 kg fuelled.</p>
+          the engine, pumps, power electronics and the legs. About 91 kg dry by the CAD estimate, about 200 kg fuelled.</p>
         <p>The tanks are the hull: there is no outer shell around them.</p></div></article>
       <article class="xp-step"><div><p class="n">01 · Nose and pressurant</p><h3>Radome and helium</h3>
         <p>A glass-fibre radome keeps the GNSS antenna and the telemetry link radio-transparent. Under it, a helium
@@ -135,7 +134,8 @@
         <p>Each leg has a primary strut with a coil-over shock and a crushable honeycomb cartridge behind it, two
           secondary struts, and a foot. Clevises attach the struts to the body; rod ends close the strut tubes.</p>
         <p>A switch in each foot tells the flight computer it is on the ground. The leg design went through
-          drop-test campaigns in simulation before it went into the flight model.</p></div></article>
+          drop-test campaigns in simulation before it went into the flight model. The struts are aluminium tubes,
+          Ø50 x 2 mm for the primary and Ø35 x 2 mm for the secondaries.</p></div></article>
     </div>
   </div>
 </section>
@@ -166,7 +166,7 @@
       <div class="stats">
         <div><b>118</b><span>solid parts, each tied to one of 13 budget lines</span></div>
         <div><b>0</b><span>unwanted intersections between any two parts</span></div>
-        <div><b>35</b><span>automated checks pass, with 1 warning and 0 failures</span></div>
+        <div><b>37</b><span>automated checks pass, with 1 warning and 0 failures</span></div>
       </div>
     </div>
   </div>
@@ -182,16 +182,16 @@
   <div class="m-block" id="mass">
     <div class="m-head">
       <p class="m-n">02 · Mass</p>
-      <h3>89.8 kg dry, 4.4% over budget</h3>
-      <p>The model's current best estimate against the Phase-0 mass budget of 86.0 kg. With the 20%
-        growth allowance that is <strong>107.7 kg</strong>. The simulator currently flies 107.3 kg, imported from the
-        previous CAD revision. Hover a bar for what it contains.</p>
+      <h3>91.4 kg dry, 6.3% over budget</h3>
+      <p>The model's current best estimate (CAD v0.4) against the Phase-0 mass budget of 86.0 kg. With the 20%
+        growth allowance that is <strong>109.7 kg</strong>, and since plant v5 (2026-11-10) the simulator flies exactly
+        this table. Hover a bar for what it contains.</p>
     </div>
     <figure>
       <div class="chart m-chart" data-mchart="mass" aria-describedby="m-mass-cap">
         <div class="legend"><span><i class="m-key m-key-bar"></i>CAD best estimate</span>
           <span><i class="m-key m-key-tick"></i>budget</span></div>
-        <noscript><p class="m-ns">This chart needs JavaScript. Dry mass by group, CAD best estimate against budget: Propulsion 20.0 kg against 17.0 kg; Airframe and thrust structure 19.6 kg against 14.0 kg; Landing legs (4) 13.9 kg against 12.0 kg; Propellant tanks 10.0 kg against 9.4 kg; Avionics and safety 8.3 kg against 9.5 kg; Pump power 7.3 kg against 7.3 kg; Helium pressurant 6.9 kg against 6.8 kg; Tank-side valves and lines 1.9 kg against 6.0 kg; Roll control 1.9 kg against 4.0 kg. Total 89.8 kg against 86.0 kg.</p></noscript>
+        <noscript><p class="m-ns">This chart needs JavaScript. Dry mass by group, CAD best estimate against budget: Propulsion 20.0 kg against 17.0 kg; Airframe and thrust structure 19.6 kg against 14.0 kg; Landing legs (4) 15.5 kg against 12.0 kg; Propellant tanks 10.0 kg against 9.4 kg; Avionics and safety 8.3 kg against 9.5 kg; Pump power 7.3 kg against 7.3 kg; Helium pressurant 6.9 kg against 6.8 kg; Tank-side valves and lines 1.9 kg against 6.0 kg; Roll control 1.9 kg against 4.0 kg. Total 91.4 kg against 86.0 kg.</p></noscript>
       </div>
       <figcaption id="m-mass-cap">Dry mass by group, without the 20% growth allowance. Black-box parts carry their
         budget mass, which is why pump power matches exactly; the propulsion overrun comes from the parts modelled in
@@ -199,8 +199,8 @@
     </figure>
     <div class="m-cols">
       <p>The largest overrun is the airframe, at 40% over. Its skin thicknesses are still placeholders that
-        no structural optimisation has touched yet. The landing legs come in 16% over budget with the original strut walls; the thicker walls that a later check asks
-        for would add up to 2.6 kg more.</p>
+        no structural optimisation has touched yet. The landing legs come in 29% over budget (15.5 against 12.0 kg) with the resized
+        struts; with the first, thinner struts they were 13.9 kg.</p>
       <p>Valves, lines and roll control look light only because the model holds the discrete parts and none
         of the brackets, fittings and plumbing. Their budget stays. Avionics is under budget for the same reason: no cable trays
         or brackets. The leg fairings studied for the wind problem were dropped and are not in these numbers.</p>
@@ -213,7 +213,7 @@
       <p class="m-n">03 · Mass properties</p>
       <h3>The centre of mass climbs as the tanks fill</h3>
       <p>Both tanks sit above the dry centre of mass, liquid oxygen below RP-1. Loading them lifts the
-        centre of mass by 14 cm and adds over a quarter to the pitch inertia. A table like this, imported into the
+        centre of mass by about 14 cm and adds over a quarter to the pitch inertia. A table like this, imported into the
         simulator, is interpolated as propellant burns. Drag the slider or hover a chart.</p>
     </div>
     <div class="m-fill">
@@ -234,10 +234,10 @@
         <div class="chart m-chart" data-mchart="ixx"></div>
       </div>
     </div>
-    <p class="m-small">Whole vehicle, dry mass with the 20% growth allowance (107.7 kg), engine centred. Heights from the
+    <p class="m-small">Whole vehicle, dry mass with the 20% growth allowance (109.7 kg), engine centred. Heights from the
       bottom edge of the aft skirt; inertia about the centre of mass. Static tip-over angle across the edge between two
-      feet: <strong>26.8°</strong> at take-off, <strong>28.4°</strong> at the landing load. The dry centre of mass sits
-      4.7 mm off the axis because of where the pumps and the battery are.</p>
+      feet: <strong>27.0°</strong> at take-off, <strong>28.6°</strong> at the landing load. The dry centre of mass sits
+      4.6 mm off the axis because of where the pumps and the battery are.</p>
   </div>
 
   <!-- 04 structure -->
@@ -277,8 +277,8 @@
       <figure class="m-fig m-render">
         <img src="assets/mech_leg.png" width="986" height="900" loading="lazy" decoding="async"
              alt="One landing leg: a primary strut with a dark shock absorber running from high on the aft skirt to the foot, and two thinner secondary struts from the base of the skirt to the same foot.">
-        <figcaption>One leg. The primary strut, with the shock and the honeycomb cartridge, runs from the thrust ring;
-          the two secondaries come up from the base frame.</figcaption>
+        <figcaption>One leg (render of the earlier, thinner struts). The primary strut, with the shock and the
+          honeycomb cartridge, runs from the thrust ring; the two secondaries come up from the base frame.</figcaption>
       </figure>
       <div class="m-txt">
         <p class="m-n">05 · Landing legs</p>
@@ -315,12 +315,16 @@
         envelope rises from 5–8 g to 17.5 g at a friction coefficient of 1, and the leg would lock solid at 1.6. The
         landing surface therefore has to keep friction at 0.6 or below: a low-friction foot sole or a steel landing
         plate.</p>
-      <p><strong>Open:</strong> a later check found what the first leg sizing had missed. The sizing left out the struts'
-        own sideways inertia, which the drop model shows is large near the foot, and the drop model underestimated the
-        leg's swinging mass. With both, the original struts' lowest margin of +0.09 no longer holds and the walls have to
-        get thicker; how much, without fairings, is still open. And the primary strut's first bending mode
-        is about 65 Hz, not the 140–150 Hz first estimated, close to the 50 Hz control loop. Command smoothing, a notch
-        filter and a modal test are on the list.</p>
+      <p><strong>Closed: strut sizing.</strong> The first leg sizing left out the struts' own sideways inertia, which the
+        drop model shows is large near the foot, and the drop model underestimated the leg's swinging mass. With both, the
+        original struts fall to −0.19 (primary) and −0.42 (secondary). The struts were resized to Ø50 x 2 mm (primary) and
+        Ø35 x 2 mm (secondaries): the lowest strut margin is now +0.18 (secondary, nonlinear beam-column FE), and the pins at
+        +0.09 are the lowest margin of the leg, a real current margin. The drop campaign was re-run with the new struts:
+        0 failures of any kind in the 800 drops inside the envelope.</p>
+      <p><strong>Open: joint stiffness.</strong> A model of the whole tripod puts the first two leg modes at 77 and 83 Hz,
+        but only with every joint assumed at 50 kN/mm; at 10 kN/mm the first falls to 54 Hz. The legs therefore need
+        zero-clearance joints with a measured stiffness of at least about 40 kN/mm each, body attachment included, and a
+        modal test. Leg modes 3 and 4, at 102 and 113 Hz, sit inside the hull's bending band.</p>
     </div>
   </div>
 
@@ -365,9 +369,9 @@
     </div>
   </div>
 
-  <p class="m-foot">Numbers are from the CAD model v0.3 with the ±10° gimbal and without the dropped leg fairings;
+  <p class="m-foot">Numbers are from the CAD model v0.4 (no leg fairings, resized struts) with the ±10° gimbal;
     analyses as noted. Nothing here has been built or tested yet.</p>
-  <script type="application/json" id="mech-data">{"img":{"h":1210,"y_ground":1185.5,"y_top":24.0,"z_top_mm":1883.5,"z_ground_mm":-450.0},"mass":{"cbe":89.78,"budget":85.98,"over_pct":4.4,"with_growth":107.7},"groups":[{"name":"Airframe and thrust structure","note":"Skins, frames, Y-rings, thrust beams, deck, raceway","cbe":19.62,"budget":14.0},{"name":"Propulsion","note":"Engine, pumps, main valves, gimbal and its actuators","cbe":19.97,"budget":17.03},{"name":"Landing legs (4)","note":"Struts, shocks, honeycomb, feet, fittings","cbe":13.89,"budget":12.0},{"name":"Propellant tanks","note":"LOX and RP-1 tanks, domes, bosses, baffles","cbe":9.99,"budget":9.38},{"name":"Pump power","note":"Pump battery, inverters, power distribution","cbe":7.29,"budget":7.29},{"name":"Helium pressurant","note":"Composite pressure vessel and regulator","cbe":6.9,"budget":6.78},{"name":"Avionics and safety","note":"Flight computer, radios, harness, flight termination","cbe":8.3,"budget":9.5},{"name":"Tank-side valves and lines","note":"Only discrete parts are modelled","cbe":1.94,"budget":6.0},{"name":"Roll control","note":"Bottle, regulator, thrusters; no plumbing modelled","cbe":1.9,"budget":4.0}],"fill":{"rows":[{"p":0.0,"m":107.74,"z":0.6705,"ixx":50.94,"izz":8.81},{"p":2.5,"m":110.24,"z":0.673,"ixx":51.21,"izz":8.84},{"p":5.0,"m":112.74,"z":0.6757,"ixx":51.49,"izz":8.87},{"p":7.5,"m":115.24,"z":0.6786,"ixx":51.78,"izz":8.92},{"p":10.0,"m":117.74,"z":0.6817,"ixx":52.08,"izz":8.97},{"p":12.5,"m":120.24,"z":0.6848,"ixx":52.38,"izz":9.02},{"p":15.0,"m":122.74,"z":0.6879,"ixx":52.69,"izz":9.08},{"p":17.5,"m":125.24,"z":0.6912,"ixx":53.0,"izz":9.14},{"p":20.0,"m":127.74,"z":0.6944,"ixx":53.31,"izz":9.2},{"p":22.5,"m":130.24,"z":0.6977,"ixx":53.62,"izz":9.26},{"p":25.0,"m":132.74,"z":0.7011,"ixx":53.94,"izz":9.32},{"p":27.5,"m":135.24,"z":0.7045,"ixx":54.26,"izz":9.39},{"p":30.0,"m":137.74,"z":0.7079,"ixx":54.59,"izz":9.45},{"p":32.5,"m":140.24,"z":0.7113,"ixx":54.91,"izz":9.51},{"p":35.0,"m":142.74,"z":0.7148,"ixx":55.24,"izz":9.57},{"p":37.5,"m":145.24,"z":0.7183,"ixx":55.57,"izz":9.63},{"p":40.0,"m":147.74,"z":0.7218,"ixx":55.9,"izz":9.7},{"p":42.5,"m":150.24,"z":0.7254,"ixx":56.24,"izz":9.76},{"p":45.0,"m":152.74,"z":0.729,"ixx":56.58,"izz":9.82},{"p":47.5,"m":155.24,"z":0.7326,"ixx":56.92,"izz":9.88},{"p":50.0,"m":157.74,"z":0.7362,"ixx":57.27,"izz":9.95},{"p":52.5,"m":160.24,"z":0.7398,"ixx":57.62,"izz":10.01},{"p":55.0,"m":162.74,"z":0.7435,"ixx":57.97,"izz":10.07},{"p":57.5,"m":165.24,"z":0.7472,"ixx":58.33,"izz":10.13},{"p":60.0,"m":167.74,"z":0.7509,"ixx":58.69,"izz":10.19},{"p":62.5,"m":170.24,"z":0.7546,"ixx":59.06,"izz":10.26},{"p":65.0,"m":172.74,"z":0.7583,"ixx":59.43,"izz":10.32},{"p":67.5,"m":175.24,"z":0.762,"ixx":59.8,"izz":10.38},{"p":70.0,"m":177.74,"z":0.7658,"ixx":60.18,"izz":10.44},{"p":72.5,"m":180.24,"z":0.7696,"ixx":60.56,"izz":10.51},{"p":75.0,"m":182.74,"z":0.7734,"ixx":60.94,"izz":10.57},{"p":77.5,"m":185.24,"z":0.7772,"ixx":61.33,"izz":10.63},{"p":80.0,"m":187.74,"z":0.781,"ixx":61.73,"izz":10.69},{"p":82.5,"m":190.24,"z":0.7848,"ixx":62.13,"izz":10.75},{"p":85.0,"m":192.74,"z":0.7887,"ixx":62.53,"izz":10.82},{"p":87.5,"m":195.24,"z":0.7925,"ixx":62.94,"izz":10.88},{"p":90.0,"m":197.74,"z":0.7964,"ixx":63.36,"izz":10.94},{"p":92.5,"m":200.24,"z":0.8002,"ixx":63.78,"izz":11.0},{"p":95.0,"m":202.74,"z":0.8041,"ixx":64.21,"izz":11.06},{"p":97.5,"m":205.24,"z":0.808,"ixx":64.64,"izz":11.12},{"p":100.0,"m":207.74,"z":0.8119,"ixx":65.07,"izz":11.18}],"takeoff":{"prop":97.5,"z":0.808,"ixx":64.6,"m":205.3,"tip_deg":26.8},"landing":{"prop":42.9,"z":0.726,"ixx":56.3,"m":150.7,"tip_deg":28.4},"lateral_com_mm":4.7},"margins":[{"k":"tank","label":"Tank under proof pressure, at the LOX dome weld","ms":0.25,"tool":"axisymmetric FE"},{"k":"landing-dome","label":"Landing loads, LOX dome weld zone","ms":0.3,"tool":"full-hull shell FE"},{"k":"skirt","label":"Aft skirt at the leg load limit","ms":0.35,"tool":"full-hull shell FE"},{"k":"frame","label":"Base frame at the leg load limit","ms":0.74,"tool":"full-hull shell FE"},{"k":"legs","label":"Leg struts and pins, first sizing","ms":0.09,"tool":"hand + 3D frame FE","open":true,"note":"without the struts' own sideways inertia; with it these struts fall below this, so the walls must get thicker"},{"k":"thrust","label":"Thrust beams at the gimbal corner, weld allowables","ms":2.22,"tool":"solid FE"},{"k":"fatigue","label":"Thrust structure fatigue, welded detail","ms":4.4,"tool":"stress-life"},{"k":"buckle","label":"Buckling (first mode in the intertank)","ms":6.8,"tool":"linear buckling FE"},{"k":"fwd","label":"Forward hull free edge, at the nose joint","ms":-0.28,"tool":"full-hull shell FE","open":true,"note":"needs a stiff ring at the nose joint"}],"drop":{"vz":[0.5,1.0,1.5,2.0,2.5,3.0],"new75":[1.75,1.75,1.5,1.25,1.25,1.0],"new40":[1.75,2.0,1.75,1.5,1.25,1.0],"old75":[1.75,1.5,1.25,1.0,0.75,0.5],"env":{"vz":2.0,"vh":1.0},"in_env":{"tipped":0,"bounced":0,"bottomed":0,"crushed":0},"mu":[0,0.3,0.6,1.0],"g_new":[5.6,5.4,7.5,17.5],"g_old":[9.1,10.4,10.4,10.4]},"modes":{"deck":[{"name":"Flat 3 mm plate","f":26.7},{"name":"Ribbed deck","f":48.6},{"name":"Ribbed deck + four struts to the pressure vessel","f":162.8}],"loop_hz":50},"gimbal":{"az":[0,15,30,45,60,75,90,105,120,135,150,165,180,195,210,225,240,255,270,285,300,315,330,345],"v03":[14.18,14.18,15.59,20.39,15.23,13.48,13.01,13.48,15.35,26.95,27.66,29.18,25.66,21.45,19.34,18.75,19.34,20.04,25.66,18.87,17.23,17.7,15.59,14.3],"v02":[14.18,14.18,12.89,12.42,12.89,13.48,13.01,13.48,15.35,29.18,29.18,29.18,24.26,19.57,17.46,16.88,14.77,12.42,11.84,12.42,14.77,17.7,15.59,14.3],"limit":10.0,"corner":14.1}}</script>
+  <script type="application/json" id="mech-data">{"img":{"h":1210,"y_ground":1185.5,"y_top":24.0,"z_top_mm":1883.5,"z_ground_mm":-450.0},"mass":{"cbe":91.43,"budget":85.98,"over_pct":6.3,"with_growth":109.7},"groups":[{"name":"Airframe and thrust structure","note":"Skins, frames, Y-rings, thrust beams, deck, raceway","cbe":19.62,"budget":14.0},{"name":"Propulsion","note":"Engine, pumps, main valves, gimbal and its actuators","cbe":19.97,"budget":17.03},{"name":"Landing legs (4)","note":"Struts, shocks, honeycomb, feet, fittings","cbe":15.53,"budget":12.0},{"name":"Propellant tanks","note":"LOX and RP-1 tanks, domes, bosses, baffles","cbe":9.99,"budget":9.38},{"name":"Pump power","note":"Pump battery, inverters, power distribution","cbe":7.29,"budget":7.29},{"name":"Helium pressurant","note":"Composite pressure vessel and regulator","cbe":6.9,"budget":6.78},{"name":"Avionics and safety","note":"Flight computer, radios, harness, flight termination","cbe":8.3,"budget":9.5},{"name":"Tank-side valves and lines","note":"Only discrete parts are modelled","cbe":1.94,"budget":6.0},{"name":"Roll control","note":"Bottle, regulator, thrusters; no plumbing modelled","cbe":1.9,"budget":4.0}],"fill":{"rows":[{"p":0.0,"m":109.71,"z":0.6572,"ixx":52.57,"izz":9.58},{"p":2.5,"m":112.21,"z":0.6599,"ixx":52.85,"izz":9.6},{"p":5.0,"m":114.71,"z":0.6629,"ixx":53.14,"izz":9.63},{"p":7.5,"m":117.21,"z":0.666,"ixx":53.44,"izz":9.68},{"p":10.0,"m":119.71,"z":0.6693,"ixx":53.74,"izz":9.73},{"p":12.5,"m":122.21,"z":0.6726,"ixx":54.05,"izz":9.78},{"p":15.0,"m":124.71,"z":0.676,"ixx":54.37,"izz":9.84},{"p":17.5,"m":127.21,"z":0.6794,"ixx":54.69,"izz":9.9},{"p":20.0,"m":129.71,"z":0.6828,"ixx":55.01,"izz":9.96},{"p":22.5,"m":132.21,"z":0.6863,"ixx":55.34,"izz":10.02},{"p":25.0,"m":134.71,"z":0.6898,"ixx":55.67,"izz":10.09},{"p":27.5,"m":137.21,"z":0.6934,"ixx":56.0,"izz":10.15},{"p":30.0,"m":139.71,"z":0.6969,"ixx":56.33,"izz":10.21},{"p":32.5,"m":142.21,"z":0.7005,"ixx":56.67,"izz":10.27},{"p":35.0,"m":144.71,"z":0.7042,"ixx":57.0,"izz":10.33},{"p":37.5,"m":147.21,"z":0.7078,"ixx":57.35,"izz":10.4},{"p":40.0,"m":149.71,"z":0.7115,"ixx":57.69,"izz":10.46},{"p":42.5,"m":152.21,"z":0.7151,"ixx":58.04,"izz":10.52},{"p":45.0,"m":154.71,"z":0.7188,"ixx":58.39,"izz":10.58},{"p":47.5,"m":157.21,"z":0.7226,"ixx":58.74,"izz":10.65},{"p":50.0,"m":159.71,"z":0.7263,"ixx":59.1,"izz":10.71},{"p":52.5,"m":162.21,"z":0.7301,"ixx":59.46,"izz":10.77},{"p":55.0,"m":164.71,"z":0.7338,"ixx":59.83,"izz":10.83},{"p":57.5,"m":167.21,"z":0.7376,"ixx":60.2,"izz":10.89},{"p":60.0,"m":169.71,"z":0.7414,"ixx":60.57,"izz":10.96},{"p":62.5,"m":172.21,"z":0.7452,"ixx":60.95,"izz":11.02},{"p":65.0,"m":174.71,"z":0.7491,"ixx":61.33,"izz":11.08},{"p":67.5,"m":177.21,"z":0.7529,"ixx":61.71,"izz":11.14},{"p":70.0,"m":179.71,"z":0.7568,"ixx":62.1,"izz":11.2},{"p":72.5,"m":182.21,"z":0.7606,"ixx":62.5,"izz":11.27},{"p":75.0,"m":184.71,"z":0.7645,"ixx":62.9,"izz":11.33},{"p":77.5,"m":187.21,"z":0.7684,"ixx":63.3,"izz":11.39},{"p":80.0,"m":189.71,"z":0.7723,"ixx":63.71,"izz":11.45},{"p":82.5,"m":192.21,"z":0.7762,"ixx":64.12,"izz":11.52},{"p":85.0,"m":194.71,"z":0.7801,"ixx":64.54,"izz":11.58},{"p":87.5,"m":197.21,"z":0.784,"ixx":64.96,"izz":11.64},{"p":90.0,"m":199.71,"z":0.788,"ixx":65.39,"izz":11.7},{"p":92.5,"m":202.21,"z":0.7919,"ixx":65.82,"izz":11.76},{"p":95.0,"m":204.71,"z":0.7959,"ixx":66.26,"izz":11.82},{"p":97.5,"m":207.21,"z":0.7998,"ixx":66.71,"izz":11.88},{"p":100.0,"m":209.71,"z":0.8038,"ixx":67.16,"izz":11.94}],"takeoff":{"prop":97.5,"z":0.8,"ixx":66.7,"m":207.2,"tip_deg":27.0},"landing":{"prop":42.9,"z":0.716,"ixx":58.1,"m":152.6,"tip_deg":28.6},"lateral_com_mm":4.6},"margins":[{"k":"tank","label":"Tank under proof pressure, at the LOX dome weld","ms":0.25,"tool":"axisymmetric FE"},{"k":"landing-dome","label":"Landing loads, LOX dome weld zone","ms":0.3,"tool":"full-hull shell FE"},{"k":"skirt","label":"Aft skirt at the leg load limit","ms":0.35,"tool":"full-hull shell FE"},{"k":"frame","label":"Base frame at the leg load limit","ms":0.74,"tool":"full-hull shell FE"},{"k":"legs","label":"Leg pins in bending, resized legs","ms":0.09,"tool":"hand + 3D frame FE"},{"k":"struts","label":"Leg struts, secondary beam-column, resized legs","ms":0.18,"tool":"nonlinear FE (CalculiX)"},{"k":"thrust","label":"Thrust beams at the gimbal corner, weld allowables","ms":2.22,"tool":"solid FE"},{"k":"fatigue","label":"Thrust structure fatigue, welded detail","ms":4.4,"tool":"stress-life"},{"k":"buckle","label":"Buckling (first mode in the intertank)","ms":6.8,"tool":"linear buckling FE"},{"k":"fwd","label":"Forward hull free edge, at the nose joint","ms":-0.28,"tool":"full-hull shell FE","open":true,"note":"needs a stiff ring at the nose joint"}],"drop":{"vz":[0.5,1.0,1.5,2.0,2.5,3.0],"new75":[1.75,1.75,1.5,1.5,1.25,1.0],"new40":[1.75,2.0,1.75,1.5,1.25,1.25],"old75":[1.75,1.5,1.25,1.0,0.75,0.5],"env":{"vz":2.0,"vh":1.0},"in_env":{"tipped":0,"bounced":0,"bottomed":0,"crushed":0},"mu":[0,0.3,0.6,1.0],"g_new":[5.4,5.3,7.7,17.5],"g_old":[9.1,10.4,10.4,10.4]},"modes":{"deck":[{"name":"Flat 3 mm plate","f":26.7},{"name":"Ribbed deck","f":48.6},{"name":"Ribbed deck + four struts to the pressure vessel","f":162.8}],"loop_hz":50,"leg_hz":[77.2,83.1],"leg_joint_kn_mm":50},"gimbal":{"az":[0,15,30,45,60,75,90,105,120,135,150,165,180,195,210,225,240,255,270,285,300,315,330,345],"v03":[14.18,14.18,15.59,20.39,15.23,13.48,13.01,13.48,15.35,26.95,27.66,29.18,25.66,21.45,19.34,18.75,19.34,20.04,25.66,18.87,17.23,17.7,15.59,14.3],"v02":[14.18,14.18,12.89,12.42,12.89,13.48,13.01,13.48,15.35,29.18,29.18,29.18,24.26,19.57,17.46,16.88,14.77,12.42,11.84,12.42,14.77,17.7,15.59,14.3],"limit":10.0,"corner":14.1}}</script>
 </section>
 
 <section class="sec split" id="open" aria-labelledby="open-h">
@@ -376,8 +380,9 @@
     <ul>
       <li>The forward hull's free edge at the nose joint has a negative margin (<a href="#structure">−0.28</a>); a stiff
         ring at the joint is planned and not analysed.</li>
-      <li>The leg strut walls must get thicker once the struts' own sideways inertia is included; how much is open
-        (<a href="#legs">legs</a>). The primary strut's first bending mode is about 65 Hz, close to the 50 Hz control loop.</li>
+      <li>Every leg joint must be zero-clearance and at least about 40 kN/mm stiff, measured with the body attachment, to
+        keep the first leg mode at or above about 75 Hz (77 Hz at 50 kN/mm); leg modes 3 and 4 sit in the hull's bending band (<a href="#legs">legs</a>). The strut
+        sizing itself is closed.</li>
       <li>The landing surface must keep friction at 0.6 or below.</li>
       <li>The cooling design depends on a film-cooling effectiveness that has to be measured before a regeneratively
         cooled chamber is built.</li>

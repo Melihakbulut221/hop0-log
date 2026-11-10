@@ -36,8 +36,8 @@ def before_after():
         ("COTS + 15% packet loss", 72, 100, 100),
         ("Harsh sensors", 72, 100, 100),
         ("Harsh + 200 ms latency", 57, 100, 100),
-        ("Harsh + 200 ms + 15% loss", 159, 299, 300),
-        ("No radar, 1 Hz GNSS", 192, 299, 300),
+        ("Harsh + 200 ms + 15% loss", 159, 300, 300),
+        ("No radar, 1 Hz GNSS", 192, 298, 300),
     ]
     fig, ax = plt.subplots(figsize=(12, 7.2), dpi=150)
     fig.patch.set_facecolor(SURFACE); ax.set_facecolor(SURFACE)
@@ -90,6 +90,7 @@ def hil_timeline():
         ("Filter gain in accelerometer mode", 294),
         ("Predictive terminal guidance (LQR)", 296),
         ("Stiffer attitude loop at 50 Hz", 299),
+        ("Filter models the whole vehicle (plant v5)", 300),
     ]
     fig, ax = plt.subplots(figsize=(12, 7.0), dpi=150)
     fig.patch.set_facecolor(SURFACE); ax.set_facecolor(SURFACE)
@@ -145,7 +146,7 @@ def og_image():
     fig.text(0.05, 0.69, "engineering log", fontsize=26, color=fg2)
     fig.text(0.05, 0.47, "A small reusable-rocket testbed,\nbuilt in simulation first", fontsize=20, color=fg,
              linespacing=1.35)
-    fig.text(0.05, 0.30, "Hardest HIL scenario: 53% → 99.7%", fontsize=18, color=trail, fontweight="bold")
+    fig.text(0.05, 0.30, "Hardest HIL scenario: 53% → 100%", fontsize=18, color=trail, fontweight="bold")
     fig.text(0.05, 0.205, "landings on the same seeds, before and after the filter\nand guidance work", fontsize=14, color=fg2)
     fig.text(0.05, 0.07, "18 replayed landings from the flight software; simulation only", fontsize=11, color=fg2)
     fig.savefig(os.path.join(OUT, "og.png"), facecolor=bg)

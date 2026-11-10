@@ -49,7 +49,7 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. HIL is the C flight software in hardware-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the HIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>29 entries</b></span><span>2026-11-03 to 2026-11-10</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>36 entries</b></span><span>2026-11-03 to 2026-11-10</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
     <li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
@@ -58,7 +58,68 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1110-ecu"><div id="d-1110"><time datetime="2026-11-10">2026-11-10</time><span class="area">Boards</span></div><div>
+<li class="entry" id="e-1110-filtermass"><div id="d-1110"><time datetime="2026-11-10">2026-11-10</time><span class="area">Navigation</span></div><div>
+  <h2 class="eh">The filter modelled the vehicle without its leg masses</h2>
+  <dl>
+    <dt>Found</dt><dd class="bad">The navigation filter, in Python and in C, read mass, inertia and centre of mass from the
+      simulator's hull body. Since plant v4 the simulator carries the moving part of each leg as a separate body at the
+      foot, so the filter's vehicle had too little pitch inertia and a centre of mass too high, and its gimbal torque model
+      predicted more angular acceleration than the vehicle had. The heavier legs of plant v5 made it visible.</dd>
+    <dt>Isolated</dt><dd>Emulator, hardest scenario, 300 episodes: new legs with the filter reading the hull body 275; with
+      the filter reading the whole vehicle 300; filter and controller scaling both on the whole vehicle 300; old legs with
+      the whole-vehicle filter 300 (299 with the hull body).</dd>
+    <dt>Changed</dt><dd>The filter uses the composite mass properties of the whole vehicle. The controller's gain scaling
+      stays on its tuning reference, since the composite variant gave the same result. C parameters and traces
+      regenerated; the equivalence checks pass.</dd>
+    <dt>Measured</dt><dd>HIL, plant v5: hardest scenario 300 (set A) and 299 (set B) of 300; worst aerodynamic corner 293 and
+      299 of 300 (592 of 600, was 574 on plant v4); no radar 298 of 300; 20 Hz hardest scenario 199 and 199 of 200, 20 Hz
+      with 150 + 50 ms latency 100 of 100. COTS and harsh rows 100 of 100.</dd>
+    <dt>Lesson</dt><dd class="bad">This supersedes the conclusion of the entry on the worst aerodynamic corner below: its
+      failures were largely this model error, not latency. In that corner failures by mean wind are now 0 of 395 up to
+      8 m/s, 1 of 103 at 8-10, 2 of 59 at 10-11 and 5 of 43 at 11-12 m/s; the landing wind limit there is 10 m/s (99.8%)
+      and the 8 m/s recommendation is withdrawn.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#vehicle-model">step 12 of the timeline</a> · <a href="gnc.html#numbers">current numbers</a></p>
+</div></li>
+
+<li class="entry" id="e-1110-plantv5"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Plant</span></div><div>
+  <h2 class="eh">Plant v5: the CAD v0.4 legs in the simulator, and a regression</h2>
+  <dl>
+    <dt>Changed</dt><dd>The mass table of CAD v0.4 (fairing-free legs with resized struts) imported into the simulator: dry
+      mass with growth 107.34 to 109.71 kg; unsprung mass per leg 1.32 to 1.95 kg.</dd>
+    <dt>Measured</dt><dd class="bad">Full HIL regression with unchanged flight software: hardest scenario 299 to 275 (set A)
+      and 298 to 281 (set B) of 300; worst aerodynamic corner 574 to 542 of 600; 20 Hz hardest scenario 187 and 197 to 181
+      and 186 of 200. COTS and harsh clean rows stayed at 100%. The failures touched down tilted more than 8° or too fast
+      sideways.</dd>
+    <dt>Isolated</dt><dd>In the emulator, returning only the unsprung leg mass to its old value brought back 299; the old
+      mass table (257) and the old engine body (277) did not. That pointed at the filter, entry above.</dd>
+  </dl>
+  <p class="ev"><a href="gnc.html#vehicle-model">the filter's model of the vehicle</a></p>
+</div></li>
+
+<li class="entry" id="e-1110-legs4"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Structure</span></div><div>
+  <h2 class="eh">Leg struts resized for their own inertia (CAD v0.4)</h2>
+  <dl>
+    <dt>Found</dt><dd class="bad">With the struts' own sideways inertia and the corrected swinging mass, the first struts fall
+      below their factors of safety: −0.19 for the primary, −0.42 for the secondaries, without fairings.</dd>
+    <dt>Changed</dt><dd>Fairing-free legs with Ø50 x 2 mm primary and Ø35 x 2 mm secondary struts; CAD v0.4 becomes the
+      baseline: dry 91.4 kg (6.3% over the 86.0 kg budget), 109.7 kg with growth, four legs 15.5 kg in CAD against a
+      12.0 kg budget. The site had shown 89.8 kg dry (4.4% over), 107.7 kg with growth, from a fairing-free estimate with
+      the first struts.</dd>
+    <dt>Measured</dt><dd>Lowest strut margin +0.18 (secondary beam-column, nonlinear FE); the pins at +0.09 are now the
+      lowest margin of the leg. Drop campaign re-run, 1320 drops per propellant load: 0 tip-overs, bounces, bottoming or
+      crushing in the 800 drops inside the envelope.</dd>
+    <dt>Open</dt><dd class="bad">A whole-tripod model gives the first two leg modes at 77 and 83 Hz only with every joint at
+      50 kN/mm (assumed); at 10 kN/mm the first is 54 Hz. The earlier single-strut estimate (about 65 Hz for the primary,
+      first estimated at 140–150 Hz) missed the foot swinging on the joint springs; in the same tripod model the first
+      struts reach 60 Hz. Zero-clearance joints with a measured stiffness of at least about
+      40 kN/mm each, and a modal test, are now requirements. Leg modes 3 and 4 (102 and 113 Hz) sit in the hull's bending
+      band.</dd>
+  </dl>
+  <p class="ev"><a href="vehicle.html#legs">landing legs</a> · <a href="vehicle.html#mass">mass</a></p>
+</div></li>
+
+<li class="entry" id="e-1110-ecu"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Boards</span></div><div>
   <h2 class="eh">The engine controller reads the power unit</h2>
   <dl>
     <dt>Changed</dt><dd>ECU-1 gained a connector for PDU-1's status: three opto-coupled lines (pre-charge done, contactor
@@ -87,13 +148,16 @@
 </div></li>
 
 <li class="entry" id="e-1110-wind"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Guidance</span></div><div>
-  <h2 class="eh">Where the worst aerodynamic corner fails, and a tuning dead end</h2>
+  <h2 class="eh">Where the worst aerodynamic corner fails, and a tuning dead end (superseded)</h2>
   <dl>
     <dt>Measured</dt><dd>In 600 HIL episodes with hull drag ×1.6 and leg drag ×2, failures rise with wind: none below 4 m/s,
       1% at 4-8, 5% at 8-10, 15-23% above 10 m/s. Nineteen of the 26 failures are above 10 m/s.</dd>
     <dt>Did not work</dt><dd class="bad">Eight variations of the lateral acceleration and terminal tilt limits, 800 emulator
       episodes each: none moved the result beyond noise. The remaining failures are latency and the aerodynamics itself.</dd>
     <dt>Decided</dt><dd>Until the aerodynamic uncertainty is measured, the landing wind limit is 8 m/s (99% in this corner).</dd>
+    <dt>Superseded</dt><dd class="bad">The conclusion was wrong: most of these failures were the filter's vehicle-model
+      error, found the same day. The wind limit in this corner is now 10 m/s; see
+      <a href="#e-1110-filtermass">the filter entry</a>.</dd>
   </dl>
   <p class="ev"><a href="gnc.html#open">open problems</a></p>
 </div></li>
