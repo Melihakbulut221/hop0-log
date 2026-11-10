@@ -61,7 +61,7 @@
   var BA = [
     ["COTS sensors", 75, 100, 100], ["COTS + 5% sensor faults", 75, 100, 100], ["COTS + 15% packet loss", 72, 100, 100],
     ["Harsh sensors", 72, 100, 100], ["Harsh + 200 ms latency", 57, 100, 100],
-    ["Harsh + 200 ms + 15% loss", 159, 296, 300], ["No radar, 1 Hz GNSS", 192, 298, 300]
+    ["Harsh + 200 ms + 15% loss", 159, 299, 300], ["No radar, 1 Hz GNSS", 192, 299, 300]
   ];
   function beforeAfter(host) {
     var narrow = host.clientWidth < 560;      // phones: row label above its bar, real-size text
@@ -105,7 +105,7 @@
     ["Simple aero model (before CFD)", 293], ["CFD aerodynamics added", 159],
     ["Angular-disturbance state in the nav filter", 266], ["Terminal tilt limits", 271],
     ["Divert-feasibility sink limit", 276], ["Terminal velocity law", 287], ["Smoother braking feed-forward", 285],
-    ["Higher terminal gate", 289], ["Filter gain in accelerometer mode", 294], ["Predictive terminal guidance (LQR)", 296]
+    ["Higher terminal gate", 289], ["Filter gain in accelerometer mode", 294], ["Predictive terminal guidance (LQR)", 296], ["Stiffer attitude loop at 50 Hz", 299]
   ];
   function timeline(host) {
     var narrow = host.clientWidth < 560;
@@ -113,7 +113,7 @@
         left = narrow ? 34 : 300, right = narrow ? 70 : 70, H = top + rowH * TL.length + 30, dy = narrow ? 12 : 0;
     var svg = el("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-labelledby": "tl-title" }, host);
     el("title", { id: "tl-title" }, svg).textContent =
-      "Landings out of 300 in the hardest HIL scenario after each change: 293, 159, 266, 271, 276, 287, 285, 289, 294, 296.";
+      "Landings out of 300 in the hardest HIL scenario after each change: 293, 159, 266, 271, 276, 287, 285, 289, 294, 296, 299.";
     var x = function (p) { return left + (p - 40) / 60 * (W - left - right); };
     (narrow ? [40, 60, 80, 100] : [40, 50, 60, 70, 80, 90, 100]).forEach(function (t) {
       el("line", { x1: x(t), x2: x(t), y1: top - 6, y2: H - 26, class: "grid" }, svg);

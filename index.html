@@ -7,7 +7,7 @@
 <meta name="description" content="A digital twin of a small reusable rocket, built before the rocket: flight dynamics, CFD aerodynamics, structure, guidance and the real flight code in hardware-in-the-loop.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hop-0 engineering log">
-<meta property="og:description" content="A digital twin of a small reusable rocket, built before the rocket. Hardest hardware-in-the-loop scenario: 53% to 98.7% landing success.">
+<meta property="og:description" content="A digital twin of a small reusable rocket, built before the rocket. Hardest hardware-in-the-loop scenario: 53% to 99.7% landing success.">
 <meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/">
 <meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
 <meta property="og:image:width" content="1200">
@@ -508,7 +508,7 @@
     <strong>1.9 m</strong>, <strong>200 kg</strong> vertical-landing hop vehicle whose physics, aerodynamics, structure and
     flight code all live in software first.</p>
   <p class="reveal">In the hardest hardware-in-the-loop scenario it now lands
-    <strong><span data-count-from="53" data-count-to="98.7">98.7%</span></strong> of the time, up from 53%, on the same
+    <strong><span data-count-from="53" data-count-to="99.7">99.7%</span></strong> of the time, up from 53%, on the same
     <strong>300</strong> random seeds.</p>
   <figure class="inset reveal">
     <img src="assets/cfd_flow_slices.png" alt="Grid of twelve CFD velocity-magnitude slices around the hull at angles of attack from 0 to 180 degrees, with and without legs.">
@@ -936,8 +936,8 @@
   <h2 class="display reveal">What each<br>flight costs</h2>
   <p class="sub reveal">The twin keeps a wear account. Every flight record is turned into damage for each part that wears
     out: the chamber's hot wall, the pump battery, the shocks, the honeycomb, the struts, the welded hull zones and the
-    gimbal actuators. The flights here are 600 hardware-in-the-loop flights of the current flight software in the
-    hardest scenario, so this is a cautious load spectrum.</p>
+    gimbal actuators. The flights here are 600 hardware-in-the-loop flights in the hardest scenario, flown by the
+    flight software one revision before its latest attitude-gain change, so this is a cautious load spectrum.</p>
   <div class="lgrid">
     <div class="lconsole reveal" id="life-console" aria-live="off">
       <div class="lc-top">
@@ -1070,7 +1070,9 @@
       <li>a descent-speed limit that keeps the divert feasible when drag is high;</li>
       <li>higher terminal-gate heights;</li>
       <li>a predictive terminal law: a finite-horizon LQR that models the attitude-loop lag and plans to null position
-        and velocity at touchdown.</li>
+        and velocity at touchdown;</li>
+      <li>a stiffer attitude loop at the 50 Hz flight rate, found by screening twelve candidates in the in-process HIL
+        emulator and then confirmed in HIL on every scenario.</li>
     </ul>
   </div>
 </div>
@@ -1127,9 +1129,9 @@
       <tbody>
         <tr><td>COTS sensors / + 5% sensor faults / + 15% packet loss</td><td class="num">100 / 100 / 100 of 100</td></tr>
         <tr><td>Harsh sensors / + 200 ms latency</td><td class="num">100 / 100 of 100</td></tr>
-        <tr><td>Harsh + 200 ms + 15% loss (two disjoint seed sets)</td><td class="num">296, 294 of 300</td></tr>
-        <tr><td>No radar, 1 Hz GNSS with 200 ms lag</td><td class="num">298 of 300</td></tr>
-        <tr><td>Worst aerodynamic-uncertainty corner (COTS / harsh)</td><td class="num">198 / 198 of 200</td></tr>
+        <tr><td>Harsh + 200 ms + 15% loss (two disjoint seed sets)</td><td class="num">299, 298 of 300</td></tr>
+        <tr><td>No radar, 1 Hz GNSS with 200 ms lag</td><td class="num">299 of 300</td></tr>
+        <tr><td>Worst aerodynamic-uncertainty corner, harsh + 200 ms (two disjoint seed sets)</td><td class="num">283, 291 of 300</td></tr>
       </tbody>
     </table>
     </div>
@@ -1143,7 +1145,7 @@
   <h2 class="reveal">Open problems</h2>
   <div class="body reveal">
     <ul>
-      <li>The worst aerodynamic-uncertainty corner (hull drag ×1.6, leg drag ×2) with 200 ms latency is still about 93%.
+      <li>The worst aerodynamic-uncertainty corner (hull drag ×1.6, leg drag ×2) with 200 ms latency is now about 96% (574 of 600), up from 94% with a higher attitude-loop gain.
         It is limited by latency rather than gains.</li>
       <li>Powered-descent aerodynamics, where the plume covers the base, is not modelled; the CFD descent axial force is
         an upper bound.</li>
