@@ -31,6 +31,7 @@
    <ul>
     <li><a href="index.html">Home</a></li>
     <li><a href="gnc.html">Landing</a></li>
+    <li><a href="emulator.html">Sandbox</a></li>
     <li><a href="vehicle.html">Vehicle</a></li>
     <li><a href="avionics.html">Avionics</a></li>
     <li><a href="life.html">Life</a></li>
@@ -49,14 +50,40 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. HIL is the C flight software in hardware-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the HIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>36 entries</b></span><span>2026-11-03 to 2026-11-10</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>39 entries</b></span><span>2026-11-03 to 2026-11-12</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
-    <li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
+    <li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
   </ul>
 </header>
 
 <ol class="log" reversed>
+
+<li class="entry" id="e-1112-loss"><div id="d-1112"><time datetime="2026-11-12">2026-11-12</time><span class="area">Landing</span></div><div>
+  <h2 class="eh">A loss-rate campaign: 3300 more flights, no loss</h2>
+  <dl>
+    <dt>Changed</dt><dd>The eleven regression scenarios flown again in HIL with the current software, three rounds of 100
+      episodes each on new seeds disjoint from every earlier set.</dd>
+    <dt>Measured</dt><dd>3300 flights, no loss. With the earlier 1100 that is 4400 loss-free flights: the loss rate is below
+      0.087% per flight with 95% confidence. Every COTS and harsh row landed 300 of 300.</dd>
+    <dt>Did not land</dt><dd class="bad">Eight hard landings, all on sideways speed (1.0 to 1.9 m/s), seven in winds near
+      10 m/s or more; six of them without radar on 1 Hz GNSS.</dd>
+  </dl>
+  <p class="ev"><span>HIL, C flight software, 3300 episodes</span><a href="life.html#spectra">life twin</a></p>
+</div></li>
+
+<li class="entry" id="e-1112-emulator"><div><time datetime="2026-11-12">2026-11-12</time><span class="area">Site</span></div><div>
+  <h2 class="eh">A toy landing loop to fly in the browser</h2>
+  <dl>
+    <dt>Changed</dt><dd>A new page with a teaching emulator: a planar hop vehicle with a textbook PD controller and
+      generic round-number parameters, flown through wind, sensor noise, latency and bursty packet loss, with seeded
+      batches and sweeps. It is not the flight software and none of its parameters are Hop-0's.</dd>
+    <dt>Measured</dt><dd>Toy only, defaults, seeds 1 to 50: 50 of 50 land; with 200 ms latency 12, with 250 ms none; at
+      150 ms latency, 20% packet loss gives 37 and 40% gives 6. The real loop lands 300 and 299 of 300 (two seed sets) at 200 ms and 15% loss
+      because it predicts across the delay; the toy's controller does not.</dd>
+  </dl>
+  <p class="ev"><a href="emulator.html">the emulator</a> · <a href="gnc.html#numbers">the real numbers</a></p>
+</div></li>
 
 <li class="entry" id="e-1110-filtermass"><div id="d-1110"><time datetime="2026-11-10">2026-11-10</time><span class="area">Navigation</span></div><div>
   <h2 class="eh">The filter modelled the vehicle without its leg masses</h2>
@@ -578,7 +605,7 @@
    <p>Simulation only: nothing on this site has been built or flown.</p>
   </div>
   <ul aria-label="Pages">
-   <li><a href="index.html">Home</a></li><li><a href="gnc.html">Landing</a></li><li><a href="vehicle.html">Vehicle</a></li>
+   <li><a href="index.html">Home</a></li><li><a href="gnc.html">Landing</a></li><li><a href="emulator.html">Sandbox</a></li><li><a href="vehicle.html">Vehicle</a></li>
    <li><a href="avionics.html">Avionics</a></li><li><a href="life.html">Life</a></li><li><a href="orbit.html">Orbit</a></li>
    <li><a href="log.html">Log</a></li>
   </ul>

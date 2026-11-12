@@ -11,6 +11,7 @@ so it works at `https://melihakbulut221.github.io/hop0-log/` and on any local se
 | `avionics.html` | Flight software, hardware-in-the-loop, the five boards, wiring |
 | `life.html` | Life twin: wear account and remaining life |
 | `orbit.html` | The first orbital product (minimum-launcher study) |
+| `emulator.html` | A toy landing loop to fly in the browser (teaching model, not the flight software) |
 | `log.html` | Dated engineering log: what changed, what was measured, what did not work |
 
 `assets/site.css` is the only stylesheet (tokens for colour, type scale and spacing at the top). `assets/js/boot.js` is
@@ -51,3 +52,16 @@ When a headline number changes, also update the home page (`index.html#status`, 
 
 Published from this repository (github.com/Melihakbulut221/hop0-log) with GitHub Pages on `main`, path `/`.
 Push to `main` and Pages rebuilds in a minute or two.
+
+## Emulator (2026-11-12)
+
+`emulator.html` + `assets/js/emulator.js` (about 19 KB, no dependencies): a planar rigid body (x, z, pitch), 100 kg,
+50 kg m², one engine of up to 2000 N on a gimbal 1 m below the centre of mass (±8°, rate limit set on the page),
+quadratic drag (1.5 m² drag area) 0.5 m below the centre of mass, mean wind plus a first-order gust process. A PD
+position loop and a PD attitude loop at 25 Hz act on noisy measurements delivered after the set latency; lost frames
+come in bursts (mean three frames) and the controller keeps the last frame it received. All of it is generic and
+chosen for teaching; it is not the Hop-0 flight software and none of its parameters are Hop-0's.
+
+Runs are deterministic (mulberry32, separate streams for the controller, sensors and wind, all from the seed). The toy
+numbers quoted on the page and in the log (defaults, seeds 1 to 50: 50 of 50 land; latency 200 ms 12 of 50, 250 ms 0;
+at 150 ms, 20% loss 37 of 50, 40% loss 6 of 50) are re-derived by the site checks from this file.

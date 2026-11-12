@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A toy landing loop · Hop-0</title>
+<meta name="description" content="An interactive toy landing loop: fly a small hop vehicle through wind, sensor noise, latency and lost frames, and run seeded batches. A teaching model with generic parameters, not the Hop-0 flight software.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A toy landing loop · Hop-0">
+<meta property="og:description" content="An interactive toy landing loop: fly a small hop vehicle through wind, sensor noise, latency and lost frames, and run seeded batches. A teaching model with generic parameters, not the Hop-0 flight software.">
+<meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/emulator.html">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hop-0 engineering log: 18 replayed landing trajectories converging on the pad.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="emulator">
+<a class="skip" href="#main">Skip to content</a>
+<!-- site header: identical on every page -->
+<header class="bar">
+ <div class="wrap">
+  <a class="home-link" href="index.html"><span class="mark" aria-hidden="true"><svg viewBox="0 0 22 22"><rect x="8.5" y="2" width="5" height="14" rx="2.5" fill="#fafaf6"/><path d="M8.5 13 L4 19 M13.5 13 L18 19" stroke="#fafaf6" stroke-width="1.8"/></svg></span>Hop-0 engineering log</a>
+  <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+  <nav id="site-nav" aria-label="Site">
+   <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="gnc.html">Landing</a></li>
+    <li><a href="emulator.html" aria-current="page">Sandbox</a></li>
+    <li><a href="vehicle.html">Vehicle</a></li>
+    <li><a href="avionics.html">Avionics</a></li>
+    <li><a href="life.html">Life</a></li>
+    <li><a href="orbit.html">Orbit</a></li>
+    <li><a href="log.html">Log</a></li>
+   </ul>
+  </nav>
+ </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+<header class="page-head">
+  <p class="kicker">Sandbox · toy model</p>
+  <h1>A toy landing loop</h1>
+  <p class="lede">Fly a small hop vehicle through wind, sensor noise, latency and lost frames, and see why the real loop is
+    tested in hardware-in-the-loop. This is a teaching model with textbook control and generic round-number parameters.
+    It is <strong>not the flight software</strong> and not Hop-0: none of its parameters, gains or laws are Hop-0's.</p>
+  <p class="status-line"><span><b>Toy model, runs in your browser</b></span><span>Deterministic: same settings and seed, same flight</span><span>Added 2026-11-12</span></p>
+  <ul class="toc" aria-label="On this page">
+    <li><a href="#fly">Fly one hop</a></li><li><a href="#batch">Run a batch</a></li>
+    <li><a href="#real">The real thing</a></li><li><a href="#model">What the toy is</a></li>
+  </ul>
+</header>
+
+<section class="sec" id="fly" aria-labelledby="fly-h">
+  <h2 id="fly-h">Fly one hop</h2>
+  <p>The vehicle climbs, moves 40 m to the pad, hovers until it is over it, and descends. A landing counts if touchdown is
+    below 2 m/s down and 1 m/s sideways, within 5 m of the pad and below 10° tilt. Change a setting, then press Fly.</p>
+  <noscript><p class="note">The emulator needs JavaScript.</p></noscript>
+  <div class="emu" id="emu" data-module="emulator">
+    <div class="emu-stage">
+      <canvas id="e-canvas" role="img" aria-label="Side view of the toy hop: trajectory, vehicle, pad and wind"></canvas>
+      <div class="emu-read" id="e-read" aria-hidden="true"></div>
+      <p class="emu-result" id="e-result" aria-live="polite"></p>
+    </div>
+    <form class="emu-ctl" id="e-form" onsubmit="return false" aria-label="Emulator settings">
+      <label for="e-wind">Mean wind <output id="e-wind-out" for="e-wind"></output>
+        <input type="range" id="e-wind" min="0" max="14" step="1" value="6"></label>
+      <label for="e-gust">Gusts <output id="e-gust-out" for="e-gust"></output>
+        <input type="range" id="e-gust" min="0" max="4" step="0.5" value="2"></label>
+      <label for="e-noise">Sensor noise <output id="e-noise-out" for="e-noise"></output>
+        <input type="range" id="e-noise" min="0" max="3" step="1" value="1"></label>
+      <label for="e-lat">Measurement latency <output id="e-lat-out" for="e-lat"></output>
+        <input type="range" id="e-lat" min="0" max="300" step="10" value="100"></label>
+      <label for="e-loss">Packet loss <output id="e-loss-out" for="e-loss"></output>
+        <input type="range" id="e-loss" min="0" max="40" step="5" value="10"></label>
+      <label for="e-rate">Gimbal rate limit <output id="e-rate-out" for="e-rate"></output>
+        <input type="range" id="e-rate" min="20" max="120" step="10" value="60"></label>
+      <label for="e-seed" class="emu-seed">Seed <input type="number" id="e-seed" min="0" max="99999" step="1" value="1" inputmode="numeric"></label>
+      <div class="emu-btns">
+        <button type="button" class="btn-small" id="e-fly">Fly</button>
+        <button type="button" class="btn-small btn-ghost" id="e-replay">Replay</button>
+        <button type="button" class="btn-small btn-ghost" id="e-newseed">New seed and fly</button>
+        <button type="button" class="btn-small btn-ghost" id="e-reset">Defaults</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="sec" id="batch" aria-labelledby="batch-h">
+  <h2 id="batch-h">Run a batch</h2>
+  <p>One flight says little. These buttons fly 50 seeded flights with the settings above (seeds from the one set above),
+    without drawing them, or repeat that for a range of latency or packet loss.</p>
+  <div class="emu-btns">
+    <button type="button" class="btn-small" id="e-batch">Fly 50 flights</button>
+    <button type="button" class="btn-small btn-ghost" id="e-sweep-lat" data-sweep>Sweep latency</button>
+    <button type="button" class="btn-small btn-ghost" id="e-sweep-loss" data-sweep>Sweep packet loss</button>
+  </div>
+  <div class="grid2 emu-out">
+    <figure><div class="chart" id="e-scatter"></div>
+      <figcaption id="e-batch-out" aria-live="polite">Touchdown of each flight. The shaded box is what counts as a landing;
+        flights that lose attitude never touch down and are only counted.</figcaption></figure>
+    <figure><div class="chart" id="e-sweep"></div>
+      <figcaption id="e-sweep-out" aria-live="polite">Success against the swept setting; the dashed line marks the
+        current value.</figcaption></figure>
+  </div>
+  <p class="note">What to try: at the defaults the toy lands every time. Raise the latency step by step: the attitude loop
+    keeps working until a point, then fails all at once. Then set the latency just below that point and sweep the packet
+    loss: lost frames make the information older still, and the two compound. Wind matters only near the top of its range, sensor noise hardly at all. At the defaults, seeds 1
+    to 50: latency 150 ms still lands 49 of 50, 200 ms 12, 250 ms none; at 150 ms, 20% packet loss brings it to 37 and 40%
+    to 6. These are toy numbers, computed in Chrome and node; another browser engine can differ by a run.</p>
+</section>
+
+<section class="sec split" id="real" aria-labelledby="real-h">
+  <h2 id="real-h">The real thing</h2>
+  <div class="body">
+    <p>Measured, not toy: the C flight software in hardware-in-the-loop on the Hop-0 plant, wind up to 12 m/s with gusts,
+      from <a href="gnc.html#numbers">the current numbers</a>. The toy cannot reproduce these; its job is to show why
+      latency and lost frames get their own rows.</p>
+    <div class="tablewrap">
+    <table class="stack">
+      <thead><tr><th>Scenario (HIL)</th><th class="num">Landings</th></tr></thead>
+      <tbody>
+        <tr><td data-label="Scenario (HIL)">COTS sensors / + 5% sensor faults / + 15% packet loss</td><td data-label="Landings" class="num">100 / 100 / 100 of 100</td></tr>
+        <tr><td data-label="Scenario (HIL)">Harsh sensors / + 200 ms latency</td><td data-label="Landings" class="num">100 / 100 of 100</td></tr>
+        <tr><td data-label="Scenario (HIL)">Harsh + 200 ms + 15% loss, two disjoint seed sets</td><td data-label="Landings" class="num">300, 299 of 300</td></tr>
+        <tr><td data-label="Scenario (HIL)">The same scenario when the CFD aerodynamics went in, before the filter and guidance work</td><td data-label="Landings" class="num">159 of 300</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <ul>
+      <li>The real loop survives 200 ms and 15% packet loss because the flight software predicts across the latency and
+        the lost frames; the toy's textbook controller does not, which is why it fails much earlier.</li>
+      <li>A fast simulation that did not model packet loss twice pointed the wrong way: a filter gain it recommended made
+        the 20 Hz HIL worst case worse, 186 to 172 of 200 (<a href="gnc.html#tools">which simulator to trust</a>).</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec split" id="model" aria-labelledby="model-h">
+  <h2 id="model-h">What the toy is</h2>
+  <div class="body">
+    <ul>
+      <li>A planar rigid body (horizontal and vertical position, pitch) of 100 kg and 50 kg·m², constant mass, with one
+        engine of up to 2000 N on a gimbal 1 m below the centre of mass, limited to ±8° and to the gimbal rate set above.</li>
+      <li>Quadratic drag (1.5 m² drag area) acting 0.5 m below the centre of mass, so a side wind tips the vehicle; wind is a
+        mean plus a first-order gust process. In Hop-0 the large wind effect came from the CFD moment of the legs, which the
+        toy does not model.</li>
+      <li>A textbook controller at 25 Hz: a PD position loop picks a tilt and a thrust, a PD attitude loop turns the tilt
+        into a gimbal angle. No navigation filter, no prediction: the controller acts on noisy, late measurements, and when a
+        frame is lost it keeps using the last one it received. Losses come in bursts of three frames on average.</li>
+      <li>Every number above is a round value chosen for this page. The real vehicle, flight software, gains, filter and
+        guidance law are not published; <a href="gnc.html">Landing</a> describes them at method level.</li>
+      <li>The page fixes the random streams by seed: a run is fully defined by its settings and its seed.</li>
+    </ul>
+  </div>
+</section>
+
+<nav class="next" aria-label="Next page"><a href="gnc.html"><span>Back</span>Landing in wind</a><a href="vehicle.html"><span>Next</span>The vehicle</a></nav>
+</div>
+</main>
+
+<!-- site footer: identical on every page -->
+<footer>
+ <div class="wrap fgrid2">
+  <div>
+   <p class="fname">Hop-0</p>
+   <p>Hasan Melih. Phase 0 of a longer plan toward a small reusable launcher. This site shows methods and results;
+     detailed design data and flight code are not published.</p>
+   <p>Simulation only: nothing on this site has been built or flown.</p>
+  </div>
+  <ul aria-label="Pages">
+   <li><a href="index.html">Home</a></li><li><a href="gnc.html">Landing</a></li><li><a href="emulator.html">Sandbox</a></li><li><a href="vehicle.html">Vehicle</a></li>
+   <li><a href="avionics.html">Avionics</a></li><li><a href="life.html">Life</a></li><li><a href="orbit.html">Orbit</a></li>
+   <li><a href="log.html">Log</a></li>
+  </ul>
+ </div>
+</footer>
+
+<script src="assets/js/boot.js"></script>
+</body>
+</html>

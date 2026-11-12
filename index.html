@@ -31,6 +31,7 @@
    <ul>
     <li><a href="index.html" aria-current="page">Home</a></li>
     <li><a href="gnc.html">Landing</a></li>
+    <li><a href="emulator.html">Sandbox</a></li>
     <li><a href="vehicle.html">Vehicle</a></li>
     <li><a href="avionics.html">Avionics</a></li>
     <li><a href="life.html">Life</a></li>
@@ -125,9 +126,10 @@
     </article>
     <article class="result">
       <span class="big num">~1,400<small> flights</small></span>
-      <h3>Before the first part wears out, and loss comes first</h3>
+      <h3>Before the first part wears out</h3>
       <p>The chamber's hot wall is the first part to wear out, after a median of 1,429 flights (780 flights if film cooling is at the pessimistic end).
-        With one loss in 600 flights in the hardest scenario, the vehicle is more likely to be lost than worn out.</p>
+        With the earlier software, one loss in 600 hardest-scenario flights made loss come first; the current software had no
+        loss in 4400 HIL flights, which puts loss and wear in the same order.</p>
       <p class="ev"><span>600 HIL flights, hardest scenario</span><span>flight software one revision before the latest
         gain change</span><span>loss rate 95% interval 0.03% to 0.9% per flight</span>
         <span class="ev-src"><a href="life.html">Life twin</a></span></p>
@@ -139,6 +141,7 @@
   <h2 id="pages-h">The log, by subsystem</h2>
   <ul class="pagelist">
     <li><a href="gnc.html">Landing</a><p>300 of 300 in the hardest HIL scenario, after falling to 159.</p><span>flights, wind, every change, numbers</span></li>
+    <li><a href="emulator.html">Sandbox</a><p>A toy landing loop in the browser: wind, noise, latency, lost frames.</p><span>teaching model, not the flight software</span></li>
     <li><a href="vehicle.html">Vehicle</a><p>91.4 kg dry, 6.3% over budget; one open negative margin.</p><span>CAD, mass, structure, legs</span></li>
     <li><a href="avionics.html">Avionics</a><p>Flight code checked against its reference; five boards, none ready to fabricate.</p><span>software, HIL, boards, wiring</span></li>
     <li><a href="life.html">Life</a><p>One loss in 600 flights sets the life, not wear.</p><span>wear account per flight</span></li>
@@ -208,7 +211,7 @@
    <p>Simulation only: nothing on this site has been built or flown.</p>
   </div>
   <ul aria-label="Pages">
-   <li><a href="index.html">Home</a></li><li><a href="gnc.html">Landing</a></li><li><a href="vehicle.html">Vehicle</a></li>
+   <li><a href="index.html">Home</a></li><li><a href="gnc.html">Landing</a></li><li><a href="emulator.html">Sandbox</a></li><li><a href="vehicle.html">Vehicle</a></li>
    <li><a href="avionics.html">Avionics</a></li><li><a href="life.html">Life</a></li><li><a href="orbit.html">Orbit</a></li>
    <li><a href="log.html">Log</a></li>
   </ul>

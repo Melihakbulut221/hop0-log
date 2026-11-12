@@ -636,3 +636,24 @@ ul.ins li { margin: var(--sp-2) 0; }
   .hero-copy { position: static; text-shadow: none; }
   .xp-fig { position: static; height: 600px; }
 }
+
+/* ================================================================ 14 emulator (toy landing loop) */
+.emu { display: grid; grid-template-columns: 7fr 4fr; gap: var(--sp-6); margin-top: var(--sp-5); align-items: start; }
+.emu > * { min-width: 0; }
+.emu-stage canvas { display: block; width: 100%; aspect-ratio: 16 / 10; background: #0b1220; border-radius: var(--radius); }
+.emu-read { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 2px solid var(--fg); margin-top: var(--sp-3); }
+.emu-read span { padding: var(--sp-2) var(--sp-2) 0 0; font-size: var(--t-xs); color: var(--fg2); }
+.emu-read b { display: block; font-size: var(--t-l); font-weight: 800; color: var(--fg); font-variant-numeric: tabular-nums; }
+.emu-result { min-height: 3em; font-size: var(--t-s); margin: var(--sp-3) 0 0; }
+.emu-ctl label { display: grid; grid-template-columns: 1fr auto; gap: 2px var(--sp-3); font-size: var(--t-s); color: var(--fg2); margin: 0 0 var(--sp-3); }
+.emu-ctl output { color: var(--fg); font-weight: 700; font-variant-numeric: tabular-nums; }
+.emu-ctl input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); margin: 2px 0 0; }
+.emu-seed input { font: inherit; font-size: var(--t-s); width: 7em; padding: 4px 8px; border: 1px solid var(--fg2); border-radius: var(--radius); background: var(--card); color: var(--fg); }
+.emu-btns { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin: var(--sp-4) 0; }
+.btn-ghost { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1px var(--fg); }
+.emu-out figure { margin: 0; }
+.chart .emu-box { fill: var(--c1); }
+.chart .emu-ok { fill: var(--dot); stroke: var(--card); stroke-width: 1.5; }
+.chart .emu-bad { fill: none; stroke: var(--accent); stroke-width: 2; }
+.chart .emu-cur { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 4; }
+@media (max-width: 860px) { .emu { grid-template-columns: 1fr; gap: var(--sp-4); } .emu-read { grid-template-columns: repeat(2, 1fr); } }
