@@ -72,6 +72,23 @@
   <p class="ev"><span>HIL, C flight software, 3300 episodes</span><a href="life.html#spectra">life twin</a></p>
 </div></li>
 
+<li class="entry" id="e-1112-invgate"><div><time datetime="2026-11-12">2026-11-12</time><span class="area">Avionics</span></div><div>
+  <h2 class="eh">Inverter gate networks moved next to the switches; the routing got harder, not easier</h2>
+  <dl>
+    <dt>Changed</dt><dd>Every gate resistor, turn-off diode and pull-down on INV-1 now sits within about 6 mm of its switch,
+      down from 20 to 50 mm; the inductance between the gate resistor and the gate fell about eightfold. The harness
+      entry got the same short-to-battery protection as the engine controller, with a logic-level enable transistor that
+      keeps more than 1 V of margin at -40 C.</dd>
+    <dt>Did not improve</dt><dd class="bad">The aim was fewer open connections. There are 95, up from 84: wider harness
+      clearances and the protection parts took routing room. The total gate loop did not shrink either, because the
+      driver's position sets it.</dd>
+    <dt>Review</dt><dd>An independent review sent the change back twice: once for a temperature grade that could not
+      survive -40 C, a restart delay that would stop the pump on every supply pulse and harness lines with signal-level
+      spacing, and once because the text claimed the pump rides through a pulse, which the arithmetic does not yet show.</dd>
+  </dl>
+  <p class="ev"><span>calcs, ERC, DRC, independent review</span><a href="avionics.html#boards">INV-1</a></p>
+</div></li>
+
 <li class="entry" id="e-1112-ecuprot"><div><time datetime="2026-11-12">2026-11-12</time><span class="area">Avionics</span></div><div>
   <h2 class="eh">The engine controller survives a shorted harness, and two old bugs fall out</h2>
   <dl>
