@@ -72,6 +72,22 @@
   <p class="ev"><span>HIL, C flight software, 3300 episodes</span><a href="life.html#spectra">life twin</a></p>
 </div></li>
 
+<li class="entry" id="e-1112-ecuprot"><div><time datetime="2026-11-12">2026-11-12</time><span class="area">Avionics</span></div><div>
+  <h2 class="eh">The engine controller survives a shorted harness, and two old bugs fall out</h2>
+  <dl>
+    <dt>Changed</dt><dd>Every input on ECU-1, and the enable, fault and supply lines to both inverters, now survive a
+      sustained short to the vehicle battery or to a reversed battery. The board was re-placed and re-routed.</dd>
+    <dt>Found</dt><dd class="bad">Working through the short cases exposed two errors in the earlier schematic: the
+      optical flame sensor was wired with reversed polarity, so the optical proof of ignition could never have read
+      true, and both RTD channels had their excitation on the wrong pin and would have read open. Both are fixed.
+      The review also found that one pressure wire shorted to the battery can set the hardware fuel permit on its own;
+      the firmware now refuses to arm unless those comparators read idle before ignition.</dd>
+    <dt>Still open</dt><dd>The valve power outputs and the CAN lines are not protected yet. 25 connections remain to
+      route by hand, two of them signals.</dd>
+  </dl>
+  <p class="ev"><span>schematic checks, ERC, DRC</span><a href="avionics.html#boards">ECU-1</a></p>
+</div></li>
+
 <li class="entry" id="e-1112-emulator"><div><time datetime="2026-11-12">2026-11-12</time><span class="area">Site</span></div><div>
   <h2 class="eh">A toy landing loop to fly in the browser</h2>
   <dl>

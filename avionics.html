@@ -138,9 +138,12 @@
         <li>Reads the power-distribution unit's pre-charge, contactor and fault-latch status as active-low opto-coupled
           lines, so an open harness or an unpowered unit reads as not ready or faulted; bus voltage, pack voltage and bus
           current come in as analog monitors.</li>
-        <li>The status lines from the power-distribution unit and the flight-computer and arming-chain discretes survive a
-          sustained short to the vehicle battery; the flight-computer arm vote also has a transient suppressor.</li>
-        <li>524 parts, ERC clean. 34 connections, four of them signals, still need routing by hand.</li>
+        <li>Its sensor inputs, valve-position switches, inverter enable, fault and supply lines, the power-distribution
+          status lines and the arming discretes survive a sustained short to the vehicle battery or to a reversed battery.
+          The valve power outputs and the data-bus protection are not covered yet.</li>
+        <li>A shorted sensor wire can fake a hardware permit, so before ignition the firmware requires every
+          ignition-proof and chamber-pressure comparator to read idle, or it will not arm.</li>
+        <li>582 parts, ERC clean. 25 connections, two of them signals, still need routing by hand.</li>
       </ul>
       <ul class="pcb-list" aria-label="ECU-1 connectors"></ul>
     </div>
@@ -178,14 +181,14 @@
   </div>
   <div class="bpanel full" id="panel-nyd" role="tabpanel" aria-labelledby="tab-nyd" hidden>
     <div class="nyd">
-      <div><h4>Finish the routing</h4><p>FC-0 has 23 connections to finish by hand, ECU-1 34 after the latest change. PDU-1 has 36,
+      <div><h4>Finish the routing</h4><p>FC-0 has 23 connections to finish by hand, ECU-1 25 after the latest change. PDU-1 has 36,
         including its active-discharge path, and its logic strip needs more room or a board of its own. INV-1 has 84.</p></div>
       <div><h4>Inverter gate networks and a pulse test</h4><p>The damper is on INV-1 and the capacitor network now stays
         under the gate driver's limit on paper, but the gate resistors sit 22-49 mm from the switches and the commutation
         loop is an estimate. Both need fixing and measuring with a double-pulse test before the board is built.</p></div>
-      <div><h4>Protect the rest of ECU-1</h4><p>The PDU status lines and the arming discretes now survive a short to the
-        battery; the inverter enable and fault lines, the valve-position inputs and the pressure and temperature inputs do
-        not yet.</p></div>
+      <div><h4>Protect the rest of ECU-1</h4><p>Every ECU-1 input and the inverter discretes now survive a short to the
+        battery. The valve power outputs and the CAN protection do not yet, and pulse immunity on the analog sensor lines
+        is still unchecked.</p></div>
       <div><h4>Measure what was assumed</h4><p>Contactor arc voltage, pack resistance, regulator start-up and the watchdog's
         timing are datasheet extrapolations or estimates until a bench test replaces them.</p></div>
     </div>
@@ -226,7 +229,7 @@
         PDU-1 has 36 connections open including its active-discharge path, INV-1 is auto-routed with 84 open, and CB-1 is
         placed with planes only. The details are under <a href="#boards">Still open</a>.</li>
       <li>The inverter's gate networks must move next to the switches and the commutation loop must be measured with a
-        double-pulse test; ECU-1's inverter, valve-position and sensor inputs still lack short-to-battery protection.</li>
+        double-pulse test; ECU-1's valve power outputs and CAN lines still lack short-to-battery protection.</li>
       <li>Contactor arc voltage, pack resistance, regulator start-up and the watchdog's timing are estimates until bench
         tests replace them.</li>
     </ul>
