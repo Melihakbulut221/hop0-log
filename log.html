@@ -52,7 +52,7 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>45 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>46 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
     <li><a href="#d-1114">14 Nov</a></li><li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
@@ -61,7 +61,23 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1114-ecuoc"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+<li class="entry" id="e-1114-invharness"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+  <h2 class="eh">Inverter board: harness protection both ways, two routing errors found</h2>
+  <dl>
+    <dt>Changed</dt><dd>The inverter's fault line now has a series resistor sized together with the engine controller's
+      pull-up, so a sustained short on it is limited in either polarity. The 12 V supply got a hold-up bank sized for the
+      estimated load and the worst-case restart of the overvoltage switch, and each harness line now has its own clearance
+      rule. Checking the routed board found two autorouter errors that had cut one low-side switch off from its current
+      shunt; both were fixed, and every gate pad is connected. Open connections fell from 95 to 62.</dd>
+    <dt>Review</dt><dd class="bad">An independent review found the ride-through model losing charge, so it overstated
+      the lowest supply voltage. Corrected, the supply still stays above the gate driver's undervoltage limit, in the
+      calculation only. The gate driver is obsolete; a per-leg replacement is being evaluated, and most of the open
+      connections wait for it.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">INV-1</a></p>
+</div></li>
+
+<li class="entry" id="e-1114-ecuoc"><div><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
   <h2 class="eh">ECU-1: a hardware over-current trip on the valve outputs</h2>
   <dl>
     <dt>Changed</dt><dd>Each valve and igniter output gained a fast comparator on its sense resistor. Above about 5 A it
