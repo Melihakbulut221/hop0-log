@@ -72,30 +72,8 @@
 </section>
 <div class="ticker" aria-label="Key numbers"><ul><!-- the list runs twice for a seamless loop; the copy is hidden from screen readers --><li><b>4,400</b>software-in-the-loop flights, no loss</li><li><b>300 / 300</b>landings, hardest SIL scenario (held-out seeds: 299)</li><li><b>10<sup>-6</sup></b>C flight code vs. its Python reference</li><li><b>2,640</b>simulated leg drops</li><li><b>~1,400</b>flights before the first part wears out</li><li><b>5</b>circuit boards, none ready to fabricate</li><li><b>~23 t</b>first orbital product, 300 kg to 500 km</li><li><b>0</b>parts built</li><li aria-hidden="true"><b>4,400</b>software-in-the-loop flights, no loss</li><li aria-hidden="true"><b>300 / 300</b>landings, hardest SIL scenario (held-out seeds: 299)</li><li aria-hidden="true"><b>10<sup>-6</sup></b>C flight code vs. its Python reference</li><li aria-hidden="true"><b>2,640</b>simulated leg drops</li><li aria-hidden="true"><b>~1,400</b>flights before the first part wears out</li><li aria-hidden="true"><b>5</b>circuit boards, none ready to fabricate</li><li aria-hidden="true"><b>~23 t</b>first orbital product, 300 kg to 500 km</li><li aria-hidden="true"><b>0</b>parts built</li></ul></div>
 
-
 <div class="wrap">
 
-<section class="status" id="status" aria-labelledby="status-h">
-  <div>
-    <p class="state"><i aria-hidden="true"></i>Phase 0 · simulation only</p>
-    <h2 id="status-h">Not built, not flown</h2>
-    <p class="muted">Everything on this site happens in software. The first engine static fires, leg drop tests and
-      tethered hops will be the twin's test: their data goes back into the plant, and the twin either agrees or gets
-      corrected.</p>
-    <p class="small muted">Last updated 2026-11-13 · <a href="log.html">engineering log</a></p>
-  </div>
-  <dl>
-    <dt>Vehicle</dt><dd>1.9 m, 200 kg fuelled, four inverted-tripod legs, one electric-pump liquid engine on a two-axis
-      gimbal. CAD model v0.4: 91.4 kg dry, 6.3% over its Phase-0 budget; the simulator flies it since 2026-11-10. <a href="vehicle.html">Vehicle</a></dd>
-    <dt>Landing</dt><dd>In the hardest software-in-the-loop scenario the C flight software lands 300 and 299 of 300 on
-      two disjoint seed sets. <a href="gnc.html#numbers">Numbers</a></dd>
-    <dt>Electronics</dt><dd>Five boards. FC-0 and ECU-1 routed with connections left to finish by hand, PDU-1 and INV-1
-      auto-routed with connections open, CB-1 placed with planes. None is ready to fabricate. <a href="avionics.html#boards">Boards</a></dd>
-    <dt>Open</dt><dd>One negative structural margin, at the nose joint; every leg joint must be zero-clearance and at least about
-      40 kN/mm stiff to keep the first leg mode at or above about 75 Hz; powered-descent aerodynamics not modelled; film-cooling effectiveness
-      not measured. <a href="gnc.html#open">Open problems</a></dd>
-  </dl>
-</section>
 
 <section class="sec" id="results" aria-labelledby="results-h">
   <h2 id="results-h">Four results and where they come from</h2>
@@ -213,6 +191,28 @@
       <a href="life.html">wear account</a> for every simulated flight, and the same step will take real flights once
       there are any.</p>
   </div>
+</section>
+
+<section class="status sec" id="status" aria-labelledby="status-h">
+  <div>
+    <p class="state"><i aria-hidden="true"></i>Phase 0 · simulation only</p>
+    <h2 id="status-h">Not built, not flown</h2>
+    <p class="muted">Everything on this site happens in software. The first engine static fires, leg drop tests and
+      tethered hops will be the twin's test: their data goes back into the plant, and the twin either agrees or gets
+      corrected.</p>
+    <p class="small muted">Last updated 2026-11-13 · <a href="log.html">engineering log</a></p>
+  </div>
+  <dl>
+    <dt>Vehicle</dt><dd>1.9 m, 200 kg fuelled, four inverted-tripod legs, one electric-pump liquid engine on a two-axis
+      gimbal. CAD model v0.4: 91.4 kg dry, 6.3% over its Phase-0 budget; the simulator flies it since 2026-11-10. <a href="vehicle.html">Vehicle</a></dd>
+    <dt>Landing</dt><dd>In the hardest software-in-the-loop scenario the C flight software lands 300 and 299 of 300 on
+      two disjoint seed sets. <a href="gnc.html#numbers">Numbers</a></dd>
+    <dt>Electronics</dt><dd>Five boards. FC-0 and ECU-1 routed with connections left to finish by hand, PDU-1 and INV-1
+      auto-routed with connections open, CB-1 placed with planes. None is ready to fabricate. <a href="avionics.html#boards">Boards</a></dd>
+    <dt>Open</dt><dd>One negative structural margin, at the nose joint; every leg joint must be zero-clearance and at least about
+      40 kN/mm stiff to keep the first leg mode at or above about 75 Hz; powered-descent aerodynamics not modelled; film-cooling effectiveness
+      not measured. <a href="gnc.html#open">Open problems</a></dd>
+  </dl>
 </section>
 
 <section class="sec" id="latest" aria-labelledby="latest-h">
