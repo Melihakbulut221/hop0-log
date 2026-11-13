@@ -51,6 +51,41 @@
     });
   }
 
+  /* ---------------------------------------------------------------- theme toggle (dark is the default) */
+  var tb = document.getElementById("theme-btn"), root = document.documentElement;
+  function themeLabel() {
+    var light = root.getAttribute("data-theme") === "light";
+    tb.setAttribute("aria-label", light ? "Switch to dark theme" : "Switch to light theme");
+    tb.setAttribute("aria-pressed", light ? "true" : "false");
+  }
+  if (tb) {
+    tb.hidden = false; themeLabel();
+    tb.addEventListener("click", function () {
+      var t = root.getAttribute("data-theme") === "light" ? "dark" : "light";
+      root.setAttribute("data-theme", t);
+      try { localStorage.setItem("hop0-theme", t); } catch (e) {}
+      themeLabel();
+      window.dispatchEvent(new Event("themechange"));
+    });
+  }
+
+  /* ---------------------------------------------------------------- reveal on scroll (skipped for reduced motion) */
+  var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!still && "IntersectionObserver" in window && !location.hash) {
+    var rv = Array.prototype.slice.call(document.querySelectorAll(
+      ".sec > h2, .sec > .lede, .result, .broke article, .pagelist li, .status > *, .entry, .page-head > *"));
+    root.classList.add("rv-on");
+    var ro = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); ro.unobserve(e.target); } });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    rv.forEach(function (n, i) {
+      n.classList.add("rv");
+      var sib = n.parentNode ? Array.prototype.indexOf.call(n.parentNode.children, n) : 0;
+      n.style.transitionDelay = Math.min(sib, 6) * 60 + "ms";
+      ro.observe(n);
+    });
+  }
+
   /* ---------------------------------------------------------------- modules */
   var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-module]"));
   function go(n) {

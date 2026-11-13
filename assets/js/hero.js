@@ -42,6 +42,13 @@
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     stars.forEach(function (s) { ctx.globalAlpha = s[3]; ctx.fillStyle = "#cfd8e6"; ctx.fillRect(s[0], s[1], s[2], s[2]); });
     ctx.globalAlpha = 1;
+    // altitude scale: the trajectories are drawn to it (only the vehicles are enlarged)
+    ctx.font = '500 10.5px "JetBrains Mono", ui-monospace, monospace'; ctx.textBaseline = "bottom";
+    for (var m = 50; m * scale < groundY - 40; m += 50) {
+      var y = Math.round(groundY - m * scale) + 0.5;
+      ctx.fillStyle = "rgba(130,196,255,.07)"; ctx.fillRect(0, y, W, 1);
+      ctx.fillStyle = "rgba(159,211,255,.45)"; ctx.fillText(m + " m", 12, y - 3);
+    }
     ctx.fillStyle = "#0e1726"; ctx.fillRect(0, groundY, W, H - groundY);
     ctx.fillStyle = "#2a3b55"; ctx.fillRect(0, groundY, W, 1.5);
   }

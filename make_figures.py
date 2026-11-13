@@ -132,23 +132,35 @@ if __name__ == "__main__":
 def og_image():
     """1200 x 630 social preview: the replayed landing trajectories (real flights from assets/flights.json)"""
     import json
+    from matplotlib import font_manager
+    sans = "Fira Sans" if any("Fira Sans" == f.name for f in font_manager.fontManager.ttflist) else "DejaVu Sans"
+    mono = "Fira Mono" if any("Fira Mono" == f.name for f in font_manager.fontManager.ttflist) else "DejaVu Sans Mono"
     d = json.load(open(os.path.join(OUT, "flights.json")))
-    bg, fg, fg2, trail = "#111b2b", "#f3f2ee", "#b9c3d3", "#6da7ec"
+    bg, fg, fg2, trail, acc, hud = "#080b10", "#f3f5f8", "#a3acb9", "#4aa3ff", "#ff6a2b", "#9fd3ff"
     fig = plt.figure(figsize=(12, 6.3), dpi=100)
     fig.patch.set_facecolor(bg)
-    ax = fig.add_axes([0.5, 0.08, 0.47, 0.84]); ax.set_facecolor(bg)
+    g = fig.add_axes([0, 0, 1, 1]); g.set_xlim(0, 1200); g.set_ylim(0, 630); g.axis("off")
+    for x in range(0, 1201, 48):
+        g.plot([x, x], [0, 630], color="#82c4ff", alpha=0.05, lw=0.8)
+    for y in range(6, 631, 48):
+        g.plot([0, 1200], [y, y], color="#82c4ff", alpha=0.05, lw=0.8)
+    ax = fig.add_axes([0.665, 0.1, 0.32, 0.8]); ax.set_facecolor("none")
     for f in d["flights"]:
-        ax.plot(f["s"], f["z"], color=trail, lw=1.2, alpha=0.55)
+        ax.plot(f["s"], f["z"], color=trail, lw=1.3, alpha=0.6)
+        ax.scatter([f["s"][-1]], [0], s=10, color=acc, zorder=3)
+    for m in (50, 100, 150, 200):
+        ax.plot([-70, 45], [m, m], color=hud, lw=0.6, alpha=0.18)
+        ax.text(-68, m + 3, "%d m" % m, color=hud, alpha=0.55, fontsize=9, family=mono)
     ax.plot([-70, 45], [0, 0], color=fg2, lw=1.5)
-    ax.scatter([0], [0], s=60, color=fg, zorder=3)
     ax.set_xlim(-70, 45); ax.set_ylim(-8, 240); ax.axis("off")
-    fig.text(0.05, 0.78, "Hop-0", fontsize=54, fontweight="bold", color=fg)
-    fig.text(0.05, 0.69, "engineering log", fontsize=26, color=fg2)
-    fig.text(0.05, 0.47, "A small reusable-rocket testbed,\nbuilt in simulation first", fontsize=20, color=fg,
-             linespacing=1.35)
-    fig.text(0.05, 0.30, "Hardest HIL scenario: 53% → 100%", fontsize=18, color=trail, fontweight="bold")
-    fig.text(0.05, 0.205, "landings on the same seeds, before and after the filter\nand guidance work", fontsize=14, color=fg2)
-    fig.text(0.05, 0.07, "18 replayed landings from the flight software; simulation only", fontsize=11, color=fg2)
+    fig.text(0.05, 0.84, "HOP-0  \u00b7  REUSABLE ROCKET DIGITAL TWIN", fontsize=14, color=acc, family=mono)
+    fig.text(0.05, 0.62, "Flown 4,400 times.", fontsize=52, fontweight="bold", color=fg, family=sans)
+    fig.text(0.05, 0.47, "Not built yet.", fontsize=52, fontweight="bold", color=acc, family=sans)
+    fig.text(0.05, 0.27, "CFD aerodynamics, structure, wear, five circuit boards\nand the real C flight code, flown in the loop\nbefore a single part is cut.",
+             fontsize=17, color=fg2, family=sans, linespacing=1.4)
+    fig.text(0.05, 0.165, "4,400 HIL FLIGHTS, NO LOSS   \u00b7   0 PARTS BUILT",
+             fontsize=12.5, color=hud, family=mono)
+    fig.text(0.05, 0.065, "melihakbulut221.github.io/hop0-log  \u00b7  simulation only", fontsize=12, color=fg2, family=mono)
     fig.savefig(os.path.join(OUT, "og.png"), facecolor=bg)
     plt.close(fig)
 
