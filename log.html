@@ -52,7 +52,7 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>43 entries</b></span><span>2026-11-03 to 2026-11-13</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>44 entries</b></span><span>2026-11-03 to 2026-11-13</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
     <li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
@@ -60,6 +60,22 @@
 </header>
 
 <ol class="log" reversed>
+
+<li class="entry" id="e-1113-supply"><div><time datetime="2026-11-13">2026-11-13</time><span class="area">Supply chain</span></div><div>
+  <h2 class="eh">Can it be bought? Two obsolete parts and empty shelves</h2>
+  <dl>
+    <dt>Changed</dt><dd>The parts lists of every board were merged into one vehicle set (about 300 unique parts) and the
+      critical parts checked against a distributor, for lifecycle, stock, lead time and second sources, and screened
+      against public export-control lists.</dd>
+    <dt>Found</dt><dd class="bad">The inverter's gate driver is obsolete with no drop-in replacement, so that board needs a
+      small redesign; a power transistor on three boards is obsolete too, with drop-in alternatives. 23 of 62 critical
+      parts checked showed zero stock at one distributor, and three part numbers in the lists did not exist as written.</dd>
+    <dt>Review</dt><dd>An independent review held the numbers but sent the public text back: it read like a legal
+      export-control determination. The site now states it as an engineering screen, to be confirmed with manufacturers
+      before purchase.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#supply">Sourcing</a></p>
+</div></li>
 
 <li class="entry" id="e-1113-sil"><div id="d-1113"><time datetime="2026-11-13">2026-11-13</time><span class="area">Site</span></div><div>
   <h2 class="eh">Correction: the loop is software-in-the-loop, not hardware-in-the-loop</h2>

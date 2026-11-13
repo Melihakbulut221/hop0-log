@@ -54,7 +54,7 @@
   <p class="status-line"><span><b>Simulation only</b></span><span>No board is ready to fabricate</span><span>Updated 2026-11-10</span></p>
   <ul class="toc" aria-label="On this page">
     <li><a href="#software">Flight software</a></li><li><a href="#hil">Software-in-the-loop</a></li>
-    <li><a href="#boards">Boards</a></li><li><a href="#wiring">Wiring</a></li><li><a href="#open">Open</a></li>
+    <li><a href="#boards">Boards</a></li><li><a href="#wiring">Wiring</a></li><li><a href="#supply">Sourcing</a></li><li><a href="#open">Open</a></li>
   </ul>
 </header>
 
@@ -228,6 +228,39 @@
   </div>
   <p class="note" style="margin-top:var(--sp-5)">The flight-computer arm vote shares the flight software with the engine
     controller's own vote, so the arm plug and the flight termination unit are the independent members of the chain.</p>
+</section>
+
+<section class="sec split" id="supply" aria-labelledby="supply-h">
+  <h2 id="supply-h">Can it be bought?</h2>
+  <div class="body">
+    <p class="lede">A design that cannot be sourced is not finished. The parts lists of all the boards were merged into
+      one vehicle set and checked against distributors and public export-control lists on 13 November 2026.</p>
+    <div class="stats" style="--n:2">
+      <div><b>~300</b><span>unique parts, about 1,850 placements per vehicle</span></div>
+      <div><b>~$1,470</b><span>board components per vehicle at ten sets; design estimate about $1,315</span></div>
+      <div><b>23 / 62</b><span>critical parts checked that showed zero stock at one large distributor</span></div>
+      <div><b>~$1,080</b><span>estimated first hardware-in-the-loop bench, a third of it still an estimate</span></div>
+    </div>
+    <ul>
+      <li>For the parts priced directly, single-unit prices were a median 1.7 times the design estimate. The rest of the
+        lines are priced with a model, not read.</li>
+      <li>Two parts were already obsolete: the inverter's gate driver, which has no drop-in replacement and needs a small
+        board redesign, and a power transistor used on three boards, for which drop-in alternatives exist. By engineering
+        judgement, about 60 of roughly 100 critical parts have at least one drop-in second source.</li>
+      <li>The larger practical risk is supply, not rules: several key parts come from a single maker with long factory lead
+        times. The three microcontrollers come from one maker and showed 52-week lead times and zero stock at one
+        distributor, while another distributor had the flight processor in stock.</li>
+      <li>The selected parts were also screened against public export-control lists using published classifications.
+        The inertial sensor and the satellite-navigation receiver are the parts to watch, because a higher-grade sensor
+        could change the classification, so any sensor change is screened before it is designed in. This is an
+        engineering screen, not a legal determination; classifications will be confirmed with manufacturers before
+        purchase.</li>
+      <li>For the first bench (one flight-computer board with fabrication and assembly, a debugger, a bench supply and an
+        Ethernet link), the pacing items are finishing the board layout and sourcing out-of-stock chips, not the
+        equipment. Bought-in vehicle hardware outside the boards is estimated at about $27,000 per vehicle, more than
+        half of it an assumption that waits on supplier quotes.</li>
+    </ul>
+  </div>
 </section>
 
 <section class="sec split" id="open" aria-labelledby="open-h">
