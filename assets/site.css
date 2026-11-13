@@ -740,3 +740,22 @@ html.rv-on .rv.in { opacity: 1; transform: none; }
   #site-nav { order: 4; }
 }
 @media (max-width: 380px) { .home-link { font-size: var(--t-s); } }
+/* home: the method and about */
+.method { list-style: none; padding: 0; margin: var(--sp-6) 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); counter-reset: st; }
+.method li { position: relative; margin: 0; padding: var(--sp-5); background: var(--card); border: 1px solid var(--rule); counter-increment: st; display: flex; flex-direction: column; gap: var(--sp-2); }
+.method li::before { content: "STEP " counter(st, decimal-leading-zero); font: 500 12px/1 var(--mono); letter-spacing: .12em; color: var(--accent); }
+.method li:not(:nth-child(3n))::after { content: ""; position: absolute; top: 50%; right: calc(-1 * var(--sp-4)); width: var(--sp-4); height: 1px; background: var(--accent); opacity: .6; }
+.method h3 { font-size: var(--t-l); }
+.method p { font-size: var(--t-s); color: var(--fg2); margin: 0; }
+.method a { margin-top: auto; padding-top: var(--sp-2); font: 500 12.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; text-decoration: none; }
+.method a::after { content: " \2192"; }
+@media (max-width: 1000px) { .method { grid-template-columns: 1fr 1fr; } .method li::after { display: none; } }
+@media (max-width: 600px) { .method { grid-template-columns: 1fr; } }
+.about { display: grid; grid-template-columns: 5fr 7fr; gap: var(--sp-7); margin-top: var(--sp-5); }
+.about > * { min-width: 0; }
+.disc { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--accent); }
+.disc li { margin: 0; padding: var(--sp-3) 0; border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: 15em 1fr; gap: var(--sp-4); align-items: baseline; }
+.disc a { font-weight: 700; color: var(--fg); text-decoration: none; }
+.disc a:hover { color: var(--accent); }
+.disc span { font-size: var(--t-s); color: var(--fg2); }
+@media (max-width: 860px) { .about { grid-template-columns: 1fr; gap: var(--sp-5); } .disc li { grid-template-columns: 1fr; gap: 2px; } }

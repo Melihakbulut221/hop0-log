@@ -73,7 +73,7 @@
   var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!still && "IntersectionObserver" in window && !location.hash) {
     var rv = Array.prototype.slice.call(document.querySelectorAll(
-      ".sec > h2, .sec > .lede, .result, .broke article, .pagelist li, .status > *, .entry, .page-head > *"));
+      ".sec > h2, .sec > .lede, .result, .broke article, .method li, .disc li, .pagelist li, .status > *, .entry, .page-head > *"));
     root.classList.add("rv-on");
     var ro = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); ro.unobserve(e.target); } });

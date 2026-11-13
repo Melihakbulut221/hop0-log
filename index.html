@@ -70,7 +70,7 @@
     </div>
   </div>
 </section>
-<div class="ticker" aria-label="Key numbers"><ul><!-- the list runs twice for a seamless loop; the copy is hidden from screen readers --><li><b>4,400</b>software-in-the-loop flights, no loss</li><li><b>300 / 300</b>landings, hardest SIL scenario (held-out seeds: 299)</li><li><b>10<sup>-6</sup></b>C flight code vs. its Python reference</li><li><b>2,640</b>simulated leg drops</li><li><b>~1,400</b>flights before the first part wears out</li><li><b>5</b>circuit boards, none ready to fabricate</li><li><b>~23 t</b>first orbital product, 300 kg to 500 km</li><li><b>0</b>parts built</li><li aria-hidden="true"><b>4,400</b>software-in-the-loop flights, no loss</li><li aria-hidden="true"><b>300 / 300</b>landings, hardest SIL scenario (held-out seeds: 299)</li><li aria-hidden="true"><b>10<sup>-6</sup></b>C flight code vs. its Python reference</li><li aria-hidden="true"><b>2,640</b>simulated leg drops</li><li aria-hidden="true"><b>~1,400</b>flights before the first part wears out</li><li aria-hidden="true"><b>5</b>circuit boards, none ready to fabricate</li><li aria-hidden="true"><b>~23 t</b>first orbital product, 300 kg to 500 km</li><li aria-hidden="true"><b>0</b>parts built</li></ul></div>
+<div class="ticker" aria-label="Key numbers"><ul><!-- the list runs twice for a seamless loop; the copy is hidden from screen readers --><li><b>4,400</b>software-in-the-loop flights, no loss</li><li><b>300 / 300</b>landings, hardest SIL scenario (held-out seeds: 299)</li><li><b>10<sup>-6</sup></b>C flight code vs. its Python reference</li><li><b>2,640</b>simulated leg drops</li><li><b>~1,400</b>flights before the first part wears out</li><li><b>5</b>circuit boards, none ready to fabricate</li><li><b>~23 t</b>sized orbital vehicle for 300 kg to 500 km (study)</li><li><b>0</b>parts built</li><li aria-hidden="true"><b>4,400</b>software-in-the-loop flights, no loss</li><li aria-hidden="true"><b>300 / 300</b>landings, hardest SIL scenario (held-out seeds: 299)</li><li aria-hidden="true"><b>10<sup>-6</sup></b>C flight code vs. its Python reference</li><li aria-hidden="true"><b>2,640</b>simulated leg drops</li><li aria-hidden="true"><b>~1,400</b>flights before the first part wears out</li><li aria-hidden="true"><b>5</b>circuit boards, none ready to fabricate</li><li aria-hidden="true"><b>~23 t</b>sized orbital vehicle for 300 kg to 500 km (study)</li><li aria-hidden="true"><b>0</b>parts built</li></ul></div>
 
 <div class="wrap">
 
@@ -147,6 +147,28 @@
   </div>
 </section>
 
+<section class="sec" id="method" aria-labelledby="method-h">
+  <p class="kicker">The method</p>
+  <h2 id="method-h">How every number here is kept honest</h2>
+  <p class="lede">The rocket is the example. The part that transfers to any hardware programme is the chain that has to
+    hold before a result is allowed onto this site.</p>
+  <ol class="method">
+    <li><h3>One logic, three ways</h3><p>The flight logic exists as a Python reference and as C. The C matches the
+      reference step by step to about 10<sup>-6</sup> and gives the same outputs on an emulated Cortex-M7.</p><a href="avionics.html#software">Flight software</a></li>
+    <li><h3>Two simulators that must agree</h3><p>A fast in-process emulator reproduces the software-in-the-loop runs
+      episode by episode. Changes are screened in the fast one and confirmed in the slow one.</p><a href="gnc.html#tools">Which simulator to trust</a></li>
+    <li><h3>Held-out seeds</h3><p>A change counts only if it holds on a second, disjoint set of random seeds it was never
+      tuned on.</p><a href="gnc.html#numbers">Seed sets A and B</a></li>
+    <li><h3>Independent review</h3><p>Board and analysis changes go through a review that can send them back. The
+      inverter change was sent back twice before it was published.</p><a href="log.html#e-1112-invgate">An example</a></li>
+    <li><h3>Numbers tied to sources</h3><p>Before anything is published, an automated check confirms that every number
+      already published is still there or was removed with a stated reason, that headline sentences quote their source
+      file, and that no restricted design data appears.</p><a href="log.html">The log</a></li>
+    <li><h3>Failures stay on the record</h3><p>Reverted changes, wrong claims and the "HIL" naming correction are dated
+      entries in the log, next to the successes.</p><a href="log.html#e-1113-sil">A correction</a></li>
+  </ol>
+</section>
+
 <section class="sec" id="pages" aria-labelledby="pages-h">
   <h2 id="pages-h">The log, by subsystem</h2>
   <ul class="pagelist">
@@ -190,6 +212,29 @@
     <p>Until there is hardware, it has nothing to sync with. Nothing on this site has flown. The twin also keeps a
       <a href="life.html">wear account</a> for every simulated flight, and the same step will take real flights once
       there are any.</p>
+  </div>
+</section>
+
+<section class="sec" id="about" aria-labelledby="about-h">
+  <p class="kicker">About</p>
+  <h2 id="about-h">One person, the whole chain</h2>
+  <div class="about">
+    <div>
+      <p class="lede">Hop-0 is an independent project by Hasan Melih. It follows one small flight vehicle through every
+        discipline it needs, and checks each against something independent of it.</p>
+      <p class="muted">The aim is to show how the work is done, end to end, before there is money for hardware. Questions,
+        criticism and conversations about the method are welcome.</p>
+      <p><a class="btn btn-p" href="https://github.com/Melihakbulut221">GitHub <span class="arr" aria-hidden="true">&rarr;</span></a></p>
+    </div>
+    <ul class="disc">
+      <li><a href="gnc.html">Guidance, navigation and control</a><span>multi-rate navigation filter, classical control, predictive terminal guidance</span></li>
+      <li><a href="avionics.html#software">Embedded flight software</a><span>C with MISRA C:2012 checks, fuzzing under sanitizers, software-in-the-loop</span></li>
+      <li><a href="avionics.html#boards">Electronics</a><span>five boards from schematic to layout, harness short protection</span></li>
+      <li><a href="vehicle.html">Structures and mechanisms</a><span>parametric CAD, finite elements, landing-leg drop simulations</span></li>
+      <li><a href="vehicle.html#model">Aerodynamics</a><span>RANS CFD force and moment tables, legs included</span></li>
+      <li><a href="life.html">Reliability</a><span>wear per flight, remaining life, loss-rate statistics</span></li>
+      <li><a href="#method">Verification</a><span>the evidence chain above</span></li>
+    </ul>
   </div>
 </section>
 
@@ -238,8 +283,10 @@
  <div class="wrap fgrid2">
   <div>
    <p class="fname">Hop-0</p>
-   <p>Hasan Melih. Phase 0 of a longer plan toward a small reusable launcher. This site shows methods and results;
+   <p>An independent engineering project by Hasan Melih: a reusable hop vehicle designed, flown and broken in software,
+     and the verification method that ties every number here to its source. This site shows methods and results;
      detailed design data and flight code are not published.</p>
+   <p><a href="https://github.com/Melihakbulut221">GitHub: Melihakbulut221</a> · <a href="index.html#about">About this project</a></p>
    <p>Simulation only: nothing on this site has been built or flown.</p>
   </div>
   <ul aria-label="Pages">
