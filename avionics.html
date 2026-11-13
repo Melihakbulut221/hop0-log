@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Avionics and flight software · Hop-0</title>
-<meta name="description" content="Hop-0 flight software (a C port checked step by step against its Python reference, MISRA C:2012, QEMU Cortex-M7), the hardware-in-the-loop setup, five circuit boards drawn from their layouts and the vehicle wiring.">
+<meta name="description" content="Hop-0 flight software (a C port checked step by step against its Python reference, MISRA C:2012, QEMU Cortex-M7), the software-in-the-loop setup, five circuit boards drawn from their layouts and the vehicle wiring.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Avionics and flight software · Hop-0">
-<meta property="og:description" content="Hop-0 flight software (a C port checked step by step against its Python reference, MISRA C:2012, QEMU Cortex-M7), the hardware-in-the-loop setup, five circuit boards drawn from their layouts and the vehicle wiring.">
+<meta property="og:description" content="Hop-0 flight software (a C port checked step by step against its Python reference, MISRA C:2012, QEMU Cortex-M7), the software-in-the-loop setup, five circuit boards drawn from their layouts and the vehicle wiring.">
 <meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/avionics.html">
-<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=2">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Hop-0: Flown 4,400 times. Not built yet. Eighteen replayed landing trajectories converging on the pad.">
+<meta property="og:image:alt" content="Hop-0: designed, flown and broken in software first. Eighteen replayed landing trajectories converging on the pad.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=2">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -53,7 +53,7 @@
     circuit boards it will run on. The boards are designed, not built.</p>
   <p class="status-line"><span><b>Simulation only</b></span><span>No board is ready to fabricate</span><span>Updated 2026-11-10</span></p>
   <ul class="toc" aria-label="On this page">
-    <li><a href="#software">Flight software</a></li><li><a href="#hil">Hardware-in-the-loop</a></li>
+    <li><a href="#software">Flight software</a></li><li><a href="#hil">Software-in-the-loop</a></li>
     <li><a href="#boards">Boards</a></li><li><a href="#wiring">Wiring</a></li><li><a href="#open">Open</a></li>
   </ul>
 </header>
@@ -78,14 +78,19 @@
 </section>
 
 <section class="sec split" id="hil" aria-labelledby="hil-h">
-  <h2 id="hil-h">Hardware-in-the-loop</h2>
+  <h2 id="hil-h">Software-in-the-loop</h2>
   <div class="body">
+    <p><b>What the loop is, and what it is not.</b> The flight code is the real C code, but today it runs on a PC, not on
+      the flight computer: that is software-in-the-loop (SIL). The same code also runs on an emulated Cortex-M7 in QEMU and
+      gives the same outputs. Hardware-in-the-loop, with the code on the FC-0 board and the board's own Ethernet port in the
+      loop, starts when the board exists; the protocol is already the one the board will speak. Until 2026-11-13 this site
+      called the PC loop "HIL"; that overstated it, and every such number is now marked SIL.</p>
     <p>The C flight software runs as a separate process and talks to the simulator over a UDP protocol with timestamps,
-      CRC, injected latency, packet loss and sensor faults. Every landing number on this site marked HIL comes from this
+      CRC, injected latency, packet loss and sensor faults. Every landing number on this site marked SIL comes from this
       loop, run in lockstep at 50 Hz.</p>
-    <p>An in-process emulator of the HIL server, with the same random streams, latency, packet-loss and command-horizon
-      logic, reproduces HIL episode by episode (300 of 300 identical in the deterministic scenarios). Candidate changes
-      are screened there and then confirmed in HIL on other seeds. Why that mattered is on
+    <p>An in-process emulator of the SIL server, with the same random streams, latency, packet-loss and command-horizon
+      logic, reproduces SIL episode by episode (300 of 300 identical in the deterministic scenarios). Candidate changes
+      are screened there and then confirmed in SIL on other seeds. Why that mattered is on
       <a href="gnc.html#tools">Landing: trusting the right simulator</a>.</p>
   </div>
 </section>

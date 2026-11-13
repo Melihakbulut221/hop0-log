@@ -9,12 +9,12 @@
 <meta property="og:title" content="A toy landing loop · Hop-0">
 <meta property="og:description" content="An interactive toy landing loop: fly a small hop vehicle through wind, sensor noise, latency and lost frames, and run seeded batches. A teaching model with generic parameters, not the Hop-0 flight software.">
 <meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/emulator.html">
-<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=2">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Hop-0: Flown 4,400 times. Not built yet. Eighteen replayed landing trajectories converging on the pad.">
+<meta property="og:image:alt" content="Hop-0: designed, flown and broken in software first. Eighteen replayed landing trajectories converging on the pad.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=2">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -50,7 +50,7 @@
   <p class="kicker">Sandbox · toy model</p>
   <h1>A toy landing loop</h1>
   <p class="lede">Fly a small hop vehicle through wind, sensor noise, latency and lost frames, and see why the real loop is
-    tested in hardware-in-the-loop. This is a teaching model with textbook control and generic round-number parameters.
+    tested in software-in-the-loop. This is a teaching model with textbook control and generic round-number parameters.
     It is <strong>not the flight software</strong> and not Hop-0: none of its parameters, gains or laws are Hop-0's.</p>
   <p class="status-line"><span><b>Toy model, runs in your browser</b></span><span>Deterministic: same settings and seed, same flight</span><span>Added 2026-11-12</span></p>
   <ul class="toc" aria-label="On this page">
@@ -121,17 +121,17 @@
 <section class="sec split" id="real" aria-labelledby="real-h">
   <h2 id="real-h">The real thing</h2>
   <div class="body">
-    <p>Measured, not toy: the C flight software in hardware-in-the-loop on the Hop-0 plant, wind up to 12 m/s with gusts,
+    <p>Measured, not toy: the C flight software in software-in-the-loop on the Hop-0 plant, wind up to 12 m/s with gusts,
       from <a href="gnc.html#numbers">the current numbers</a>. The toy cannot reproduce these; its job is to show why
       latency and lost frames get their own rows.</p>
     <div class="tablewrap">
     <table class="stack">
-      <thead><tr><th>Scenario (HIL)</th><th class="num">Landings</th></tr></thead>
+      <thead><tr><th>Scenario (SIL)</th><th class="num">Landings</th></tr></thead>
       <tbody>
-        <tr><td data-label="Scenario (HIL)">COTS sensors / + 5% sensor faults / + 15% packet loss</td><td data-label="Landings" class="num">100 / 100 / 100 of 100</td></tr>
-        <tr><td data-label="Scenario (HIL)">Harsh sensors / + 200 ms latency</td><td data-label="Landings" class="num">100 / 100 of 100</td></tr>
-        <tr><td data-label="Scenario (HIL)">Harsh + 200 ms + 15% loss, two disjoint seed sets</td><td data-label="Landings" class="num">300, 299 of 300</td></tr>
-        <tr><td data-label="Scenario (HIL)">The same scenario when the CFD aerodynamics went in, before the filter and guidance work</td><td data-label="Landings" class="num">159 of 300</td></tr>
+        <tr><td data-label="Scenario (SIL)">COTS sensors / + 5% sensor faults / + 15% packet loss</td><td data-label="Landings" class="num">100 / 100 / 100 of 100</td></tr>
+        <tr><td data-label="Scenario (SIL)">Harsh sensors / + 200 ms latency</td><td data-label="Landings" class="num">100 / 100 of 100</td></tr>
+        <tr><td data-label="Scenario (SIL)">Harsh + 200 ms + 15% loss, two disjoint seed sets</td><td data-label="Landings" class="num">300, 299 of 300</td></tr>
+        <tr><td data-label="Scenario (SIL)">The same scenario when the CFD aerodynamics went in, before the filter and guidance work</td><td data-label="Landings" class="num">159 of 300</td></tr>
       </tbody>
     </table>
     </div>
@@ -139,7 +139,7 @@
       <li>The real loop survives 200 ms and 15% packet loss because the flight software predicts across the latency and
         the lost frames; the toy's textbook controller does not, which is why it fails much earlier.</li>
       <li>A fast simulation that did not model packet loss twice pointed the wrong way: a filter gain it recommended made
-        the 20 Hz HIL worst case worse, 186 to 172 of 200 (<a href="gnc.html#tools">which simulator to trust</a>).</li>
+        the 20 Hz SIL worst case worse, 186 to 172 of 200 (<a href="gnc.html#tools">which simulator to trust</a>).</li>
     </ul>
   </div>
 </section>

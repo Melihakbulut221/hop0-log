@@ -1,6 +1,6 @@
 """
-Figures for the project site (English). Numbers come from the HIL tables in research/plantfix/README.md
-(C flight software, lockstep HIL, same random seeds per scenario).
+Figures for the project site (English). Numbers come from the SIL tables in research/plantfix/README.md
+(C flight software, lockstep SIL, same random seeds per scenario).
 
   ../.venv/bin/python make_figures.py      -> assets/before_after.png, assets/hil_timeline.png
 """
@@ -60,7 +60,7 @@ def before_after():
     ax.spines["bottom"].set_color(GRID); ax.tick_params(length=0)
     fig.text(0.02, 0.955, "Landing success in winds up to 12 m/s: before and after", fontsize=20, fontweight="bold",
              color=INK)
-    fig.text(0.02, 0.905, "C flight software in hardware-in-the-loop simulation, same random seeds per scenario",
+    fig.text(0.02, 0.905, "C flight software in software-in-the-loop simulation, same random seeds per scenario",
              fontsize=12.5, color=INK2)
     handles = [Line2D([0], [0], marker="o", ls="", markersize=11, markerfacecolor=BEFORE, markeredgecolor=SURFACE,
                       label="Before: when the CFD aerodynamics went in"),
@@ -68,7 +68,7 @@ def before_after():
                       label="After: current flight software (filter and guidance changes)")]
     fig.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.012, 0.885), ncol=2, frameon=False, fontsize=12,
                handletextpad=0.3, columnspacing=2.0, labelcolor=INK)
-    fig.text(0.02, 0.018, "Simulation and HIL only; the vehicle has not flown. 100 or 300 episodes per scenario. "
+    fig.text(0.02, 0.018, "Simulation and SIL only; the vehicle has not flown. 100 or 300 episodes per scenario. "
              "'After' also has a ±10° gimbal instead of ±7°\n(small effect on its own); the gain comes from the "
              "navigation filter and the guidance.", fontsize=10.5, color=INK2)
     fig.subplots_adjust(left=0.25, right=0.97, top=0.81, bottom=0.115)
@@ -111,11 +111,11 @@ def hil_timeline():
     for s in ("top", "right", "left"):
         ax.spines[s].set_visible(False)
     ax.spines["bottom"].set_color(GRID); ax.tick_params(length=0)
-    fig.text(0.02, 0.95, "Every change, measured in HIL", fontsize=20, fontweight="bold", color=INK)
+    fig.text(0.02, 0.95, "Every change, measured in SIL", fontsize=20, fontweight="bold", color=INK)
     fig.text(0.02, 0.9, "Hardest scenario: harsh sensors, 200 ms latency, 15% packet loss, wind up to 12 m/s. "
              "Same 300 episodes at every step.", fontsize=12.5, color=INK2)
     fig.text(0.02, 0.018, "Landing success, in order of the changes. Steps that did not change this scenario (for "
-             "example a fix that only affected COTS sensors)\nare left out. Changes that did not hold up in HIL were "
+             "example a fix that only affected COTS sensors)\nare left out. Changes that did not hold up in SIL were "
              "reverted and are not shown.", fontsize=10.5, color=INK2)
     fig.subplots_adjust(left=0.33, right=0.97, top=0.85, bottom=0.12)
     fig.savefig(os.path.join(OUT, "hil_timeline.png"), facecolor=SURFACE)
@@ -144,7 +144,7 @@ def og_image():
         g.plot([x, x], [0, 630], color="#82c4ff", alpha=0.05, lw=0.8)
     for y in range(6, 631, 48):
         g.plot([0, 1200], [y, y], color="#82c4ff", alpha=0.05, lw=0.8)
-    ax = fig.add_axes([0.665, 0.1, 0.32, 0.8]); ax.set_facecolor("none")
+    ax = fig.add_axes([0.745, 0.1, 0.24, 0.8]); ax.set_facecolor("none")
     for f in d["flights"]:
         ax.plot(f["s"], f["z"], color=trail, lw=1.3, alpha=0.6)
         ax.scatter([f["s"][-1]], [0], s=10, color=acc, zorder=3)
@@ -153,12 +153,12 @@ def og_image():
         ax.text(-68, m + 3, "%d m" % m, color=hud, alpha=0.55, fontsize=9, family=mono)
     ax.plot([-70, 45], [0, 0], color=fg2, lw=1.5)
     ax.set_xlim(-70, 45); ax.set_ylim(-8, 240); ax.axis("off")
-    fig.text(0.05, 0.84, "HOP-0  \u00b7  REUSABLE ROCKET DIGITAL TWIN", fontsize=14, color=acc, family=mono)
-    fig.text(0.05, 0.62, "Flown 4,400 times.", fontsize=52, fontweight="bold", color=fg, family=sans)
-    fig.text(0.05, 0.47, "Not built yet.", fontsize=52, fontweight="bold", color=acc, family=sans)
+    fig.text(0.05, 0.84, "HOP-0  \u00b7  REUSABLE ROCKET  \u00b7  VIRTUAL PROTOTYPE", fontsize=14, color=acc, family=mono)
+    fig.text(0.05, 0.62, "Designed, flown and broken", fontsize=46, fontweight="bold", color=fg, family=sans)
+    fig.text(0.05, 0.47, "in software first.", fontsize=46, fontweight="bold", color=acc, family=sans)
     fig.text(0.05, 0.27, "CFD aerodynamics, structure, wear, five circuit boards\nand the real C flight code, flown in the loop\nbefore a single part is cut.",
              fontsize=17, color=fg2, family=sans, linespacing=1.4)
-    fig.text(0.05, 0.165, "4,400 HIL FLIGHTS, NO LOSS   \u00b7   0 PARTS BUILT",
+    fig.text(0.05, 0.165, "4,400 SOFTWARE-IN-THE-LOOP FLIGHTS, NO LOSS  \u00b7  0 PARTS BUILT",
              fontsize=12.5, color=hud, family=mono)
     fig.text(0.05, 0.065, "melihakbulut221.github.io/hop0-log  \u00b7  simulation only", fontsize=12, color=fg2, family=mono)
     fig.savefig(os.path.join(OUT, "og.png"), facecolor=bg)

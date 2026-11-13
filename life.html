@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>What each flight costs · Hop-0</title>
-<meta name="description" content="The Hop-0 life twin: a wear account built from 600 hardware-in-the-loop flights, remaining life per part, landing loads, and why loss rather than wear sets the vehicle's life.">
+<meta name="description" content="The Hop-0 life twin: a wear account built from 600 software-in-the-loop flights, remaining life per part, landing loads, and why loss rather than wear sets the vehicle's life.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="What each flight costs · Hop-0">
-<meta property="og:description" content="The Hop-0 life twin: a wear account built from 600 hardware-in-the-loop flights, remaining life per part, landing loads, and why loss rather than wear sets the vehicle's life.">
+<meta property="og:description" content="The Hop-0 life twin: a wear account built from 600 software-in-the-loop flights, remaining life per part, landing loads, and why loss rather than wear sets the vehicle's life.">
 <meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/life.html">
-<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=2">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Hop-0: Flown 4,400 times. Not built yet. Eighteen replayed landing trajectories converging on the pad.">
+<meta property="og:image:alt" content="Hop-0: designed, flown and broken in software first. Eighteen replayed landing trajectories converging on the pad.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=2">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -49,13 +49,13 @@
 <header class="page-head">
   <p class="kicker">Life twin</p>
   <h1>What each flight costs</h1>
-  <p class="status-line"><span><b>Simulation only</b></span><span>1700 HIL flights in two spectra</span><span>Life twin v0.1</span><span>Updated 2026-11-10</span></p>
+  <p class="status-line"><span><b>Simulation only</b></span><span>1700 SIL flights in two spectra</span><span>Life twin v0.1</span><span>Updated 2026-11-10</span></p>
 </header>
 <section class="sec" id="life" aria-labelledby="life-h" data-module="life" style="border-top:0;padding-top:0">
   <h2 id="life-h" class="vh">Wear account</h2>
   <p class="lede">The twin keeps a wear account. Every flight record is turned into damage for each part that wears
     out: the chamber's hot wall, the pump battery, the shocks, the honeycomb, the struts, the welded hull zones and the
-    gimbal actuators. The flights here are 600 hardware-in-the-loop flights in the hardest scenario, flown by the
+    gimbal actuators. The flights here are 600 software-in-the-loop flights in the hardest scenario, flown by the
     flight software one revision before its latest attitude-gain change, so this is a cautious load spectrum.</p>
   <div class="lgrid">
     <div class="lconsole" id="life-console" aria-live="off">
@@ -85,7 +85,7 @@
   <div class="tablewrap"><table>
     <thead><tr><th></th><th class="num">Hardest scenario, plant v4, earlier software</th><th class="num">Eleven scenarios, plant v4</th><th class="num">Eleven scenarios, plant v5 (current)</th></tr></thead>
     <tbody>
-      <tr><td>HIL flights / replayed landings</td><td class="num">600 / 561</td><td class="num">1100 / 1055</td><td class="num">1100 / 1100</td></tr>
+      <tr><td>SIL flights / replayed landings</td><td class="num">600 / 561</td><td class="num">1100 / 1055</td><td class="num">1100 / 1100</td></tr>
       <tr><td>Losses</td><td class="num">1 (95%: 0.03-0.9% per flight)</td><td class="num">0 (95% upper bound 0.35% per flight)</td><td class="num">0 in 1100; 0 in 4400 with the loss campaign (95% upper bound 0.087% per flight)</td></tr>
       <tr><td>Chamber hot wall, median flights (pessimistic film)</td><td class="num">1,429 (780)</td><td class="num">1,427 (783)</td><td class="num">1,424 (778)</td></tr>
       <tr><td>Pump battery, median flights</td><td class="num">2,351</td><td class="num">2,405</td><td class="num">2,371</td></tr>
@@ -95,12 +95,12 @@
     </tbody>
   </table></div>
   <p class="note">Wear barely depends on the scenario mix: every hop heats the chamber and drains the battery about the same,
-    and landing loads stay well inside the leg's envelope. Loss was the open question. A campaign of 3300 more HIL flights on new seeds
+    and landing loads stay well inside the leg's envelope. Loss was the open question. A campaign of 3300 more SIL flights on new seeds
     (2026-11-12) had no loss either: with 4400 loss-free flights the loss rate is below 0.087% per flight with 95%
     confidence. Eight flights in that campaign were hard landings, all on sideways speed at 1.0 to 1.9 m/s, seven of them
     in winds near 10 m/s or more.</p>
   <p class="note">Plant v5 (2026-11-10) carries the heavier CAD v0.4 legs, whose moving mass per leg went from 1.32 to
-    1.95 kg. Its column is the same eleven-scenario regression replayed on plant v5; all 1100 landings matched the HIL log.
+    1.95 kg. Its column is the same eleven-scenario regression replayed on plant v5; all 1100 landings matched the SIL log.
     Wear is unchanged; the heavier feet raise the peak landing load a little, but the landings are cleaner, so the shock
     uses at most 37% of its stroke instead of 71%. The console above still flies the cautious plant v4 spectrum.
     <a href="log.html#e-1110-plantv5">Log</a>.</p>
@@ -110,8 +110,8 @@
       the earlier software in the hardest scenario, one loss in 600 flights made loss come first. With the current software
       no loss in 4400 flights bounds the median flights before a loss above about 800: the same order as wear, and only a
       bound, not a measurement.</p></div>
-    <div><h3>What the numbers rest on</h3><p>Leg loads come from replaying each HIL flight at the physics rate and
-      checking it against the HIL log, episode by episode. The battery cycle life, the weld fatigue class and the shock service
+    <div><h3>What the numbers rest on</h3><p>Leg loads come from replaying each SIL flight at the physics rate and
+      checking it against the SIL log, episode by episode. The battery cycle life, the weld fatigue class and the shock service
       interval are assumptions until a datasheet or a test replaces them; the twin says which.</p></div>
     <div><h3>A bug it found</h3><p>Building the twin exposed a sign error in the simulator's honeycomb limiter: past
       its crush point it stiffened the leg instead of capping the force. No landing in these records reached that point, so no

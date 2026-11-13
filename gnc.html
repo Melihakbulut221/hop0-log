@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Landing in wind · Hop-0</title>
-<meta name="description" content="How the Hop-0 guidance, navigation and control learned to land in wind up to 12 m/s once the aerodynamics came from CFD, measured after every change in hardware-in-the-loop.">
+<meta name="description" content="How the Hop-0 guidance, navigation and control learned to land in wind up to 12 m/s once the aerodynamics came from CFD, measured after every change in software-in-the-loop.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Landing in wind · Hop-0">
-<meta property="og:description" content="How the Hop-0 guidance, navigation and control learned to land in wind up to 12 m/s once the aerodynamics came from CFD, measured after every change in hardware-in-the-loop.">
+<meta property="og:description" content="How the Hop-0 guidance, navigation and control learned to land in wind up to 12 m/s once the aerodynamics came from CFD, measured after every change in software-in-the-loop.">
 <meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/gnc.html">
-<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=2">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Hop-0: Flown 4,400 times. Not built yet. Eighteen replayed landing trajectories converging on the pad.">
+<meta property="og:image:alt" content="Hop-0: designed, flown and broken in software first. Eighteen replayed landing trajectories converging on the pad.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=2">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -50,8 +50,8 @@
   <p class="kicker">Guidance, navigation and control</p>
   <h1>Landing in wind</h1>
   <p class="lede">How the lander learned to land in wind up to 12 m/s once the aerodynamics came from CFD, measured after
-    every change with the C flight software in hardware-in-the-loop (HIL).</p>
-  <p class="status-line"><span><b>Simulation only</b></span><span>HIL rows: C flight software over UDP, lockstep, 50 Hz</span><span>Updated 2026-11-10</span></p>
+    every change with the C flight software in software-in-the-loop (SIL).</p>
+  <p class="status-line"><span><b>Simulation only</b></span><span>SIL rows: C flight software over UDP, lockstep, 50 Hz</span><span>Updated 2026-11-10</span></p>
   <ul class="toc" aria-label="On this page">
     <li><a href="#flights">Recorded flights</a></li><li><a href="#wind">Wind and the filter</a></li>
     <li><a href="#timeline">Every change</a></li><li><a href="#numbers">Current numbers</a></li>
@@ -73,7 +73,7 @@
     <svg class="bg" id="banner-bg" aria-hidden="true"></svg>
     <div class="in">
       <h2 id="wind-h">Wind broke the lander. The fix was in the filter.</h2>
-      <p>With a simple drag model the lander made 293 of 300 in the hardest HIL scenario. CFD of the vehicle with its
+      <p>With a simple drag model the lander made 293 of 300 in the hardest SIL scenario. CFD of the vehicle with its
         legs moved the centre of pressure below the centre of mass, and it fell to 159. Leg fairings and a bigger gimbal
         did not bring it back. One extra state in the navigation filter, then a series of guidance changes, did.</p>
     </div>
@@ -82,9 +82,9 @@
     <div class="chart" data-chart="before-after">
       <div class="legend"><span><i class="k-before"></i>Before: when the CFD aerodynamics went in</span>
         <span><i class="k-after"></i>After: current flight software</span></div>
-      <noscript><img src="assets/before_after.png" alt="Landing success before and after in seven HIL scenarios." style="width:100%"></noscript>
+      <noscript><img src="assets/before_after.png" alt="Landing success before and after in seven SIL scenarios." style="width:100%"></noscript>
     </div>
-    <figcaption>Landing success in winds up to 12 m/s, C flight software in hardware-in-the-loop, the same random seeds
+    <figcaption>Landing success in winds up to 12 m/s, C flight software in software-in-the-loop, the same random seeds
       before and after: 100 episodes per row, 300 for the two lower rows (seed set A). "After" is the current flight
       software on plant v5 (the CAD v0.4 legs, 2026-11-10); it also has a ±10° gimbal instead of ±7°, which on its own
       changes little.</figcaption>
@@ -92,10 +92,10 @@
   <div class="split" style="margin-top:var(--sp-7)">
     <h3>What happened</h3>
     <div class="body">
-      <p>With a simple drag model, the controller landed in winds up to 12 m/s more than 96% of the time in HIL. Then
+      <p>With a simple drag model, the controller landed in winds up to 12 m/s more than 96% of the time in SIL. Then
         that model was replaced with tables from CFD of the vehicle with its legs.</p>
       <p>The legs pull the centre of pressure 0.15–0.5 m below the centre of mass in side flow and in descent. Falling tail
-        first, the vehicle is aerodynamically unstable. In HIL the hardest scenario dropped from 293 to 159 landings out of
+        first, the vehicle is aerodynamically unstable. In SIL the hardest scenario dropped from 293 to 159 landings out of
         300, and even the clean COTS-sensor case fell to 75% (75 of 100).</p>
       <h4 style="margin-top:var(--sp-5)">The hardware answer, and why it didn't help</h4>
       <p>The obvious response was hardware. I designed leg fairings and a ±10° gimbal (up from ±7°) and checked both
@@ -117,15 +117,15 @@
         tightest.</p>
       <p>The fix is one extra state in the filter: an angular-acceleration disturbance, learnt from the gyro residual. It
         went into Python and C together and is tested for C/Python equivalence. Together with the ±10° gimbal, it took the
-        hardest HIL scenario from 159 to 266 of 300. The rest came from guidance:</p>
+        hardest SIL scenario from 159 to 266 of 300. The rest came from guidance:</p>
       <ul>
         <li>wider tilt limits near the ground, to stop the vehicle arriving at the pad still drifting;</li>
         <li>a descent-speed limit that keeps the divert feasible when drag is high;</li>
         <li>higher terminal-gate heights;</li>
         <li>a predictive terminal law: a finite-horizon LQR that models the attitude-loop lag and plans to null position
           and velocity at touchdown;</li>
-        <li>a stiffer attitude loop at the 50 Hz flight rate, found by screening eleven candidates in the in-process HIL
-          emulator and then confirmed in HIL on every scenario.</li>
+        <li>a stiffer attitude loop at the 50 Hz flight rate, found by screening eleven candidates in the in-process SIL
+          emulator and then confirmed in SIL on every scenario.</li>
       </ul>
     </div>
   </div>
@@ -134,14 +134,14 @@
 <section class="sec" id="timeline" aria-labelledby="timeline-h" data-module="hilcharts">
   <h2 id="timeline-h">Every change, measured</h2>
   <p>The hardest scenario (harsh sensors, 200 ms latency, 15% packet loss, wind up to 12 m/s), the same 300 episodes
-    after every step. A change is kept when it holds up in HIL; changes that did not were reverted and are not shown
+    after every step. A change is kept when it holds up in SIL; changes that did not were reverted and are not shown
     (they are in the <a href="log.html">log</a>). Step 7 is within noise and was kept because it removes a step in the
     thrust command.</p>
   <figure style="margin-bottom:0">
     <div class="chart" data-chart="timeline" id="tl-chart">
       <div class="legend"><span><i class="k-after"></i>seed set A, 300 episodes</span>
         <span><i class="k-b"></i>held-out seed set B, 300 episodes, where it was run</span></div>
-      <noscript><img src="assets/hil_timeline.png" alt="Landings out of 300 in the hardest HIL scenario after each change." style="width:100%"></noscript>
+      <noscript><img src="assets/hil_timeline.png" alt="Landings out of 300 in the hardest SIL scenario after each change." style="width:100%"></noscript>
     </div>
     <figcaption>Each step links to its log entry. At 300 episodes one landing is 0.33%; steps of two or three landings are
       within run-to-run noise. Some of the earlier steps were chosen on set A itself, which is why the held-out set B was
@@ -180,18 +180,18 @@
 <section class="sec split" id="numbers" aria-labelledby="numbers-h">
   <h2 id="numbers-h">Current numbers</h2>
   <div class="body">
-    <p>All scenarios have mean wind up to 12 m/s with gusts. HIL rows are the C flight software over UDP, lockstep, at
+    <p>All scenarios have mean wind up to 12 m/s with gusts. SIL rows are the C flight software over UDP, lockstep, at
       50 Hz unless marked 20 Hz. Plant v5 (CAD v0.4 legs) with the filter reading the whole vehicle, 2026-11-10.</p>
     <div class="tablewrap">
     <table class="stack">
-      <thead><tr><th>Scenario</th><th class="num">Episodes</th><th>Seeds</th><th class="num">HIL landings</th></tr></thead>
+      <thead><tr><th>Scenario</th><th class="num">Episodes</th><th>Seeds</th><th class="num">SIL landings</th></tr></thead>
       <tbody>
-        <tr id="n-cots"><td data-label="Scenario">COTS sensors / + 5% sensor faults / + 15% packet loss</td><td data-label="Episodes" class="num">100 each</td><td data-label="Seeds">A</td><td data-label="HIL landings" class="num">100 / 100 / 100 of 100</td></tr>
-        <tr id="n-harsh"><td data-label="Scenario">Harsh sensors / + 200 ms latency</td><td data-label="Episodes" class="num">100 each</td><td data-label="Seeds">A</td><td data-label="HIL landings" class="num">100 / 100 of 100</td></tr>
-        <tr id="n-hardest"><td data-label="Scenario">Harsh + 200 ms + 15% loss (two disjoint seed sets)</td><td data-label="Episodes" class="num">300 + 300</td><td data-label="Seeds">A, B</td><td data-label="HIL landings" class="num">300, 299 of 300</td></tr>
-        <tr id="n-noradar"><td data-label="Scenario">No radar, 1 Hz GNSS with 200 ms lag</td><td data-label="Episodes" class="num">300</td><td data-label="Seeds">A</td><td data-label="HIL landings" class="num">298 of 300</td></tr>
-        <tr id="n-aero"><td data-label="Scenario">Worst aerodynamic-uncertainty corner, harsh + 200 ms (two disjoint seed sets)</td><td data-label="Episodes" class="num">300 + 300</td><td data-label="Seeds">A, B</td><td data-label="HIL landings" class="num">293, 299 of 300</td></tr>
-        <tr id="n-20hz"><td data-label="Scenario">20 Hz reference: harsh + 200 ms / hardest scenario (two disjoint seed sets)</td><td data-label="Episodes" class="num">100; 200 + 200</td><td data-label="Seeds">A; A, B</td><td data-label="HIL landings" class="num">100 of 100; 199, 199 of 200</td></tr>
+        <tr id="n-cots"><td data-label="Scenario">COTS sensors / + 5% sensor faults / + 15% packet loss</td><td data-label="Episodes" class="num">100 each</td><td data-label="Seeds">A</td><td data-label="SIL landings" class="num">100 / 100 / 100 of 100</td></tr>
+        <tr id="n-harsh"><td data-label="Scenario">Harsh sensors / + 200 ms latency</td><td data-label="Episodes" class="num">100 each</td><td data-label="Seeds">A</td><td data-label="SIL landings" class="num">100 / 100 of 100</td></tr>
+        <tr id="n-hardest"><td data-label="Scenario">Harsh + 200 ms + 15% loss (two disjoint seed sets)</td><td data-label="Episodes" class="num">300 + 300</td><td data-label="Seeds">A, B</td><td data-label="SIL landings" class="num">300, 299 of 300</td></tr>
+        <tr id="n-noradar"><td data-label="Scenario">No radar, 1 Hz GNSS with 200 ms lag</td><td data-label="Episodes" class="num">300</td><td data-label="Seeds">A</td><td data-label="SIL landings" class="num">298 of 300</td></tr>
+        <tr id="n-aero"><td data-label="Scenario">Worst aerodynamic-uncertainty corner, harsh + 200 ms (two disjoint seed sets)</td><td data-label="Episodes" class="num">300 + 300</td><td data-label="Seeds">A, B</td><td data-label="SIL landings" class="num">293, 299 of 300</td></tr>
+        <tr id="n-20hz"><td data-label="Scenario">20 Hz reference: harsh + 200 ms / hardest scenario (two disjoint seed sets)</td><td data-label="Episodes" class="num">100; 200 + 200</td><td data-label="Seeds">A; A, B</td><td data-label="SIL landings" class="num">100 of 100; 199, 199 of 200</td></tr>
       </tbody>
     </table>
     </div>
@@ -204,12 +204,12 @@
       <dt>15% packet loss</dt><dd>15% of the frames between simulator and flight software are bad: 10% dropped and 5%
         corrupted, so that their checksum fails.</dd>
       <dt>Worst aerodynamic corner</dt><dd>hull drag ×1.6, leg drag ×2 against the CFD tables.</dd>
-      <dt>Seed sets</dt><dd>A: the seeds used for every HIL comparison since the plant was rebuilt; some earlier changes were
+      <dt>Seed sets</dt><dd>A: the seeds used for every SIL comparison since the plant was rebuilt; some earlier changes were
         chosen on it. B: three further blocks of 100 seeds, kept for confirmation. Screening runs use a third range of
         seeds, disjoint from both.</dd>
-      <dt>Python, HIL, emulator</dt><dd>Python: the fast simulation with the Python reference of the flight software. HIL:
-        the C flight software as its own process over UDP. Emulator: an in-process copy of the HIL server that reproduces
-        HIL episode by episode, used for screening.</dd>
+      <dt>Python, SIL, emulator</dt><dd>Python: the fast simulation with the Python reference of the flight software. SIL:
+        the C flight software as its own process over UDP. Emulator: an in-process copy of the SIL server that reproduces
+        SIL episode by episode, used for screening.</dd>
     </dl>
   </div>
 </section>
@@ -219,13 +219,13 @@
   <div class="body">
     <p class="big-quote">A gain that only shows up in the fast simulator is not a gain.</p>
     <p>The hardest part was not the control design but knowing which result to believe. Three tools disagreed at
-      different times: the fast Python simulation, hardware-in-the-loop, and the C code itself.</p>
+      different times: the fast Python simulation, software-in-the-loop, and the C code itself.</p>
     <ul>
       <li><strong>The fast Python loop did not model packet loss, and it twice pointed the wrong way.</strong> A filter
-        gain it recommended made the 20 Hz HIL worst case worse (186 to 172 of 200). I wrote an in-process emulator of the
-        HIL server, with the same random streams, latency, packet-loss and command-horizon logic. It reproduces HIL
+        gain it recommended made the 20 Hz SIL worst case worse (186 to 172 of 200). I wrote an in-process emulator of the
+        SIL server, with the same random streams, latency, packet-loss and command-horizon logic. It reproduces SIL
         episode by episode (300 of 300 identical in the deterministic scenarios). Tuning now happens there, on seed sets
-        disjoint from the ones used for confirmation in HIL.</li>
+        disjoint from the ones used for confirmation in SIL.</li>
       <li><strong>The quick diagnostic tool ran a legacy filter mode</strong> (no accelerometer, GNSS every frame, no
         radar). For two changes it reported regressions that the flight configuration did not have. It now runs the
         flight filter by default.</li>

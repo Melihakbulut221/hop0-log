@@ -9,12 +9,12 @@
 <meta property="og:title" content="Engineering log · Hop-0">
 <meta property="og:description" content="Dated entries of the Hop-0 digital twin since 2026-11-03: what changed, what was measured, and what did not work or was reverted.">
 <meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/log.html">
-<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=2">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Hop-0: Flown 4,400 times. Not built yet. Eighteen replayed landing trajectories converging on the pad.">
+<meta property="og:image:alt" content="Hop-0: designed, flown and broken in software first. Eighteen replayed landing trajectories converging on the pad.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=2">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -50,28 +50,41 @@
   <p class="kicker">Log</p>
   <h1>Engineering log</h1>
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
-    the episodes run. HIL is the C flight software in hardware-in-the-loop; Python is the fast simulation; the emulator is
-    the in-process copy of the HIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>42 entries</b></span><span>2026-11-03 to 2026-11-12</span><span>Simulation only</span></p>
+    the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
+    the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
+  <p class="status-line"><span><b>43 entries</b></span><span>2026-11-03 to 2026-11-13</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
-    <li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
+    <li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
   </ul>
 </header>
 
 <ol class="log" reversed>
 
+<li class="entry" id="e-1113-sil"><div id="d-1113"><time datetime="2026-11-13">2026-11-13</time><span class="area">Site</span></div><div>
+  <h2 class="eh">Correction: the loop is software-in-the-loop, not hardware-in-the-loop</h2>
+  <dl>
+    <dt>Changed</dt><dd>Every landing number this site called "HIL" came from the real C flight code running on a PC,
+      talking to the simulator over UDP. With no flight computer in the loop, that is software-in-the-loop (SIL). The
+      site now says SIL everywhere; none of the numbers changed.</dd>
+    <dt>Still true</dt><dd>The code in the loop is the flight code, not a stand-in, and it gives the same outputs on an
+      emulated Cortex-M7. Hardware-in-the-loop starts when the FC-0 board exists; the loop already speaks the protocol
+      the board will use.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#hil">what the loop is</a></p>
+</div></li>
+
 <li class="entry" id="e-1112-loss"><div id="d-1112"><time datetime="2026-11-12">2026-11-12</time><span class="area">Landing</span></div><div>
   <h2 class="eh">A loss-rate campaign: 3300 more flights, no loss</h2>
   <dl>
-    <dt>Changed</dt><dd>The eleven regression scenarios flown again in HIL with the current software, three rounds of 100
+    <dt>Changed</dt><dd>The eleven regression scenarios flown again in SIL with the current software, three rounds of 100
       episodes each on new seeds disjoint from every earlier set.</dd>
     <dt>Measured</dt><dd>3300 flights, no loss. With the earlier 1100 that is 4400 loss-free flights: the loss rate is below
       0.087% per flight with 95% confidence. Every COTS and harsh row landed 300 of 300.</dd>
     <dt>Did not land</dt><dd class="bad">Eight hard landings, all on sideways speed (1.0 to 1.9 m/s), seven in winds near
       10 m/s or more; six of them without radar on 1 Hz GNSS.</dd>
   </dl>
-  <p class="ev"><span>HIL, C flight software, 3300 episodes</span><a href="life.html#spectra">life twin</a></p>
+  <p class="ev"><span>SIL, C flight software, 3300 episodes</span><a href="life.html#spectra">life twin</a></p>
 </div></li>
 
 <li class="entry" id="e-1112-invgate"><div><time datetime="2026-11-12">2026-11-12</time><span class="area">Avionics</span></div><div>
@@ -133,7 +146,7 @@
     <dt>Changed</dt><dd>The filter uses the composite mass properties of the whole vehicle. The controller's gain scaling
       stays on its tuning reference, since the composite variant gave the same result. C parameters and traces
       regenerated; the equivalence checks pass.</dd>
-    <dt>Measured</dt><dd>HIL, plant v5: hardest scenario 300 (set A) and 299 (set B) of 300; worst aerodynamic corner 293 and
+    <dt>Measured</dt><dd>SIL, plant v5: hardest scenario 300 (set A) and 299 (set B) of 300; worst aerodynamic corner 293 and
       299 of 300 (592 of 600, was 574 on plant v4); no radar 298 of 300; 20 Hz hardest scenario 199 and 199 of 200, 20 Hz
       with 150 + 50 ms latency 100 of 100. COTS and harsh rows 100 of 100.</dd>
     <dt>Lesson</dt><dd class="bad">This supersedes the conclusion of the entry on the worst aerodynamic corner below: its
@@ -149,7 +162,7 @@
   <dl>
     <dt>Changed</dt><dd>The mass table of CAD v0.4 (fairing-free legs with resized struts) imported into the simulator: dry
       mass with growth 107.34 to 109.71 kg; unsprung mass per leg 1.32 to 1.95 kg.</dd>
-    <dt>Measured</dt><dd class="bad">Full HIL regression with unchanged flight software: hardest scenario 299 to 275 (set A)
+    <dt>Measured</dt><dd class="bad">Full SIL regression with unchanged flight software: hardest scenario 299 to 275 (set A)
       and 298 to 281 (set B) of 300; worst aerodynamic corner 574 to 542 of 600; 20 Hz hardest scenario 187 and 197 to 181
       and 186 of 200. COTS and harsh clean rows stayed at 100%. The failures touched down tilted more than 8° or too fast
       sideways.</dd>
@@ -229,18 +242,18 @@
   <dl>
     <dt>Changed</dt><dd>The Python reference of the flight software now rejects implausible sensor frames, holds or predicts
       the command and latches safe mode exactly as the C code does.</dd>
-    <dt>Found</dt><dd class="bad">Before, the in-process HIL emulator crashed in the sensor-fault scenario that the C code
+    <dt>Found</dt><dd class="bad">Before, the in-process SIL emulator crashed in the sensor-fault scenario that the C code
       passes 100 of 100: the equivalence traces never contained faults, so the gap stayed invisible.</dd>
     <dt>Measured</dt><dd>Fault-free trace re-recorded bit-identical; with 5% injected sensor faults the emulator now matches
-      HIL in 100 of 100 episodes.</dd>
+      SIL in 100 of 100 episodes.</dd>
   </dl>
-  <p class="ev"><a href="gnc.html#numbers">HIL numbers</a></p>
+  <p class="ev"><a href="gnc.html#numbers">SIL numbers</a></p>
 </div></li>
 
 <li class="entry" id="e-1110-wind"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Guidance</span></div><div>
   <h2 class="eh">Where the worst aerodynamic corner fails, and a tuning dead end (superseded)</h2>
   <dl>
-    <dt>Measured</dt><dd>In 600 HIL episodes with hull drag ×1.6 and leg drag ×2, failures rise with wind: none below 4 m/s,
+    <dt>Measured</dt><dd>In 600 SIL episodes with hull drag ×1.6 and leg drag ×2, failures rise with wind: none below 4 m/s,
       1% at 4-8, 5% at 8-10, 15-23% above 10 m/s. Nineteen of the 26 failures are above 10 m/s.</dd>
     <dt>Did not work</dt><dd class="bad">Eight variations of the lateral acceleration and terminal tilt limits, 800 emulator
       episodes each: none moved the result beyond noise. The remaining failures are latency and the aerodynamics itself.</dd>
@@ -255,8 +268,8 @@
 <li class="entry" id="e-1110-life2"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Life twin</span></div><div>
   <h2 class="eh">Life twin rebuilt on eleven scenarios</h2>
   <dl>
-    <dt>Changed</dt><dd>The wear account rebuilt from the 50 Hz regression of the current software: 1100 HIL flights in eleven
-      scenarios, 1055 of them replayed at the physics rate and matched against the HIL log.</dd>
+    <dt>Changed</dt><dd>The wear account rebuilt from the 50 Hz regression of the current software: 1100 SIL flights in eleven
+      scenarios, 1055 of them replayed at the physics rate and matched against the SIL log.</dd>
     <dt>Measured</dt><dd>Wear is almost unchanged (chamber about 1,430 flights, battery about 2,400). No loss in 1100 flights,
       which bounds the loss rate below 0.35% per flight.</dd>
   </dl>
@@ -267,23 +280,23 @@
   <h2 class="eh">Stiffer attitude loop at 50 Hz</h2>
   <dl>
     <dt>Changed</dt><dd>A higher attitude-loop gain, at the 50 Hz flight rate only. Eleven candidates were screened in the
-      emulator on seeds disjoint from HIL; the predictive law's own settings were already the best of their sweep.</dd>
-    <dt>Measured</dt><dd>Emulator, worst aerodynamic corner: 760 to 776 of 800. HIL worst aerodynamic corner 281 to 283
+      emulator on seeds disjoint from SIL; the predictive law's own settings were already the best of their sweep.</dd>
+    <dt>Measured</dt><dd>Emulator, worst aerodynamic corner: 760 to 776 of 800. SIL worst aerodynamic corner 281 to 283
       (set A) and 282 to 291 (set B) of 300; hardest scenario 296 to 299 (A) and 294 to 298 (B); no radar 298 to 299.
-      COTS and harsh rows stayed at 100 of 100. The baseline column was re-run and reproduced the earlier HIL numbers exactly.</dd>
+      COTS and harsh rows stayed at 100 of 100. The baseline column was re-run and reproduced the earlier SIL numbers exactly.</dd>
     <dt>Did not work</dt><dd class="bad">At 20 Hz the same change was net 3 landings worse in 400, so the 20 Hz configuration
       keeps the old gain. The gain still leaves about 1.5 to 2 times margin to where the loop went unstable in an earlier sweep.</dd>
   </dl>
-  <p class="ev"><span>HIL, 300 episodes per set</span><a href="gnc.html#timeline">step 11 of the timeline</a></p>
+  <p class="ev"><span>SIL, 300 episodes per set</span><a href="gnc.html#timeline">step 11 of the timeline</a></p>
 </div></li>
 
 <li class="entry" id="e-1110-life"><div><time datetime="2026-11-10">2026-11-10</time><span class="area">Life twin</span></div><div>
   <h2 class="eh">Life twin v0.1: a wear account per flight</h2>
   <dl>
-    <dt>Changed</dt><dd>Every flight record is turned into damage for each part that wears out. Built from 600 HIL episodes of
+    <dt>Changed</dt><dd>Every flight record is turned into damage for each part that wears out. Built from 600 SIL episodes of
       the hardest scenario (both seed sets), flown by the software before the attitude-gain change above.</dd>
     <dt>Measured</dt><dd>The chamber's hot wall wears out first, after about 1,400 flights (780 with pessimistic film
-      cooling). Leg loads replayed at the physics rate matched the HIL log for 561 landings. One loss in 600 flights.</dd>
+      cooling). Leg loads replayed at the physics rate matched the SIL log for 561 landings. One loss in 600 flights.</dd>
     <dt>Found</dt><dd class="bad">A sign error in the simulator's honeycomb limiter: past its crush point it stiffened the
       leg instead of capping the force. No recorded landing reached that point, so no result changed (a re-play of three
       episodes after the fix was bit-identical).</dd>
@@ -346,12 +359,12 @@
   <dl>
     <dt>Changed</dt><dd>A finite-horizon LQR for the last part of the descent that models the attitude-loop lag and plans to
       null position and velocity at touchdown. Deterministic in embedded C, equivalent to Python.</dd>
-    <dt>Measured</dt><dd>Emulator, hardest scenario: 780 to 790 of 800, hard landings 14 to 7. HIL hardest scenario 294 to
-      296 (set A) and 289 to 294 (set B) of 300. Other HIL rows within noise.</dd>
+    <dt>Measured</dt><dd>Emulator, hardest scenario: 780 to 790 of 800, hard landings 14 to 7. SIL hardest scenario 294 to
+      296 (set A) and 289 to 294 (set B) of 300. Other SIL rows within noise.</dd>
     <dt>Did not work</dt><dd class="bad">Running only inside the terminal gate made no difference: the final lateral state is
       set higher up. The legacy diagnostic mode showed a regression that the flight configuration did not have.</dd>
   </dl>
-  <p class="ev"><span>HIL, 300 episodes per set</span><a href="gnc.html#timeline">step 10</a></p>
+  <p class="ev"><span>SIL, 300 episodes per set</span><a href="gnc.html#timeline">step 10</a></p>
 </div></li>
 
 <li class="entry" id="e-1108-kad"><div id="d-1108"><time datetime="2026-11-08">2026-11-08</time><span class="area">Navigation</span></div><div>
@@ -359,7 +372,7 @@
   <dl>
     <dt>Changed</dt><dd>The gain of the angular-disturbance state now depends on whether the filter uses the accelerometer.
       Screened in the emulator on the worst aerodynamic corner with latency.</dd>
-    <dt>Measured</dt><dd>Emulator 362 to 379 of 400. HIL target scenario 269 to 273 (A) and 275 to 279 (B) of 300; hardest
+    <dt>Measured</dt><dd>Emulator 362 to 379 of 400. SIL target scenario 269 to 273 (A) and 275 to 279 (B) of 300; hardest
       scenario 289 to 294.</dd>
     <dt>Did not work</dt><dd class="bad">Without the accelerometer the same gain hurts with harsh sensors (398 to 380 of 400 in
       the legacy diagnostic mode), hence the split by mode.</dd>
@@ -372,7 +385,7 @@
   <dl>
     <dt>Changed</dt><dd>Higher floors for the terminal-gate heights, for every sensor class. From here on, screening and
       confirmation seeds are disjoint by rule.</dd>
-    <dt>Measured</dt><dd>Emulator 379 to 391 of 400. HIL hardest scenario 285 to 289 (A) and 283 to 289 (B); hard landings
+    <dt>Measured</dt><dd>Emulator 379 to 391 of 400. SIL hardest scenario 285 to 289 (A) and 283 to 289 (B); hard landings
       roughly halved. 20 Hz hardest scenario 183 to 194 of 200.</dd>
   </dl>
   <p class="ev"><a href="gnc.html#timeline">step 8</a></p>
@@ -382,7 +395,7 @@
   <h2 class="eh">Smoother braking feed-forward</h2>
   <dl>
     <dt>Changed</dt><dd>The braking feed-forward now ramps to zero at the flare instead of stepping, in Python and C.</dd>
-    <dt>Measured</dt><dd>A one-step thrust jump is gone; the float32 equivalence margin improved about three times. HIL no
+    <dt>Measured</dt><dd>A one-step thrust jump is gone; the float32 equivalence margin improved about three times. SIL no
       radar 298 to 300, hardest scenario 287 to 285 (within noise). Kept for the smoother command.</dd>
   </dl>
   <p class="ev"><a href="gnc.html#timeline">step 7</a></p>
@@ -393,7 +406,7 @@
   <dl>
     <dt>Tried</dt><dd>A full re-sweep of the 20 Hz configuration, and the attitude gain on the hardest scenario at 50 Hz.</dd>
     <dt>Did not work</dt><dd class="bad">At 20 Hz no candidate beat the noise and the best one went opposite ways on the two
-      HIL seed sets. At 50 Hz the gain gave +3 of 600, at the noise limit, while reducing stability margin. Neither was
+      SIL seed sets. At 50 Hz the gain gave +3 of 600, at the noise limit, while reducing stability margin. Neither was
       applied. (The gain was applied on 2026-11-10 after a sweep on a different scenario.)</dd>
   </dl>
 </div></li>
@@ -403,23 +416,23 @@
   <dl>
     <dt>Tried</dt><dd>Filter and guidance settings for the 20 Hz reference configuration, first from the fast Python loop,
       then from the new emulator.</dd>
-    <dt>Did not work</dt><dd class="bad">The filter gain the Python loop recommended made the HIL hardest case worse, 186 to
+    <dt>Did not work</dt><dd class="bad">The filter gain the Python loop recommended made the SIL hardest case worse, 186 to
       172 of 200: the Python loop did not model packet loss. A second candidate gained +1 on a second seed set and cost 3
       landings in a deterministic 50 Hz scenario. Both reverted. One seed block had been used in screening and in the
-      "held-out" HIL set; since then the sets are disjoint.</dd>
+      "held-out" SIL set; since then the sets are disjoint.</dd>
   </dl>
   <p class="ev"><a href="gnc.html#mistakes">Mistakes</a></p>
 </div></li>
 
 <li class="entry" id="e-1107-emulator"><div><time datetime="2026-11-07">2026-11-07</time><span class="area">Tools</span></div><div>
-  <h2 class="eh">An in-process emulator of the HIL server</h2>
+  <h2 class="eh">An in-process emulator of the SIL server</h2>
   <dl>
-    <dt>Changed</dt><dd>The HIL server's random streams, latency, packet-loss and command-horizon logic in-process, without
+    <dt>Changed</dt><dd>The SIL server's random streams, latency, packet-loss and command-horizon logic in-process, without
       the network, in parallel.</dd>
-    <dt>Measured</dt><dd>It reproduces HIL episode by episode: 300 of 300 identical in the deterministic scenario, totals within
+    <dt>Measured</dt><dd>It reproduces SIL episode by episode: 300 of 300 identical in the deterministic scenario, totals within
       one landing in the lossy ones. It correctly shows the misleading 20 Hz recommendation above as a regression.</dd>
   </dl>
-  <p class="ev"><a href="avionics.html#hil">Hardware-in-the-loop</a></p>
+  <p class="ev"><a href="avionics.html#hil">Software-in-the-loop</a></p>
 </div></li>
 
 <li class="entry" id="e-1107-termvel"><div><time datetime="2026-11-07">2026-11-07</time><span class="area">Guidance</span></div><div>
@@ -427,7 +440,7 @@
   <dl>
     <dt>Changed</dt><dd>A slower, less aggressive lateral approach to the pad. The vehicle had been overshooting the pad
       under latency and lost frames.</dd>
-    <dt>Measured</dt><dd>Chosen among ten HIL variants on set A: hardest scenario 276 to 287 of 300. On the held-out set B,
+    <dt>Measured</dt><dd>Chosen among ten SIL variants on set A: hardest scenario 276 to 287 of 300. On the held-out set B,
       introduced for this check: 282 to 286. No radar 295 to 298.</dd>
     <dt>Lesson</dt><dd class="bad">The gain on set B was about a third of the gain on set A: part of it was fitted to the seeds.</dd>
   </dl>
@@ -441,7 +454,7 @@
       200). A margin that raised the terminal gate for noisy position fixes was also giving the vehicle time to damp its
       lateral drift; with better sensors the gate was lower and the time was missing.</dd>
     <dt>Changed</dt><dd>A floor under the gate heights for every sensor class.</dd>
-    <dt>Measured</dt><dd>HIL COTS rows 97 / 98 / 94 to 100 / 100 / 100 of 100; worst aerodynamic corner with COTS 185 to
+    <dt>Measured</dt><dd>SIL COTS rows 97 / 98 / 94 to 100 / 100 / 100 of 100; worst aerodynamic corner with COTS 185 to
       195 of 200. Harsh rows unchanged by construction.</dd>
   </dl>
 </div></li>
@@ -451,8 +464,8 @@
   <dl>
     <dt>Changed</dt><dd>In descent, the sink rate is limited so that the remaining divert can still be completed with the
       available tilt when drag is high.</dd>
-    <dt>Measured</dt><dd>Python worst aerodynamic corner 342 to 358 of 400 (held-out seeds 335 to 355). HIL hardest
-      scenario 271 to 276; first HIL runs of the worst corner: 185 (COTS) and 195 (harsh) of 200.</dd>
+    <dt>Measured</dt><dd>Python worst aerodynamic corner 342 to 358 of 400 (held-out seeds 335 to 355). SIL hardest
+      scenario 271 to 276; first SIL runs of the worst corner: 185 (COTS) and 195 (harsh) of 200.</dd>
     <dt>Did not work</dt><dd class="bad">COTS with lost frames went 97 to 94 of 100, at the noise limit for 100 episodes, and
       led to the entry above.</dd>
   </dl>
@@ -465,7 +478,7 @@
     <dt>Found</dt><dd>The remaining failures arrived at the terminal gate still drifting sideways; the tilt allowed near the
       ground was too small to stop that drift and hold against the wind.</dd>
     <dt>Changed</dt><dd>Wider tilt limits near the ground.</dd>
-    <dt>Measured</dt><dd>Python harsh 364 to 387 of 400 on the tuning seeds, 363 to 378 on unseen seeds. HIL hardest
+    <dt>Measured</dt><dd>Python harsh 364 to 387 of 400 on the tuning seeds, 363 to 378 on unseen seeds. SIL hardest
       scenario 266 to 271, no radar 281 to 295, harsh with latency 90 to 93.</dd>
     <dt>Did not work</dt><dd class="bad">The first variant touched down tilted at 20 Hz and cost 17 landings there; the flare
       limit was pulled back until 20 Hz was neutral.</dd>
@@ -495,7 +508,7 @@
       under-modelled gimbal torque by 30%, which happened to offset the aerodynamic moment it did not know about.</dd>
     <dt>Changed</dt><dd>An angular-acceleration disturbance state, learnt from the gyro residual, in Python and C together;
       the ±10° gimbal applied as well.</dd>
-    <dt>Measured</dt><dd>HIL hardest scenario 159 to 266 of 300; no radar 192 to 281; COTS 75 to 96 of 100; harsh 72 to 99.
+    <dt>Measured</dt><dd>SIL hardest scenario 159 to 266 of 300; no radar 192 to 281; COTS 75 to 96 of 100; harsh 72 to 99.
       On its own the bigger gimbal changes the rate within noise.</dd>
     <dt>Found</dt><dd class="bad">A C bug: the new state was not reset between episodes. Fixed; C/Python equivalence back
       within tolerance.</dd>
@@ -521,7 +534,7 @@
     <dt>Changed</dt><dd>RANS CFD force and moment tables of the vehicle with its legs, 0° to 180° angle of attack, replace
       the simple drag model, with uncertainty factors on hull and leg drag drawn per episode.</dd>
     <dt>Measured</dt><dd>The legs put the centre of pressure 0.15–0.5 m below the centre of mass in side flow and descent.
-      Python harsh 386 to 222 of 400. HIL hardest scenario 293 to 159 of 300; COTS 100 to 75 of 100.</dd>
+      Python harsh 386 to 222 of 400. SIL hardest scenario 293 to 159 of 300; COTS 100 to 75 of 100.</dd>
     <dt>Did not work</dt><dd class="bad">Gain sweeps did not fix it (best 81 against 73 of 96). A lower descent-speed limit
       helped a little. The real fix came the same day, in the filter.</dd>
   </dl>
@@ -535,7 +548,7 @@
       friction, a 2 ms physics step, the revised engine.</dd>
     <dt>Found</dt><dd class="bad">The unsprung leg masses were counted twice, which made the touchdown lateral speed 45%
       worse. Found by separating the effects one at a time; fixed.</dd>
-    <dt>Measured</dt><dd>HIL with the simple aerodynamics: hardest scenario 293 of 300, no radar 296 of 300.</dd>
+    <dt>Measured</dt><dd>SIL with the simple aerodynamics: hardest scenario 293 of 300, no radar 296 of 300.</dd>
   </dl>
   <p class="ev"><a href="gnc.html#timeline">step 1</a></p>
 </div></li>
@@ -605,7 +618,7 @@
   <dl>
     <dt>Changed</dt><dd>A mass table from the CAD model (mass, centre of mass and inertia at every propellant load), the
       real gimbal pivot, sprung legs, gimbal backlash and a thrust cut at touchdown.</dd>
-    <dt>Measured</dt><dd>HIL: COTS 100 / 100 / 100 of 100, harsh 100 and 99, hardest scenario 296 of 300, no radar 297 of 300.</dd>
+    <dt>Measured</dt><dd>SIL: COTS 100 / 100 / 100 of 100, harsh 100 and 99, hardest scenario 296 of 300, no radar 297 of 300.</dd>
     <dt>Open</dt><dd class="bad">In this controller, backlash up to several times the specified limit did not change the
       landing rate, which contradicts a sensitivity found with a different controller; to be settled by an actuator test.</dd>
   </dl>
@@ -615,7 +628,7 @@
   <h2 class="eh">The simulator ignored the centre of mass</h2>
   <dl>
     <dt>Found</dt><dd class="bad">A MuJoCo body-frame flag kept the centre of mass at the hull's geometric centre. The gimbal
-      lever arm was too long and the aerodynamic moment was always zero. Every guidance and HIL result before this date
+      lever arm was too long and the aerodynamic moment was always zero. Every guidance and SIL result before this date
       was measured on the wrong plant.</dd>
     <dt>Measured</dt><dd>On the corrected plant the previous controller landed 37% to 44.5% of 200 episodes.</dd>
     <dt>Changed</dt><dd>Retuned attitude gains and integral authority. Python on unseen seeds: 397 to 400 of 400 across sensor

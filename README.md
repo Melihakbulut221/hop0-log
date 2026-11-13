@@ -8,7 +8,7 @@ so it works at `https://melihakbulut221.github.io/hop0-log/` and on any local se
 | `index.html` | What Hop-0 is, current status, four results with their evidence, the six layers of the twin, latest log entries |
 | `gnc.html` | Landing in wind: recorded flights, the wind/filter story, every change measured, current numbers and definitions, simulators, mistakes, open problems |
 | `vehicle.html` | How the vehicle is modelled, exploded CAD section, mechanical design (mass, mass properties, structure, legs, deck, gimbal) |
-| `avionics.html` | Flight software, hardware-in-the-loop, the five boards, wiring |
+| `avionics.html` | Flight software, software-in-the-loop, the five boards, wiring |
 | `life.html` | Life twin: wear account and remaining life |
 | `orbit.html` | The first orbital product (minimum-launcher study) |
 | `emulator.html` | A toy landing loop to fly in the browser (teaching model, not the flight software) |
@@ -37,14 +37,14 @@ python3 -m http.server 8777 --directory site
 cd site && ../.venv/bin/python make_figures.py
 ```
 
-`before_after.png` and `hil_timeline.png` are the no-JavaScript fallbacks of the two HIL charts on `gnc.html`.
+`before_after.png` and `hil_timeline.png` are the no-JavaScript fallbacks of the two SIL charts on `gnc.html`.
 `assets/cfd_flow_slices.png` is a copy of `research/cfd/plots/flow_slices.png`.
 
 ## Updating numbers
 
 | Numbers | Where they live on the site | Source |
 |---|---|---|
-| HIL tables, before/after, timeline (sets A and B) | `gnc.html#numbers`, `assets/js/hilcharts.js` (`BA`, `TL`) | `research/plantfix/README.md` |
+| SIL tables, before/after, timeline (sets A and B) | `gnc.html#numbers`, `assets/js/hilcharts.js` (`BA`, `TL`) | `research/plantfix/README.md` |
 | Log entries | `log.html` (one `<li class="entry" id="e-MMDD-name">` per entry; the timeline links to these ids) | `research/plantfix/README.md`, `research/ARGE_DURUM.md` |
 | Boards and wiring | `avionics.html`, `assets/js/boards.js`, `assets/js/wiring.js` | `research/avionics`, `research/ecu_board`, `research/pdu_board` |
 | Mechanical design | `vehicle.html` (`#mech-data` JSON block) | `research/cad`, `research/legs_v2`, `research/legs_v3`, `research/tvc_v2` |

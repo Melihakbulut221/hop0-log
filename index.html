@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hop-0 engineering log</title>
-<meta name="description" content="A digital twin of a small reusable rocket, built before the rocket: flight dynamics, CFD aerodynamics, structure, guidance and the real flight code in hardware-in-the-loop. Simulation only; nothing has been built or flown.">
+<meta name="description" content="A digital twin of a small reusable rocket, built before the rocket: flight dynamics, CFD aerodynamics, structure, guidance and the real flight code in software-in-the-loop. Simulation only; nothing has been built or flown.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hop-0: flown 4,400 times, not built yet">
-<meta property="og:description" content="A reusable rocket that exists only as a digital twin: CFD aerodynamics, structure, wear, five circuit boards and the real C flight code, flown 4,400 times in hardware-in-the-loop without a loss. Nothing built yet.">
+<meta property="og:title" content="Hop-0: designed, flown and broken in software first">
+<meta property="og:description" content="A reusable rocket that exists only in software so far: CFD aerodynamics, structure, wear, five circuit boards and the real C flight code, flown 4,400 times in software-in-the-loop without a loss. Hardware-in-the-loop starts when the flight computer board exists.">
 <meta property="og:url" content="https://melihakbulut221.github.io/hop0-log/">
-<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=2">
+<meta property="og:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Hop-0: Flown 4,400 times. Not built yet. Eighteen replayed landing trajectories converging on the pad.">
+<meta property="og:image:alt" content="Hop-0: designed, flown and broken in software first. Eighteen replayed landing trajectories converging on the pad.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=2">
+<meta name="twitter:image" content="https://melihakbulut221.github.io/hop0-log/assets/og.png?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -49,10 +49,11 @@
   <canvas id="hero-canvas" aria-hidden="true"></canvas>
   <div class="wrap">
     <div class="hero-copy">
-      <p class="hero-k"><i aria-hidden="true"></i>Hop-0 · reusable rocket digital twin · phase 0</p>
-      <h1 id="hero-h">Flown 4,400 times.<span>Not built yet.</span></h1>
-      <p>A 1.9 m, 200 kg vertical-landing hop vehicle that exists only as a digital twin: CFD aerodynamics, structure,
-        wear, five circuit boards and the real C flight code, flown in the loop before a single part is cut.</p>
+      <p class="hero-k"><i aria-hidden="true"></i>Hop-0 · reusable rocket · virtual prototype · phase 0</p>
+      <h1 id="hero-h">Designed, flown and broken<span>in software first.</span></h1>
+      <p>A 1.9 m, 200 kg vertical-landing hop vehicle that exists only in software: CFD aerodynamics, structure, wear,
+        five circuit boards and the real C flight code, flown 4,400 times in the loop before a single part is cut.</p>
+      <p class="hero-note">Simulation and software-in-the-loop. Hardware-in-the-loop starts when the flight computer board exists.</p>
       <div class="cta"><a class="btn btn-p" href="emulator.html">Fly the sandbox <span class="arr" aria-hidden="true">&rarr;</span></a>
         <a class="btn btn-g" href="#broke">See what broke</a></div>
     </div>
@@ -69,7 +70,7 @@
     </div>
   </div>
 </section>
-<div class="ticker" aria-label="Key numbers"><ul><!-- the list runs twice for a seamless loop; the copy is hidden from screen readers --><li><b>4,400</b>hardware-in-the-loop flights, no loss</li><li><b>300 / 300</b>landings, hardest HIL scenario (held-out seeds: 299)</li><li><b>10<sup>-6</sup></b>C flight code vs. its Python reference</li><li><b>2,640</b>simulated leg drops</li><li><b>~1,400</b>flights before the first part wears out</li><li><b>5</b>circuit boards, none ready to fabricate</li><li><b>~23 t</b>first orbital product, 300 kg to 500 km</li><li><b>0</b>parts built</li><li aria-hidden="true"><b>4,400</b>hardware-in-the-loop flights, no loss</li><li aria-hidden="true"><b>300 / 300</b>landings, hardest HIL scenario (held-out seeds: 299)</li><li aria-hidden="true"><b>10<sup>-6</sup></b>C flight code vs. its Python reference</li><li aria-hidden="true"><b>2,640</b>simulated leg drops</li><li aria-hidden="true"><b>~1,400</b>flights before the first part wears out</li><li aria-hidden="true"><b>5</b>circuit boards, none ready to fabricate</li><li aria-hidden="true"><b>~23 t</b>first orbital product, 300 kg to 500 km</li><li aria-hidden="true"><b>0</b>parts built</li></ul></div>
+<div class="ticker" aria-label="Key numbers"><ul><!-- the list runs twice for a seamless loop; the copy is hidden from screen readers --><li><b>4,400</b>software-in-the-loop flights, no loss</li><li><b>300 / 300</b>landings, hardest SIL scenario (held-out seeds: 299)</li><li><b>10<sup>-6</sup></b>C flight code vs. its Python reference</li><li><b>2,640</b>simulated leg drops</li><li><b>~1,400</b>flights before the first part wears out</li><li><b>5</b>circuit boards, none ready to fabricate</li><li><b>~23 t</b>first orbital product, 300 kg to 500 km</li><li><b>0</b>parts built</li><li aria-hidden="true"><b>4,400</b>software-in-the-loop flights, no loss</li><li aria-hidden="true"><b>300 / 300</b>landings, hardest SIL scenario (held-out seeds: 299)</li><li aria-hidden="true"><b>10<sup>-6</sup></b>C flight code vs. its Python reference</li><li aria-hidden="true"><b>2,640</b>simulated leg drops</li><li aria-hidden="true"><b>~1,400</b>flights before the first part wears out</li><li aria-hidden="true"><b>5</b>circuit boards, none ready to fabricate</li><li aria-hidden="true"><b>~23 t</b>first orbital product, 300 kg to 500 km</li><li aria-hidden="true"><b>0</b>parts built</li></ul></div>
 
 
 <div class="wrap">
@@ -86,7 +87,7 @@
   <dl>
     <dt>Vehicle</dt><dd>1.9 m, 200 kg fuelled, four inverted-tripod legs, one electric-pump liquid engine on a two-axis
       gimbal. CAD model v0.4: 91.4 kg dry, 6.3% over its Phase-0 budget; the simulator flies it since 2026-11-10. <a href="vehicle.html">Vehicle</a></dd>
-    <dt>Landing</dt><dd>In the hardest hardware-in-the-loop scenario the C flight software lands 300 and 299 of 300 on
+    <dt>Landing</dt><dd>In the hardest software-in-the-loop scenario the C flight software lands 300 and 299 of 300 on
       two disjoint seed sets. <a href="gnc.html#numbers">Numbers</a></dd>
     <dt>Electronics</dt><dd>Five boards. FC-0 and ECU-1 routed with connections left to finish by hand, PDU-1 and INV-1
       auto-routed with connections open, CB-1 placed with planes. None is ready to fabricate. <a href="avionics.html#boards">Boards</a></dd>
@@ -102,11 +103,11 @@
   <div class="results">
     <article class="result">
       <span class="big num">159 &rarr; 300<small> of 300</small></span>
-      <h3>Landings in the hardest hardware-in-the-loop scenario</h3>
+      <h3>Landings in the hardest software-in-the-loop scenario</h3>
       <p>After CFD aerodynamics replaced the simple drag model the lander fell from 293 to 159; one extra state in the
         navigation filter, a series of guidance changes and a correction of the filter's model of the vehicle brought it
         back. In percent: 53% to 100%; on the held-out seeds 99.7%.</p>
-      <p class="ev"><span>HIL, C flight software, 50 Hz</span><span>harsh sensors, 200 ms latency, 15% packet loss,
+      <p class="ev"><span>SIL, C flight software, 50 Hz</span><span>harsh sensors, 200 ms latency, 15% packet loss,
         wind up to 12 m/s</span><span>300 episodes per run; seed set A 300, held-out set B 299</span><span>plant v5</span>
         <span class="ev-src"><a href="gnc.html#numbers">Table, scenario definitions, landing criteria</a> ·
         <a href="gnc.html#timeline">every step</a></span></p>
@@ -115,10 +116,10 @@
       <span class="big num">10<sup>-6</sup></span>
       <h3>The C flight code matches its Python reference, step by step</h3>
       <p>It passes static analysis with MISRA C:2012 rules, runs fuzzing under ASan and UBSan, and gives the same outputs
-        on a Cortex-M7 in QEMU. An in-process emulator of the HIL server reproduces HIL episode by episode.</p>
+        on a Cortex-M7 in QEMU. An in-process emulator of the SIL server reproduces SIL episode by episode.</p>
       <p class="ev"><span>largest step-by-step difference about 10<sup>-6</sup></span><span>300 of 300 episodes
-        identical between emulator and HIL in the deterministic scenarios</span>
-        <span class="ev-src"><a href="avionics.html#software">Flight software and HIL</a></span></p>
+        identical between emulator and SIL in the deterministic scenarios</span>
+        <span class="ev-src"><a href="avionics.html#software">Flight software and SIL</a></span></p>
     </article>
     <article class="result">
       <span class="big num">0<small> of 800</small></span>
@@ -135,8 +136,8 @@
       <h3>Before the first part wears out</h3>
       <p>The chamber's hot wall is the first part to wear out, after a median of 1,429 flights (780 flights if film cooling is at the pessimistic end).
         With the earlier software, one loss in 600 hardest-scenario flights made loss come first; the current software had no
-        loss in 4400 HIL flights, which puts loss and wear in the same order.</p>
-      <p class="ev"><span>600 HIL flights, hardest scenario</span><span>flight software one revision before the latest
+        loss in 4400 SIL flights, which puts loss and wear in the same order.</p>
+      <p class="ev"><span>600 SIL flights, hardest scenario</span><span>flight software one revision before the latest
         gain change</span><span>loss rate 95% interval 0.03% to 0.9% per flight</span>
         <span class="ev-src"><a href="life.html">Life twin</a></span></p>
     </article>
@@ -150,7 +151,7 @@
     the entry that records it.</p>
   <div class="broke">
     <article><span class="n"><s>293</s> 159</span><h3>Real aerodynamics broke the lander</h3>
-      <p>When CFD force tables replaced the simple drag model, landings in the hardest HIL scenario fell to 159 of 300.
+      <p>When CFD force tables replaced the simple drag model, landings in the hardest SIL scenario fell to 159 of 300.
         Getting back to 300 took a new filter state, guidance changes and a corrected vehicle model.</p>
       <a href="gnc.html#timeline">Every step</a></article>
     <article><span class="n"><s>299</s> 275</span><h3>The filter forgot the legs</h3>
@@ -171,13 +172,13 @@
 <section class="sec" id="pages" aria-labelledby="pages-h">
   <h2 id="pages-h">The log, by subsystem</h2>
   <ul class="pagelist">
-    <li><a href="gnc.html">Landing</a><p>300 of 300 in the hardest HIL scenario, after falling to 159.</p><span>flights, wind, every change, numbers</span></li>
+    <li><a href="gnc.html">Landing</a><p>300 of 300 in the hardest SIL scenario, after falling to 159.</p><span>flights, wind, every change, numbers</span></li>
     <li><a href="emulator.html">Sandbox</a><p>A toy landing loop in the browser: wind, noise, latency, lost frames.</p><span>teaching model, not the flight software</span></li>
     <li><a href="vehicle.html">Vehicle</a><p>91.4 kg dry, 6.3% over budget; one open negative margin.</p><span>CAD, mass, structure, legs</span></li>
-    <li><a href="avionics.html">Avionics</a><p>Flight code checked against its reference; five boards, every harness input short-proofed on the engine controller.</p><span>software, HIL, boards, wiring</span></li>
+    <li><a href="avionics.html">Avionics</a><p>Flight code checked against its reference; five boards, every harness input short-proofed on the engine controller.</p><span>software, SIL, boards, wiring</span></li>
     <li><a href="life.html">Life</a><p>The chamber hot wall wears out first; no loss in 4400 flights puts loss in the same order.</p><span>wear account per flight</span></li>
     <li><a href="orbit.html">Orbit</a><p>About 23 t for 300 kg to 500 km; about 2.1 t is the smallest that reaches orbit.</p><span>minimum-launcher study</span></li>
-    <li><a href="log.html">Log</a><p>42 dated entries since 2026-11-03, failures and reversions included.</p><span>what changed, what was measured</span></li>
+    <li><a href="log.html">Log</a><p>43 dated entries since 2026-11-03, failures and reversions included.</p><span>what changed, what was measured</span></li>
   </ul>
 </section>
 
@@ -197,7 +198,7 @@
       <tr><th scope="row">Structure</th><td data-label="Model">Finite elements of tanks, legs, thrust structure and engine cooling, plus leg drop tests</td>
         <td data-label="Checked against">factors of safety 1.25 on yield, 1.4 on ultimate</td><td data-label="Page"><a href="vehicle.html#structure">Vehicle</a></td></tr>
       <tr><th scope="row">Guidance</th><td data-label="Model">A classical controller, a multi-rate navigation filter and a predictive terminal law</td>
-        <td data-label="Checked against">simulation and HIL on disjoint seed sets</td><td data-label="Page"><a href="gnc.html">Landing</a></td></tr>
+        <td data-label="Checked against">simulation and SIL on disjoint seed sets</td><td data-label="Page"><a href="gnc.html">Landing</a></td></tr>
       <tr><th scope="row">Flight code</th><td data-label="Model">C, MISRA checked</td>
         <td data-label="Checked against">the Python reference, to about 10<sup>-6</sup>; a Cortex-M7 in QEMU</td><td data-label="Page"><a href="avionics.html#software">Avionics</a></td></tr>
       <tr><th scope="row">Loop</th><td data-label="Model">The flight code as a separate process, over UDP, with latency, loss and sensor faults</td>
@@ -217,15 +218,15 @@
 <section class="sec" id="latest" aria-labelledby="latest-h">
   <h2 id="latest-h">Latest in the log</h2>
   <ul class="logteaser">
+    <li><time datetime="2026-11-13">2026-11-13</time><div><a href="log.html#e-1113-sil">Correction: the loop is software-in-the-loop</a>
+      <span>The flight code runs on a PC, not on the flight computer, so every "HIL" number is now marked SIL. The numbers did not change.</span></div></li>
     <li><time datetime="2026-11-12">2026-11-12</time><div><a href="log.html#e-1112-invgate">Inverter gate networks moved next to the switches</a>
       <span>Gate-node inductance about eightfold lower; open connections went up from 84 to 95, and the review sent it back twice.</span></div></li>
     <li><time datetime="2026-11-12">2026-11-12</time><div><a href="log.html#e-1112-ecuprot">The engine controller survives a shorted harness</a>
       <span>Every input short-proofed; the work exposed a reversed flame sensor and miswired RTD channels.</span></div></li>
     <li><time datetime="2026-11-12">2026-11-12</time><div><a href="log.html#e-1112-loss">A loss-rate campaign: 3300 more flights, no loss</a>
-      <span>4400 loss-free HIL flights in all: the loss rate is below 0.087% per flight with 95% confidence.</span></div></li>
-    <li><time datetime="2026-11-12">2026-11-12</time><div><a href="log.html#e-1112-emulator">A toy landing loop to fly in the browser</a>
-      <span>Wind, noise, latency and lost frames on a textbook controller; not the flight software.</span></div></li>
-  </ul>
+      <span>4400 loss-free SIL flights in all: the loss rate is below 0.087% per flight with 95% confidence.</span></div></li>
+      </ul>
   <p style="margin-top:var(--sp-4)"><a href="log.html">All entries since 2026-11-03</a></p>
 </section>
 

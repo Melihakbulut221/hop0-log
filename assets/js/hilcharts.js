@@ -45,7 +45,7 @@
         left = narrow ? 34 : 230, right = narrow ? 58 : 64, H = top + rowH * BA.length + 34, dy = narrow ? 12 : 0;
     var svg = el("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-labelledby": "ba-title" }, host);
     el("title", { id: "ba-title" }, svg).textContent =
-      "Landing success before and after in seven HIL scenarios; values are in the table below.";
+      "Landing success before and after in seven SIL scenarios; values are in the table below.";
     var x = function (p) { return left + (p - 40) / 60 * (W - left - right); };
     (narrow ? [40, 60, 80, 100] : [40, 50, 60, 70, 80, 90, 100]).forEach(function (t) {
       el("line", { x1: x(t), x2: x(t), y1: top - 6, y2: H - 30, class: "grid" }, svg);
@@ -100,7 +100,7 @@
         left = narrow ? 34 : 300, right = narrow ? 70 : 70, H = top + rowH * TL.length + 30, dy = narrow ? 12 : 0;
     var svg = el("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-labelledby": "tl-title" }, host);
     el("title", { id: "tl-title" }, svg).textContent =
-      "Landings out of 300 in the hardest HIL scenario after each change, seed set A: 293, 159, 266, 271, 276, 287, 285, 289, 294, 296, 299, 300; held-out seed set B, where run: 282, 286, 283, 289, 289, 294, 298, 299.";
+      "Landings out of 300 in the hardest SIL scenario after each change, seed set A: 293, 159, 266, 271, 276, 287, 285, 289, 294, 296, 299, 300; held-out seed set B, where run: 282, 286, 283, 289, 289, 294, 298, 299.";
     var x = function (p) { return left + (p - 40) / 60 * (W - left - right); };
     (narrow ? [40, 60, 80, 100] : [40, 50, 60, 70, 80, 90, 100]).forEach(function (t) {
       el("line", { x1: x(t), x2: x(t), y1: top - 6, y2: H - 26, class: "grid" }, svg);
