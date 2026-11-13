@@ -146,11 +146,17 @@
           lines, so an open harness or an unpowered unit reads as not ready or faulted; bus voltage, pack voltage and bus
           current come in as analog monitors.</li>
         <li>Its sensor inputs, valve-position switches, inverter enable, fault and supply lines, the power-distribution
-          status lines and the arming discretes survive a sustained short to the vehicle battery or to a reversed battery.
-          The valve power outputs and the data-bus protection are not covered yet.</li>
+          status lines and the arming discretes survive a sustained short to the vehicle battery or to a reversed battery.</li>
+        <li>Each valve and igniter output now has a hardware over-current trip: a fast comparator on the sense resistor
+          switches the channel off in an estimated fraction of a microsecond and re-arms it on the next PWM edge, and the
+          outputs are also gated by the hardware arming chain, so firmware alone cannot energise a valve. A valve wire
+          shorted to ground, or a very short low-inductance short to the battery, is still not covered.</li>
+        <li>The data-bus protection was replaced with parts rated for a sustained short to the 36 V battery; the bus
+          termination resistors would still burn open in that case.</li>
         <li>A shorted sensor wire can fake a hardware permit, so before ignition the firmware requires every
           ignition-proof and chamber-pressure comparator to read idle, or it will not arm.</li>
-        <li>582 parts, ERC clean. 25 connections, two of them signals, still need routing by hand.</li>
+        <li>658 parts, ERC clean. 21 connections are still open after rerouting, including three signal nets and the
+          supply pins of the valve connectors, plus 7 design-rule flags.</li>
       </ul>
       <ul class="pcb-list" aria-label="ECU-1 connectors"></ul>
     </div>
@@ -188,16 +194,17 @@
   </div>
   <div class="bpanel full" id="panel-nyd" role="tabpanel" aria-labelledby="tab-nyd" hidden>
     <div class="nyd">
-      <div><h4>Finish the routing</h4><p>FC-0 has 23 connections to finish by hand, ECU-1 25 after the latest change. PDU-1 has 36,
+      <div><h4>Finish the routing</h4><p>FC-0 has 23 connections to finish by hand. ECU-1 has 21, including three signal nets and the valve connectors' supply pins. PDU-1 has 36,
         including its active-discharge path, and its logic strip needs more room or a board of its own. INV-1 has 95, most at the
         gate driver's fine-pitch pins, and three board-edge clearance flags.</p></div>
       <div><h4>Inverter pulse test and ride-through</h4><p>The gate networks now sit next to the switches, but the
         commutation loop is still an estimate that needs a double-pulse test. Whether the inverter's 12 V supply rides
         through an automotive-style pulse without stopping the pump is not yet shown, and a reversed-battery short on its
-        fault line needs a change on the engine controller.</p></div>
-      <div><h4>Protect the rest of ECU-1</h4><p>Every ECU-1 input and the inverter discretes now survive a short to the
-        battery. The valve power outputs and the CAN protection do not yet, and pulse immunity on the analog sensor lines
-        is still unchecked.</p></div>
+        fault line needs a resistor change on both boards; the engine-controller half is done.</p></div>
+      <div><h4>Protect the rest of ECU-1</h4><p>Every ECU-1 input and the inverter discretes survive a short to the
+        battery, and the valve outputs now trip on over-current. A valve wire shorted to ground still blows the main fuse,
+        the trip is only analysed for typical harness wiring, and pulse immunity on the analog sensor lines is still
+        unchecked.</p></div>
       <div><h4>Measure what was assumed</h4><p>Contactor arc voltage, pack resistance, regulator start-up and the watchdog's
         timing are datasheet extrapolations or estimates until a bench test replaces them.</p></div>
     </div>
@@ -270,7 +277,7 @@
       <li>None of the five boards is fabrication-ready: FC-0 and ECU-1 are routed with connections left to finish by hand,
         PDU-1 has 36 connections open including its active-discharge path, INV-1 is auto-routed with 95 open, and CB-1 is
         placed with planes only. The details are under <a href="#boards">Still open</a>.</li>
-      <li>The inverter's commutation loop must be measured with a double-pulse test and its supply ride-through confirmed; ECU-1's valve power outputs and CAN lines still lack short-to-battery protection.</li>
+      <li>The inverter's commutation loop must be measured with a double-pulse test and its supply ride-through confirmed; ECU-1's valve outputs still lack protection against a short to ground, and their over-current trip is an estimate until measured.</li>
       <li>Contactor arc voltage, pack resistance, regulator start-up and the watchdog's timing are estimates until bench
         tests replace them.</li>
     </ul>

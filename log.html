@@ -52,14 +52,30 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>44 entries</b></span><span>2026-11-03 to 2026-11-13</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>45 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
-    <li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
+    <li><a href="#d-1114">14 Nov</a></li><li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
   </ul>
 </header>
 
 <ol class="log" reversed>
+
+<li class="entry" id="e-1114-ecuoc"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+  <h2 class="eh">ECU-1: a hardware over-current trip on the valve outputs</h2>
+  <dl>
+    <dt>Changed</dt><dd>Each valve and igniter output gained a fast comparator on its sense resistor. Above about 5 A it
+      clears a per-channel latch that holds the driver off until the next PWM edge, and the driver now also needs the
+      hardware arm signal, so firmware alone cannot energise a valve. The data-bus protection was replaced with parts
+      rated for a sustained short to the 36 V battery, and the inverter fault-line pull-up was retuned for a matching
+      inverter change.</dd>
+    <dt>Review</dt><dd class="bad">An independent review found the trip analysis used the most forgiving wiring
+      inductance: a very short, low-inductance short could still overstress the switch. It also found 21 connections
+      still open after rerouting, including three signal nets and the valve connectors' supply pins. The board is not
+      ready for fabrication, and the trip timing is an estimate, not a measurement.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">ECU-1</a></p>
+</div></li>
 
 <li class="entry" id="e-1113-supply"><div><time datetime="2026-11-13">2026-11-13</time><span class="area">Supply chain</span></div><div>
   <h2 class="eh">Can it be bought? Two obsolete parts and empty shelves</h2>
