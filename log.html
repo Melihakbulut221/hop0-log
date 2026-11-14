@@ -52,7 +52,7 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>54 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>55 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
     <li><a href="#d-1114">14 Nov</a></li><li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
@@ -61,7 +61,22 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1114-invprecharge"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Firmware</span></div><div>
+<li class="entry" id="e-1114-pdufix"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+  <h2 class="eh">PDU-1: review fixes for heavy copper, pad vias and the auxiliary-contact pulse</h2>
+  <dl>
+    <dt>Changed</dt><dd>A stricter spacing rule for the heavy inner copper layers is now enforced by both the design-rule
+      check and the project check script, and no via sits inside a component pad. The isolated switch drivers gained a
+      return via so their short gate loops close through the plane beneath. The auxiliary-contact wetting circuit got a
+      blocking diode, a faster reset and pulse-rated resistors, and a script now draws a coating and masking map from the
+      layout. Still no rule violations or open connections.</dd>
+    <dt>Review</dt><dd class="bad">The review found bare stud pads close to opposite-polarity copper where the coating
+      is masked, the power-supply input capacitors connected only through long repair tracks, and the repair step not
+      exactly reproducible. Spacing, loop and temperature figures are estimates; not fabricated.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">PDU-1</a></p>
+</div></li>
+
+<li class="entry" id="e-1114-invprecharge"><div><time datetime="2026-11-14">2026-11-14</time><span class="area">Firmware</span></div><div>
   <h2 class="eh">Inverter firmware: gate-supply pre-charge, timer behaviour corrected</h2>
   <dl>
     <dt>Changed</dt><dd>The half-bridge drivers need their high-side gate supply charged before the first high-side
