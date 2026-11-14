@@ -52,7 +52,7 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>47 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>48 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
     <li><a href="#d-1114">14 Nov</a></li><li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
@@ -61,7 +61,23 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1114-ecucopper"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+<li class="entry" id="e-1114-invdriver"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+  <h2 class="eh">Inverter board: new gate drivers, discrete over-current trip</h2>
+  <dl>
+    <dt>Changed</dt><dd>The inverter's three-phase gate driver went out of production, and the planned replacement family
+      turned out to be end-of-life as well. The board now uses one 180 V half-bridge driver per leg, placed between the
+      paired switches, which cuts the driver-to-gate distance to about a third. The protection the old driver had built in
+      is rebuilt from small parts: a comparator on the DC-link shunt sets a latch that blocks all gate inputs, and a
+      separate supply lockout stops switching before the gate drive gets weak. Open connections fell from 62 to 7.</dd>
+    <dt>Review</dt><dd class="bad">The short-circuit survival table was wrong in method: the shunt sits outside the
+      local capacitor bank, so a short is fed first by that bank and the trip sees it late. Survival is not shown, and
+      that path will be reworked. The trip circuit's own supply and ground are among the 7 open connections, and the new
+      driver is single-sourced. Not ready to fabricate.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">INV-1</a></p>
+</div></li>
+
+<li class="entry" id="e-1114-ecucopper"><div><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
   <h2 class="eh">ECU-1: valve power copper and a short-circuit inductance sweep</h2>
   <dl>
     <dt>Changed</dt><dd>The valve supply never reached several pins because the board had no copper plane for it, only
