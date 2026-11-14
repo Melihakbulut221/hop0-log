@@ -52,7 +52,7 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>50 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>51 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
     <li><a href="#d-1114">14 Nov</a></li><li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
@@ -61,7 +61,23 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1114-invmargin"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+<li class="entry" id="e-1114-ecuspacing"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+  <h2 class="eh">ECU-1: spacing rules, chassis ring, fabrication notes, and 23 connections open again</h2>
+  <dl>
+    <dt>Changed</dt><dd>ECU-1's copper spacing now follows IPC-2221B by voltage: 0.6 mm on the outer layers between
+      battery, armed-rail, valve-output and harness nets and everything else, with ten fine-pitch packages listed as
+      mandatory conformal-coating areas. The design-rule check enforces both; run on the previous layout it flags about
+      500 spacing errors. A chassis copper ring with stitching vias runs along the edge, and draft fabrication notes fix
+      the stack-up, including 1 oz inner copper, and a 2 µH valve-harness limit.</dd>
+    <dt>Review</dt><dd class="bad">Rerouting under the new rules left 23 connections open, and almost all of them break
+      a function: the arm switch, the programming header, a chamber-pressure input and several sensors. The review also
+      found two fault-exposed nets missing from the rules, and questioned whether 0.6 mm between low-voltage harness
+      lines, which pushed most of those pins out of the router, is worth its cost. The board is a draft.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">ECU-1</a></p>
+</div></li>
+
+<li class="entry" id="e-1114-invmargin"><div><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
   <h2 class="eh">Inverter board: reverse-trip margin, safer interlock, scripted layout</h2>
   <dl>
     <dt>Changed</dt><dd>An independent check of the inverter's DC-link current found the normal full-power reverse

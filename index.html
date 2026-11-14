@@ -178,7 +178,7 @@
     <li><a href="avionics.html">Avionics</a><p>Flight code checked against its reference; five boards, every harness input short-proofed on the engine controller.</p><span>software, SIL, boards, wiring</span></li>
     <li><a href="life.html">Life</a><p>The chamber hot wall wears out first; no loss in 4400 flights puts loss in the same order.</p><span>wear account per flight</span></li>
     <li><a href="orbit.html">Orbit</a><p>About 23 t for 300 kg to 500 km; about 2.1 t is the smallest that reaches orbit.</p><span>minimum-launcher study</span></li>
-    <li><a href="log.html">Log</a><p>50 dated entries since 2026-11-03, failures and reversions included.</p><span>what changed, what was measured</span></li>
+    <li><a href="log.html">Log</a><p>51 dated entries since 2026-11-03, failures and reversions included.</p><span>what changed, what was measured</span></li>
   </ul>
 </section>
 
@@ -263,14 +263,14 @@
 <section class="sec" id="latest" aria-labelledby="latest-h">
   <h2 id="latest-h">Latest in the log</h2>
   <ul class="logteaser">
+    <li><time datetime="2026-11-14">2026-11-14</time><div><a href="log.html#e-1114-ecuspacing">ECU-1: spacing rules, and 23 connections open again</a>
+      <span>Stricter IPC-2221B spacing is now enforced; rerouting under it reopened the arm switch and the programming header.</span></div></li>
     <li><time datetime="2026-11-14">2026-11-14</time><div><a href="log.html#e-1114-invmargin">Inverter board: reverse-trip margin, safer interlock, scripted layout</a>
       <span>A review caught the project's own model underestimating normal reverse current by a quarter; the layout is not yet reproducible.</span></div></li>
     <li><time datetime="2026-11-14">2026-11-14</time><div><a href="log.html#e-1114-invshort">Inverter board: short-circuit detection moved inside the capacitor bank</a>
       <span>Each leg's shunt now trips the drivers; in calculation, wired shorts are cut within the switch rating, a solid stud short is not.</span></div></li>
     <li><time datetime="2026-11-14">2026-11-14</time><div><a href="log.html#e-1114-invdriver">Inverter board: new gate drivers, discrete over-current trip</a>
       <span>The obsolete driver and its planned replacement are both out of production; the review found the new trip sees a short late.</span></div></li>
-    <li><time datetime="2026-11-14">2026-11-14</time><div><a href="log.html#e-1114-ecucopper">ECU-1: valve power copper and an inductance sweep</a>
-      <span>No open connections left on the routed layout; a series inductor per valve keeps a short at the connector within the switch rating, in simulation.</span></div></li>
           </ul>
   <p style="margin-top:var(--sp-4)"><a href="log.html">All entries since 2026-11-03</a></p>
 </section>

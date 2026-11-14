@@ -162,9 +162,14 @@
           termination resistors would still burn open in that case.</li>
         <li>A shorted sensor wire can fake a hardware permit, so before ignition the firmware requires every
           ignition-proof and chamber-pressure comparator to read idle, or it will not arm.</li>
-        <li>672 parts, ERC clean. The switched valve supply now runs on dedicated internal copper instead of narrow
-          routed tracks, and the routed layout passes the design-rule check with no open connections. It is not ready for
-          fabrication: spacing on the 36 V nets, the copper stack-up and several long repair tracks still need review.</li>
+        <li>Copper spacing now follows IPC-2221B by voltage: 0.6 mm on the outer layers between the battery, armed-rail,
+          valve-output and harness nets and everything else, with ten fine-pitch packages listed as mandatory
+          conformal-coating areas; the design-rule check enforces both. A chassis copper ring with stitching vias runs along
+          the edge and joins ground at one point near the power input, and draft fabrication notes fix the stack-up,
+          including 1 oz inner copper.</li>
+        <li>672 parts, ERC clean. The switched valve supply runs on dedicated internal copper. After rerouting under the
+          stricter spacing, 23 connections are open again, including the arm switch, the programming header and several
+          sensor inputs, so the layout is a draft. It is not ready for fabrication.</li>
       </ul>
       <ul class="pcb-list" aria-label="ECU-1 connectors"></ul>
     </div>
@@ -202,7 +207,7 @@
   </div>
   <div class="bpanel full" id="panel-nyd" role="tabpanel" aria-labelledby="tab-nyd" hidden>
     <div class="nyd">
-      <div><h4>Finish the routing</h4><p>FC-0 has 23 connections to finish by hand. ECU-1 has none left, but its 36 V spacing, copper stack-up and long repair tracks still need a fabrication review. PDU-1 has 36,
+      <div><h4>Finish the routing</h4><p>FC-0 has 23 connections to finish by hand. ECU-1 has 23 again after rerouting under stricter spacing, including the arm switch and the programming header, plus 16 long repair tracks to shorten. PDU-1 has 36,
         including its active-discharge path, and its logic strip needs more room or a board of its own. INV-1 has none left, but a repeat routing run
         on the same inputs did not converge, so the layout is not yet reproducible.</p></div>
       <div><h4>Inverter short circuit, pulse test and ride-through</h4><p>The inverter now detects shorts inside each leg,
@@ -284,7 +289,7 @@
   <h2 id="open-h">Open on the avionics</h2>
   <div class="body">
     <ul>
-      <li>None of the five boards is fabrication-ready: FC-0 is routed with connections left to finish by hand, ECU-1 has no open connections but needs a spacing and stack-up review,
+      <li>None of the five boards is fabrication-ready: FC-0 and ECU-1 are routed with connections left to finish by hand,
         PDU-1 has 36 connections open including its active-discharge path, INV-1 is auto-routed with every connection made, and CB-1 is
         placed with planes only. The details are under <a href="#boards">Still open</a>.</li>
       <li>The inverter's commutation loop must be measured with a double-pulse test and its supply ride-through confirmed; ECU-1's valve outputs still lack protection against a short to ground, and their over-current trip is an estimate until measured.</li>
