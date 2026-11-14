@@ -52,7 +52,7 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>53 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>54 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
     <li><a href="#d-1114">14 Nov</a></li><li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
@@ -61,7 +61,22 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1114-pdulayout"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+<li class="entry" id="e-1114-invprecharge"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Firmware</span></div><div>
+  <h2 class="eh">Inverter firmware: gate-supply pre-charge, timer behaviour corrected</h2>
+  <dl>
+    <dt>Changed</dt><dd>The half-bridge drivers need their high-side gate supply charged before the first high-side
+      switching, so the firmware now runs a short sequence of low-side-only pulses across the three legs at every start,
+      and a fault turns all outputs off at once.</dd>
+    <dt>Review</dt><dd class="bad">Review of the first version found that the microcontroller's timer drives a lone
+      low-side output with the uninverted signal: the pulses would have been about five times longer than intended, and
+      the change-over to normal switching could briefly use stale settings. The sequence was rebuilt around the
+      documented timer behaviour and checked with a tick-level timer model across all timing cases. Each leg's first
+      pulse still carries the start-up risk it exists to reduce. Bench measurement is still open.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">INV-1</a></p>
+</div></li>
+
+<li class="entry" id="e-1114-pdulayout"><div><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
   <h2 class="eh">PDU-1 layout closes: zero rule violations, zero open connections</h2>
   <dl>
     <dt>Changed</dt><dd>The power-distribution board's layout is now electrically complete in the design tool. The
