@@ -52,7 +52,7 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>51 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>52 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
     <li><a href="#d-1114">14 Nov</a></li><li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
@@ -61,7 +61,21 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1114-ecuspacing"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+<li class="entry" id="e-1114-invboot"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+  <h2 class="eh">Inverter: high-side gate supply margin recalculated</h2>
+  <dl>
+    <dt>Changed</dt><dd>Review showed the earlier estimate of the high-side gate supply was too optimistic: it missed the
+      drain during each on-time and the driver's own bias current. A per-period charge-balance model with datasheet worst
+      cases now sets the design. Lighter gate pull-down resistors and a slightly lower duty-cycle limit keep the supply
+      above the driver's undervoltage limit with a small calculated margin, at the cost of about 2 % top speed without
+      field weakening.</dd>
+    <dt>Review</dt><dd class="bad">The numbers held, but the review found an older gap: the firmware never pre-charges
+      that supply before the first switching cycle, which the driver's datasheet asks for. Not yet measured.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">INV-1</a></p>
+</div></li>
+
+<li class="entry" id="e-1114-ecuspacing"><div><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
   <h2 class="eh">ECU-1: spacing rules, chassis ring, fabrication notes, and 23 connections open again</h2>
   <dl>
     <dt>Changed</dt><dd>ECU-1's copper spacing now follows IPC-2221B by voltage: 0.6 mm on the outer layers between
