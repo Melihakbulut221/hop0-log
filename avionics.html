@@ -186,12 +186,12 @@
     </div>
   </div>
   <div class="bpanel" id="panel-pdu" role="tabpanel" aria-labelledby="tab-pdu" data-board="pdu" hidden>
-    <div><div class="pcb-fig"></div><p class="pcb-info">170 × 110 mm. Hover a connector for what it carries.</p></div>
+    <div><div class="pcb-fig"></div><p class="pcb-info">185 × 110 mm. Hover a connector for what it carries.</p></div>
     <div>
       <h3>PDU-1 power distribution unit</h3>
       <p class="role">Sits between the pump battery and the DC bus of the two inverters: fuses the pack, pre-charges the bus, closes the main contactor and reports back to the engine controller.</p>
-      <span class="tag">Placed and routed · DRC 9 violations · routing incomplete: 36 connections, including the active-discharge path, are still open · not ready to fabricate</span>
-      <ul class="facts"><li>The contactor cannot close until the bus has charged to 95 % of the pack voltage. The interlock is built from comparators and gates, independent of any firmware.</li><li>A hardware one-shot limits each pre-charge attempt and a cool-down timer blocks the next one, which bounds the energy the pre-charge resistors take into a shorted bus.</li><li>Two hardware over-current thresholds, one fast and one timed, open the contactor for faults downstream of it. Faults upstream of the contactor are cleared by the fuse alone.</li><li>The high-voltage side is isolated from the logic: isolated amplifiers for the voltages and current, isolated switch drivers for the pre-charge and discharge switches, and a 7 mm barrier with no copper on any layer.</li><li>233 parts including off-board items, ERC clean. 47 of 47 sizing checks pass: pre-charge energy, resistor pulse rating, fuse and contactor coordination, copper temperature rise, spacing.</li></ul>
+      <span class="tag">Routed, no rule violations, no open connections · design review, not fabricated</span>
+      <ul class="facts"><li>The contactor cannot close until the bus has charged to 95 % of the pack voltage. The interlock is built from comparators and gates, independent of any firmware.</li><li>A hardware one-shot limits each pre-charge attempt and a cool-down timer blocks the next one, which bounds the energy the pre-charge resistors take into a shorted bus.</li><li>Two hardware over-current thresholds, one fast and one timed, open the contactor for faults downstream of it. Faults upstream of the contactor are cleared by the fuse alone.</li><li>The high-voltage side is isolated from the logic: isolated amplifiers for the voltages and current, isolated switch drivers for the pre-charge and discharge switches, and a 7 mm barrier with no copper on any layer.</li><li>232 parts including off-board items, ERC clean. 50 of 50 sizing checks pass: pre-charge energy, resistor pulse rating, fuse and contactor coordination, copper temperature rise, spacing, contactor auxiliary-contact wetting.</li><li>The routed layout passes the design-rule check with no violations and no open connections, including the active-discharge path. It rebuilds exactly from the saved autorouter session; a fresh autorouter run may differ.</li><li>One board with 2 oz outer and 4 oz inner copper: the logic strip was widened instead of splitting off a separate logic board, whose connector working loose in flight would have removed an over-current input. High-voltage copper keeps 1.0 mm to other nets on every layer.</li><li>The gate loops of the two isolated switches are drawn by script: short, straight, without vias, over their own source plane. Inner-layer spacing on the heavy copper, vias inside a few small pads, the stud footprints, the fuse-body clearance and a coating drawing are still open.</li></ul>
       <ul class="pcb-list" aria-label="PDU-1 connectors"></ul>
     </div>
   </div>
@@ -207,8 +207,8 @@
   </div>
   <div class="bpanel full" id="panel-nyd" role="tabpanel" aria-labelledby="tab-nyd" hidden>
     <div class="nyd">
-      <div><h4>Finish the routing</h4><p>FC-0 has 23 connections to finish by hand. ECU-1 has 23 again after rerouting under stricter spacing, including the arm switch and the programming header, plus 16 long repair tracks to shorten. PDU-1 has 36,
-        including its active-discharge path, and its logic strip needs more room or a board of its own. INV-1 has none left, but a repeat routing run
+      <div><h4>Finish the routing</h4><p>FC-0 has 23 connections to finish by hand. ECU-1 has 23 again after rerouting under stricter spacing, including the arm switch and the programming header, plus 16 long repair tracks to shorten. PDU-1 has none left, but
+        its heavy inner copper still has spacing below the fabricator&#x27;s usual minimum and a few vias sit inside small pads. INV-1 has none left, but a repeat routing run
         on the same inputs did not converge, so the layout is not yet reproducible.</p></div>
       <div><h4>Inverter short circuit, pulse test and ride-through</h4><p>The inverter now detects shorts inside each leg,
         but only in calculation: a solid short at the output studs and a long-wired phase-to-negative short are not
@@ -290,7 +290,7 @@
   <div class="body">
     <ul>
       <li>None of the five boards is fabrication-ready: FC-0 and ECU-1 are routed with connections left to finish by hand,
-        PDU-1 has 36 connections open including its active-discharge path, INV-1 is auto-routed with every connection made, and CB-1 is
+        PDU-1 is routed with no open connections but needs inner-layer spacing and via fixes, INV-1 is auto-routed with every connection made, and CB-1 is
         placed with planes only. The details are under <a href="#boards">Still open</a>.</li>
       <li>The inverter's commutation loop must be measured with a double-pulse test and its supply ride-through confirmed; ECU-1's valve outputs still lack protection against a short to ground, and their over-current trip is an estimate until measured.</li>
       <li>Contactor arc voltage, pack resistance, regulator start-up and the watchdog's timing are estimates until bench

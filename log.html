@@ -52,7 +52,7 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>52 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>53 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
     <li><a href="#d-1114">14 Nov</a></li><li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
@@ -61,7 +61,23 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1114-invboot"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+<li class="entry" id="e-1114-pdulayout"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+  <h2 class="eh">PDU-1 layout closes: zero rule violations, zero open connections</h2>
+  <dl>
+    <dt>Changed</dt><dd>The power-distribution board's layout is now electrically complete in the design tool. The
+      stack-up changed to thinner outer and heavier inner copper, so the fine-pitch logic parts fit on the outer layers,
+      and a widened logic strip replaced the idea of a separate logic board and its connector. Placement, gate-loop
+      drawing and post-route repairs are scripted. A mis-coded isolated supply and an obsolete transistor were replaced,
+      and the contactor's auxiliary contact now gets a short wetting pulse at each closure.</dd>
+    <dt>Review</dt><dd class="bad">The board rebuilds exactly from the saved autorouter session, but a fresh run may
+      differ. The review found inner-layer spacing on the heavy copper below the usual fabrication minimum, vias inside a
+      few small pads, and a discharge-path length misreported in the notes. Whether the wetting pulse meets the
+      contactor maker's minimum is still to be asked. Not fabricated.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">PDU-1</a></p>
+</div></li>
+
+<li class="entry" id="e-1114-invboot"><div><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
   <h2 class="eh">Inverter: high-side gate supply margin recalculated</h2>
   <dl>
     <dt>Changed</dt><dd>Review showed the earlier estimate of the high-side gate supply was too optimistic: it missed the
