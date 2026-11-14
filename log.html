@@ -52,7 +52,7 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>55 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>56 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
     <li><a href="#d-1114">14 Nov</a></li><li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
@@ -61,7 +61,22 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1114-pdufix"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+<li class="entry" id="e-1114-pdustuds"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+  <h2 class="eh">PDU-1: terminal spacing at altitude, regulator input loop, repeatable rebuild</h2>
+  <dl>
+    <dt>Changed</dt><dd>The power-distribution board's bare cable terminals now keep opposite-polarity copper far enough
+      away for the uncoated high-altitude spacing in the IPC-2221B table, and a check measures every masked area. The
+      switching regulator's input capacitors moved next to its pins, joined on the top layer without vias. The post-route
+      repair step was made order-independent: two rebuilds from the saved autorouter session gave identical copper.</dd>
+    <dt>Review</dt><dd class="bad">The review confirmed the spacing by its own measurements, but found the input-loop
+      length measured to the regulator's enable pin rather than its supply pin, and the contact-bounce margin of the
+      auxiliary-contact pulse shown only for two assumed bounce patterns. The spacing values are from the table as
+      remembered, not yet checked against the standard. Not fabricated.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">PDU-1</a></p>
+</div></li>
+
+<li class="entry" id="e-1114-pdufix"><div><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
   <h2 class="eh">PDU-1: review fixes for heavy copper, pad vias and the auxiliary-contact pulse</h2>
   <dl>
     <dt>Changed</dt><dd>A stricter spacing rule for the heavy inner copper layers is now enforced by both the design-rule
