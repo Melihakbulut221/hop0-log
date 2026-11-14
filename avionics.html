@@ -147,16 +147,24 @@
           current come in as analog monitors.</li>
         <li>Its sensor inputs, valve-position switches, inverter enable, fault and supply lines, the power-distribution
           status lines and the arming discretes survive a sustained short to the vehicle battery or to a reversed battery.</li>
-        <li>Each valve and igniter output now has a hardware over-current trip: a fast comparator on the sense resistor
-          switches the channel off in an estimated fraction of a microsecond and re-arms it on the next PWM edge, and the
-          outputs are also gated by the hardware arming chain, so firmware alone cannot energise a valve. A valve wire
-          shorted to ground, or a very short low-inductance short to the battery, is still not covered.</li>
+        <li>Each valve and igniter output has a hardware over-current trip: a fast comparator on the sense resistor
+          switches the channel off in an estimated fraction of a microsecond, and the outputs are also gated by the
+          hardware arming chain, so firmware alone cannot energise a valve.</li>
+        <li>Each valve output now has a 1 µH series inductor between its switch and the connector, so even a short right
+          at the connector sees a minimum loop inductance. A simulation that swept the harness inductance from 0 to 2 µH
+          had shown the earlier circuit could exceed the switch's voltage rating on a very short wire; with the inductor,
+          the switch stays below 80 % of its rating across that range. The figures rest on estimated component values.</li>
+        <li>After a trip, a slow shared retry clock re-arms the channel every 0.2 to 0.4 ms instead of on every PWM edge,
+          which in the thermal estimate keeps the clamp diode within its limit during a sustained short, for harness
+          inductance up to 2 µH. If the clock stops, a tripped channel stays off. A valve wire shorted to ground is still
+          not covered.</li>
         <li>The data-bus protection was replaced with parts rated for a sustained short to the 36 V battery; the bus
           termination resistors would still burn open in that case.</li>
         <li>A shorted sensor wire can fake a hardware permit, so before ignition the firmware requires every
           ignition-proof and chamber-pressure comparator to read idle, or it will not arm.</li>
-        <li>658 parts, ERC clean. 21 connections are still open after rerouting, including three signal nets and the
-          supply pins of the valve connectors, plus 7 design-rule flags.</li>
+        <li>672 parts, ERC clean. The switched valve supply now runs on dedicated internal copper instead of narrow
+          routed tracks, and the routed layout passes the design-rule check with no open connections. It is not ready for
+          fabrication: spacing on the 36 V nets, the copper stack-up and several long repair tracks still need review.</li>
       </ul>
       <ul class="pcb-list" aria-label="ECU-1 connectors"></ul>
     </div>
@@ -194,7 +202,7 @@
   </div>
   <div class="bpanel full" id="panel-nyd" role="tabpanel" aria-labelledby="tab-nyd" hidden>
     <div class="nyd">
-      <div><h4>Finish the routing</h4><p>FC-0 has 23 connections to finish by hand. ECU-1 has 21, including three signal nets and the valve connectors' supply pins. PDU-1 has 36,
+      <div><h4>Finish the routing</h4><p>FC-0 has 23 connections to finish by hand. ECU-1 has none left, but its 36 V spacing, copper stack-up and long repair tracks still need a fabrication review. PDU-1 has 36,
         including its active-discharge path, and its logic strip needs more room or a board of its own. INV-1 has 62, most between its single gate
         driver and the switch legs, and that driver is obsolete, so it will be replaced before the routing is finished.</p></div>
       <div><h4>Inverter pulse test and ride-through</h4><p>The gate networks now sit next to the switches, but the
@@ -203,7 +211,7 @@
         fault-line fix needed a resistor change on both boards, and both are now in the designs.</p></div>
       <div><h4>Protect the rest of ECU-1</h4><p>Every ECU-1 input and the inverter discretes survive a short to the
         battery, and the valve outputs now trip on over-current. A valve wire shorted to ground still blows the main fuse,
-        the trip is only analysed for typical harness wiring, and pulse immunity on the analog sensor lines is still
+        the trip is only analysed for harness inductance up to 2 µH, and pulse immunity on the analog sensor lines is still
         unchecked.</p></div>
       <div><h4>Measure what was assumed</h4><p>Contactor arc voltage, pack resistance, regulator start-up and the watchdog's
         timing are datasheet extrapolations or estimates until a bench test replaces them.</p></div>
@@ -274,7 +282,7 @@
   <h2 id="open-h">Open on the avionics</h2>
   <div class="body">
     <ul>
-      <li>None of the five boards is fabrication-ready: FC-0 and ECU-1 are routed with connections left to finish by hand,
+      <li>None of the five boards is fabrication-ready: FC-0 is routed with connections left to finish by hand, ECU-1 has no open connections but needs a spacing and stack-up review,
         PDU-1 has 36 connections open including its active-discharge path, INV-1 is auto-routed with 62 open, and CB-1 is
         placed with planes only. The details are under <a href="#boards">Still open</a>.</li>
       <li>The inverter's commutation loop must be measured with a double-pulse test and its supply ride-through confirmed; ECU-1's valve outputs still lack protection against a short to ground, and their over-current trip is an estimate until measured.</li>

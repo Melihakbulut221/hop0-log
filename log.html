@@ -52,7 +52,7 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>46 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>47 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
     <li><a href="#d-1114">14 Nov</a></li><li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
@@ -61,7 +61,24 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1114-invharness"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+<li class="entry" id="e-1114-ecucopper"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+  <h2 class="eh">ECU-1: valve power copper and a short-circuit inductance sweep</h2>
+  <dl>
+    <dt>Changed</dt><dd>The valve supply never reached several pins because the board had no copper plane for it, only
+      routed tracks too wide to land on fine-pitch pins. It now runs on dedicated internal copper regions and fixed copper
+      in each valve cell. After automatic routing and a scripted, clearance-checked repair step, the design-rule check
+      reports no violations and no open connections. A simulation that swept harness inductance from 0 to 2 µH showed
+      the earlier over-current trip could exceed the switch rating on a very short wire; each output now has a 1 µH series
+      inductor, a lower clamp and a slow shared retry clock.</dd>
+    <dt>Review</dt><dd class="bad">The figures rest on estimated component values, and a harness longer than about
+      2 to 3 m would break the thermal check. The review found a repaired chassis track running between the valve
+      connector pins, 36 V spacing that needs conformal coating or wider rules, and an inner copper thickness that must be
+      specified. The board is not fabricated.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">ECU-1</a></p>
+</div></li>
+
+<li class="entry" id="e-1114-invharness"><div><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
   <h2 class="eh">Inverter board: harness protection both ways, two routing errors found</h2>
   <dl>
     <dt>Changed</dt><dd>The inverter's fault line now has a series resistor sized together with the engine controller's

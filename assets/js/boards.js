@@ -41,10 +41,10 @@
         ["J15", 84, 30, [7, 7], "Debug (SWD)", "Cortex 10-pin, 1.27 mm"],
         ["J16", 4.5, 26, GH(2), "Arm vote to the engine controller: fail-safe discrete (mates ECU-1 J7)", "JST GH 2-pin"]] },
     ecu: { w: 150, h: 110, holes: [[4, 4], [146, 4], [4, 106], [146, 106]],
-      zones: [[4, 16, 50, 80, "Power input, protection, regulators"], [102, 20, 30, 84, "Valve and igniter drivers ×8"], [12, 86, 100, 14, "Pressure, thermocouple and RTD front ends"]],
-      ics: [[68, 54, 14, 14, "MCU", "STM32G474"], [36, 15, 4.9, 3.9, "CAN", "CAN-FD transceiver"], [50, 15, 4.9, 3.9, "CAN", "CAN-FD transceiver"], [66, 15, 4.9, 3.9, "CAN", "CAN-FD transceiver"]],
+      zones: [[4, 16, 50, 80, "Power and protection"], [96, 22, 45, 81, "Valve and igniter drivers ×8, return-valve driver"], [12, 86, 100, 14, "Pressure, thermocouple and RTD front ends"]],
+      ics: [[68, 54, 14, 14, "MCU", "STM32G474"], [36, 18.5, 4.9, 3.9, "CAN", "CAN-FD transceiver"], [50, 18.5, 4.9, 3.9, "CAN", "CAN-FD transceiver"], [66, 18.5, 4.9, 3.9, "CAN", "CAN-FD transceiver"]],
       conns: [
-        ["J1", 5, 24, MF(2), "Power in, 18–32 V vehicle bus", "Molex Micro-Fit 3.0, 2×2"],
+        ["J1", 5.6, 24, MF(2), "Power in, 18–32 V vehicle bus", "Molex Micro-Fit 3.0, 2×2"],
         ["J2", 50, 34, [7, 7], "Debug (SWD)", "Cortex 10-pin, 1.27 mm"],
         ["J3", 36, 4.5, GH(3), "CAN-FD to the flight computer (FC-0 J2)", "JST GH 3-pin"],
         ["J4", 49, 4.5, GH(3), "CAN-FD to the test stand", "JST GH 3-pin"],
