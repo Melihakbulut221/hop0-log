@@ -52,7 +52,7 @@
   <p class="lede">What changed, what was measured, and what did not work. Newest first. Landing counts are landings out of
     the episodes run. SIL is the C flight software in software-in-the-loop; Python is the fast simulation; the emulator is
     the in-process copy of the SIL server. Seed sets A and B are defined on <a href="gnc.html#landing-criteria">Landing</a>.</p>
-  <p class="status-line"><span><b>48 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
+  <p class="status-line"><span><b>49 entries</b></span><span>2026-11-03 to 2026-11-14</span><span>Simulation only</span></p>
   <ul class="toc" aria-label="Jump to a day">
     <li><a href="#d-1114">14 Nov</a></li><li><a href="#d-1113">13 Nov</a></li><li><a href="#d-1112">12 Nov</a></li><li><a href="#d-1110">10 Nov</a></li><li><a href="#d-1109">9 Nov</a></li><li><a href="#d-1108">8 Nov</a></li>
     <li><a href="#d-1107">7 Nov</a></li><li><a href="#d-1106">6 Nov</a></li><li><a href="#d-1104">4 Nov</a></li><li><a href="#d-1103">3 Nov</a></li>
@@ -61,7 +61,23 @@
 
 <ol class="log" reversed>
 
-<li class="entry" id="e-1114-invdriver"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+<li class="entry" id="e-1114-invshort"><div id="d-1114"><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
+  <h2 class="eh">Inverter board: short-circuit detection moved inside the capacitor bank</h2>
+  <dl>
+    <dt>Changed</dt><dd>The last review showed the inverter's DC-link shunt sits outside its own ceramic capacitor bank,
+      so it sees a short late. Detection now uses the three low-side phase shunts, which carry the full fault current;
+      each has a fast comparator that ignores the switching spike for a few hundred nanoseconds after turn-on. A reverse
+      comparator on the DC-link shunt catches phase-to-negative shorts on short wiring, a logic interlock blocks a steady
+      command to turn on both switches of a leg, and the dead time was lengthened. All connections are now routed.</dd>
+    <dt>Review</dt><dd class="bad">A time-domain model with the local bank shows shorts through 100 nH or more cut
+      within the switches' rating; a solid stud short and long phase-to-negative shorts are not covered. The review found
+      the reverse trip's margin against normal full-power current thin enough to trip by mistake, and the routing not yet
+      reproduced from a clean run. Nothing has been tested on hardware.</dd>
+  </dl>
+  <p class="ev"><a href="avionics.html#boards">INV-1</a></p>
+</div></li>
+
+<li class="entry" id="e-1114-invdriver"><div><time datetime="2026-11-14">2026-11-14</time><span class="area">Avionics</span></div><div>
   <h2 class="eh">Inverter board: new gate drivers, discrete over-current trip</h2>
   <dl>
     <dt>Changed</dt><dd>The inverter's three-phase gate driver went out of production, and the planned replacement family
